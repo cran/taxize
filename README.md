@@ -2,7 +2,7 @@
 
 We are developing `taxize` as a package to allow users to search over many websites for species names (scientific and common) and download up and downstream taxonomic hierarchical information - and many other things. 
 
-The `taxize` rOpenSci tutorial is [here](https://github.com/ropensci/taxize_/wiki/taxize-tutorial)
+The `taxize` rOpenSci tutorial is [here](http://ropensci.github.com/taxize_/)
 
 `taxize` is part of the rOpenSci project, visit [our webiste](http://ropensci.org) to learn more.
 
@@ -23,8 +23,8 @@ The following are URL's for API documentation, where to get API keys, and what p
 	+ [API forum](https://eol.uservoice.com/forums/15429-encyclopedia-of-life-api)
 	+ function prefix: `eol`
 + Taxonomic Name Resolution Service (TNRS) 
-	+ [API docs](http://tnrs.iplantcollaborative.org/api.html)
-	+ NOTE!!!! Temporarily removed due to the API going down a lot. Will bring the function back when we build in better fail catching.
+	+ [API docs](http://api.phylotastic.org/tnrs)
+	+ function prefix: `tnrs`
 + Integrated Taxonomic Information Service (ITIS)
 	+ [API docs](http://www.itis.gov/ws_description.html)
 	+ function prefix: `itis`
@@ -58,6 +58,14 @@ The following are URL's for API documentation, where to get API keys, and what p
 	+ [Their website](http://www.theplantlist.org/)
  	+ API docs: There are none! We wrap functions in the [taxonstand package](http://cran.r-project.org/web/packages/Taxonstand/index.html)
  	+ function prefix: `tpl`
++ Catalogue of Life
+ 	+ [API docs](http://www.catalogueoflife.org/colwebsite/content/services)
+ 	+ function prefix: `col`
++ Global Invasive Species Database
+  + [Their website](http://www.issg.org/database/welcome/)
+ 	+ API docs: There are none! The function scraps the web directly.
+ 	+ function prefix: `gisd`
+  
 
 ### Temporarily not implemented to resolve bugs or to complete development
 + Tree of Life web project
@@ -65,7 +73,23 @@ The following are URL's for API documentation, where to get API keys, and what p
  	+ [API docs](http://tolweb.org/tree/home.pages/downloadtree.html)
  	+ function prefix: `tol`
 
-### Install `taxize` from GitHub:
+### Coming soon
++ Freshwaterecology - The Taxa and Autecology Database for Freshwater Organisms
+  + [Their website](http://www.freshwaterecology.info)
+  + API docs: There are none! The function scraps the web directly.
+  + function prefix: `fresh`
+  + Note: Currently only the macro-invertebrate database is supported!
+
+### Install `taxize` 
+
++ Stable version from CRAN:
+
+```R 
+install.packages("taxize")
+require(taxize)
+```
+
++ Or, development version from GitHub:
 
 ```R 
 install.packages("devtools")
@@ -74,19 +98,51 @@ install_github("taxize_", "ropensci")
 require(taxize)
 ```
 
-### Example hitting the TNRS (taxonomic names resolution service Phylotastic API):
+### A few examples (for more [click here](http://ropensci.github.com/taxize_/))
 
-```R 
-> require(devtools)
-> install_github("taxize_","ropensci")
-> require(taxize)
-> mynames <- c("Crepis atrabarba", "Zygadenus venenosus")
-> mynames
-[1] "Crepis atrabarba"    "Zygadenus venenosus"
-> tnrastic(query = mynames, output = 'names')
-Your request is being processed. You can retrieve the results at http://api.phylotastic.org/tnrs/retrieve/c8b544f0794e13a61b0b63ea7952f664.
-Pausing a bit for the query to finish...
-      AcceptedName    sourceId MatchScore       submittedName
-1 Crepis atribarba iPlant TNRS       0.98    Crepis atrabarba
-2                  iPlant TNRS          1 Zygadenus venenosus
+### Get unique taxonomic identifier from NCBI
+
+```R
+> uids <- get_uid(c("Chironomus riparius", "Chaetopteryx"))
+
+Retrieving data for species ' Chironomus riparius '
+
+Retrieving data for species ' Chaetopteryx '
+
+> ## And retrieve classification
+> out <- classification(uids)
+> lapply(out, head)
+[[1]]
+              ScientificName         Rank     UID
+1         cellular organisms      no rank  131567
+2                  Eukaryota superkingdom    2759
+3               Opisthokonta      no rank   33154
+4                    Metazoa      kingdom   33208
+5                  Eumetazoa      no rank    6072
+6                  Bilateria      no rank   33213
+
+[[2]]
+       ScientificName         Rank     UID
+1  cellular organisms      no rank  131567
+2           Eukaryota superkingdom    2759
+3        Opisthokonta      no rank   33154
+4             Metazoa      kingdom   33208
+5           Eumetazoa      no rank    6072
+6           Bilateria      no rank   33213
 ```
+
+### Get unique taxonomic identifier from NCBI
+
+```R
+> # input the taxonomic names
+> taxa <- c("Poa annua", "Abies procera", "Helianthus annuus")
+> 
+> # fetch the tree - the formatting of names and higher taxonmy is done within the function
+> tree <- phylomatic_tree(taxa=taxa, get = 'POST', informat='newick', method = "phylomatic", 
++     storedtree = "R20120829", taxaformat = "slashpath", outformat = "newick", clean = "true")
+> 
+> # plot the tree
+> plot(tree)
+```
+
+![thing](http://ropensci.github.com/taxize_/phylomatic_phylo.png)
