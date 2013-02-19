@@ -1,6 +1,6 @@
-2eeec8e59b1b22a2a625a8e3faa86c5b *DESCRIPTION
+22567128dab56177acf36932c32461d0 *DESCRIPTION
 daa420d7576ed9615648326d15cf2272 *NAMESPACE
-2af628578e54114488008b9738c552bf *NEWS
+5ed0b79596c704f6ee95cc244c3f0729 *NEWS
 88ffadf85f4847f9722b136afeb66fed *R/capwords.r
 ad64bf39e85f40aeb22634d142e6d4a8 *R/classification.R
 83521754152037b9c75a0f29893913ff *R/col_children.R
@@ -14,14 +14,14 @@ ad692363a52429b69b66ada9f428385d *R/eol_search.R
 7a79bfbda7809d7eb211e382959ea12d *R/get_genes.R
 2d8580808ccdf68ac3d6b559e87942d5 *R/get_genes_avail.R
 4c9aec4019bd1c6e2dc02acfc907a370 *R/get_seqs.R
-30f86e31cca7e0f7cc9c047517652d82 *R/get_tsn.R
+d6c3ec0d942635e1f69b6c07dbfd2630 *R/get_tsn.R
 3055fa26777679f75528ed419acf2dcb *R/get_uid.R
 fa667192639ccc674088c25f94651148 *R/gisd_isinvasive.R
 c4728c5edad5258256a51f7ef884b47c *R/gni_details.R
 b1781ca6f91b1cb9cec88bfe043370c5 *R/gni_search.R
 05dae35a71800ca7e0b2c4e4ff280736 *R/gnr_datasources.R
 c92769eab77b1991b3a56330b1d7b264 *R/gnr_resolve.R
-93e283a62020f820a7db8f2cfb8e189c *R/itis.R
+450cfe1162c7b6f0d62c744435cc093f *R/itis.R
 a840729914050d34a87861ce08ea470c *R/itis_acceptname.R
 60f2af3b85c64f2d3406a0f17abdabaa *R/itis_downstream.R
 ed1e392fa35e44e9547f4dbc802aedfb *R/itis_name.R
@@ -30,9 +30,9 @@ ed1e392fa35e44e9547f4dbc802aedfb *R/itis_name.R
 7df1a5588d67222abb859b61754bf224 *R/iucn_summary.R
 f81e4ee320f274e64cbec9817136ebb8 *R/phylomatic_tree.R
 fec69c82bdbcad6f4f5e4dd316f502a8 *R/plantminer.R
-f0213fbe1fab2af8ab84b5b4fd3036ca *R/tax_name.R
+661362bf95fcc56df76b09bc7aec0d1f *R/tax_name.R
 75b9da69c8f4f6c65a2e7b18470e7342 *R/taxize-package.R
-0f064f5f9c9d63b284309110720f0c2b *R/tnrs.R
+81baf212bb419b8f1a7ba7d6a14900aa *R/tnrs.R
 8e13c5f57aa3dd3d48ddcb05109cb310 *R/tnrs_sources.r
 a189482b3807bc54dfcd666c2cd27d6d *R/tp_acceptednames.R
 d2751d750cd7677244546f79d355a9be *R/tp_namedistributions.R
@@ -70,7 +70,7 @@ cb3e9ca34a82a1bafc007b89f42eba99 *inst/tests/test-itis_downstream.R
 933e9a4e4eacda57369cfa00fdb51b4d *inst/tests/test-itis_taxrank.R
 33a2eb2afd8e1be714efd4695bf113b1 *inst/tests/test-iucn_summary.R
 698c8017a58eeec457d96b2d0cc07e38 *inst/tests/test-plantminer.R
-8adaa614194fddd10baea6948ae4a12c *inst/tests/test-tax_name.R
+0a7639c8260fdb5f18614eaffaca5688 *inst/tests/test-tax_name.R
 33dca7187c24fe758a57c59538f15f09 *inst/tests/test-tnrs.R
 294b459e0bb92980be8b8604dc1682a4 *inst/tests/test-tnrs_sources.R
 28305251d5a0a5a4ea2387b47fb14c24 *inst/tests/test-tp_acceptednames.R
@@ -78,6 +78,7 @@ fb9d071168c012ff050542393136fb84 *inst/tests/test-tp_namereferences.R
 3490df313616bf3fe6ec8a57ac09383c *inst/tests/test-tp_summary.R
 737cf3237bc23ced6b446b3f06631fcc *inst/tests/test-tp_synonyms.R
 927553b9301f2e503a4a247e19943fa8 *inst/tests/test-tpl_search.R
+b55529347726a42d5bbf51000b634bb6 *inst/tests/test-ubio_namebank.R
 19c1f14550b9a87ca9f3b53cfa2abe78 *man/capwords.Rd
 22a83ffd9c5f5db30f15633540ea6b7b *man/classification.Rd
 e59802947a6b42ae847afc8a2efe10cb *man/col_children.Rd
@@ -105,7 +106,7 @@ f58785b9ef569968cc278115cebdb6aa *man/getcurrencyfromtsn.Rd
 9eac8df510196a63062f3bf6089b75e9 *man/getdatedatafromtsn.Rd
 b7e2b35066ce1e0296eded1d8b181e18 *man/getdescription.Rd
 94166355fe2f1fd3bff056c23ad994c6 *man/getexpertsfromtsn.Rd
-35dd76e021a349c7e157372cde6f4cb2 *man/getfullhierarchyfromtsn.Rd
+131d07d6ff7d38179fb6408ddeca7ac4 *man/getfullhierarchyfromtsn.Rd
 ca419a6b8e2ca52f761d20e692cfc851 *man/getfullrecordfromlsid.Rd
 5563fa27e879da8a4f3327e33684cee2 *man/getfullrecordfromtsn.Rd
 3f24dec9b5328784b18ccc2c7a7c61ca *man/getgeographicdivisionsfromtsn.Rd
@@ -160,7 +161,7 @@ ddde47734d8be25ab189d8426219aa2e *man/searchbycommonnamebeginswith.Rd
 93400d923c8c8265b0e964ebd8e112b2 *man/searchforanymatchpaged.Rd
 7f6e42428f33982f1f1f7835a623e7f9 *man/tax_name.Rd
 482ebc741f30817090ec51caa9f02f73 *man/taxize-package.Rd
-c65ae93300666ec3bd3eebf9ab1eafab *man/tnrs.Rd
+4bebbaf2ada1825193fdf3908a871b6c *man/tnrs.Rd
 0de1989ba898f41a2241b268f5656e19 *man/tnrs_sources.Rd
 4cce5f2277dd8381682598027813b500 *man/tp_acceptednames.Rd
 485e7e48695fb57256dcee3aecc31128 *man/tp_namedistributions.Rd
@@ -170,4 +171,3 @@ f5f6b5d71963e4c5da9904633fe46368 *man/tp_summary.Rd
 6357b8e7fce7195a000280985772f8df *man/tpl_get.Rd
 c929794f2abd8f7339b9afc1fec5fbb3 *man/tpl_search.Rd
 8a87ce280ab06a752cd8994934f1301b *man/ubio_namebank.Rd
-53f0e0281566555966d52bcaae4adfe2 *tests/test-all.R

@@ -1,8 +1,8 @@
 Package: taxize
 Description: Taxonomic information from around the web.
 Title: Taxonomic information from around the web.
-Version: 0.0.4
-Date: 2013-01-31
+Version: 0.0.5
+Date: 2013-02-19
 License: CC0
 URL: https://ropensci.github.com/taxize_
 BugReports: https://github.com/ropensci/taxize_/issues
@@ -31,9 +31,10 @@ Collate: 'classification.R' 'get_tsn.R' 'gnr_datasources.R'
         'col_classification.R' 'gisd_isinvasive.R' 'itis_name.R'
         'tax_name.R' 'col_downstream.R' 'get_genes.R' 'tnrs_sources.r'
         'tnrs.R' 'itis.R'
-Packaged: 2013-01-31 20:56:57 UTC; scottmac2
+Packaged: 2013-02-19 19:53:22 UTC; scottmac2
 Author: Scott Chamberlain [aut, cre], Eduard Szoecs [aut], Carl
         Boettiger [aut], Ignasi Bartomeus [aut]
 Maintainer: Scott Chamberlain <myrmecocystus@gmail.com>
+NeedsCompilation: no
 Repository: CRAN
-Date/Publication: 2013-01-31 22:06:47
+Date/Publication: 2013-02-19 21:30:50
