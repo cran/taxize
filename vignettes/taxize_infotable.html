@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+<title>Some key functions in taxize, what they do, and their data sources.</title>
+
+
+
+
+
+<style type="text/css">
+body, td {
+   font-family: sans-serif;
+   background-color: white;
+   font-size: 12px;
+   margin: 8px;
+}
+
+tt, code, pre {
+   font-family: 'DejaVu Sans Mono', 'Droid Sans Mono', 'Lucida Console', Consolas, Monaco, monospace;
+}
+
+h1 { 
+   font-size:2.2em; 
+}
+
+h2 { 
+   font-size:1.8em; 
+}
+
+h3 { 
+   font-size:1.4em; 
+}
+
+h4 { 
+   font-size:1.0em; 
+}
+
+h5 { 
+   font-size:0.9em; 
+}
+
+h6 { 
+   font-size:0.8em; 
+}
+
+a:visited {
+   color: rgb(50%, 0%, 50%);
+}
+
+pre {	
+   margin-top: 0;
+   max-width: 95%;
+   border: 1px solid #ccc;
+   white-space: pre-wrap;
+}
+
+pre code {
+   display: block; padding: 0.5em;
+}
+
+code.r, code.cpp {
+   background-color: #F8F8F8;
+}
+
+table, td, th {
+  border: none;
+}
+
+blockquote {
+   color:#666666;
+   margin:0;
+   padding-left: 1em;
+   border-left: 0.5em #EEE solid;
+}
+
+hr {
+   height: 0px;
+   border-bottom: none;
+   border-top-width: thin;
+   border-top-style: dotted;
+   border-top-color: #999999;
+}
+
+@media print {
+   * { 
+      background: transparent !important; 
+      color: black !important; 
+      filter:none !important; 
+      -ms-filter: none !important; 
+   }
+
+   body { 
+      font-size:12pt; 
+      max-width:100%; 
+   }
+       
+   a, a:visited { 
+      text-decoration: underline; 
+   }
+
+   hr { 
+      visibility: hidden;
+      page-break-before: always;
+   }
+
+   pre, blockquote { 
+      padding-right: 1em; 
+      page-break-inside: avoid; 
+   }
+
+   tr, img { 
+      page-break-inside: avoid; 
+   }
+
+   img { 
+      max-width: 100% !important; 
+   }
+
+   @page :left { 
+      margin: 15mm 20mm 15mm 10mm; 
+   }
+     
+   @page :right { 
+      margin: 15mm 10mm 15mm 20mm; 
+   }
+
+   p, h2, h3 { 
+      orphans: 3; widows: 3; 
+   }
+
+   h2, h3 { 
+      page-break-after: avoid; 
+   }
+}
+</style>
+
+
+
+</head>
+
+<body>
+<!--
+%\VignetteEngine{knitr::knitr}
+%\VignetteIndexEntry{An R Markdown Vignette made with knitr}
+-->
+
+<h1>Some key functions in taxize, what they do, and their data sources.</h1>
+
+<table><thead>
+<tr>
+<th>Function name</th>
+<th>What it does</th>
+<th>Source</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>apg_lookup</td>
+<td>Changes names to match the APGIII list</td>
+<td>Angiosperm Phylogeny Group</td>
+</tr>
+<tr>
+<td>classification</td>
+<td>Upstream classification</td>
+<td>Various</td>
+</tr>
+<tr>
+<td>col_children</td>
+<td>Direct children</td>
+<td>Catalogue of Life</td>
+</tr>
+<tr>
+<td>col_downstream</td>
+<td>Downstream taxa to specified rank</td>
+<td>Catalogue of Life</td>
+</tr>
+<tr>
+<td>eol_hierarchy</td>
+<td>Upstream classification</td>
+<td>Encyclopedia of Life</td>
+</tr>
+<tr>
+<td>eol_search</td>
+<td>Search EOL taxon information</td>
+<td>Encyclopedia of Life</td>
+</tr>
+<tr>
+<td>get_seqs</td>
+<td>Get NCBI sequences</td>
+<td>National Center for Biotechnology Information</td>
+</tr>
+<tr>
+<td>get_tsn</td>
+<td>Get ITIS TSN</td>
+<td>Integrated Taxonomic Information System</td>
+</tr>
+<tr>
+<td>get_uid</td>
+<td>Get NCBI UID</td>
+<td>National Center for Biotechnology Information</td>
+</tr>
+<tr>
+<td>searchbycommonname</td>
+<td>Search ITIS by common name</td>
+<td>Integrated Taxonomic Information System</td>
+</tr>
+<tr>
+<td>searchbyscientificname</td>
+<td>Search ITIS by scientific name</td>
+<td>Integrated Taxonomic Information System</td>
+</tr>
+<tr>
+<td>gisd_isinvasive</td>
+<td>Invasiveness status</td>
+<td>Global Invasive Species Database</td>
+</tr>
+<tr>
+<td>gni_parse</td>
+<td>Parse scientific names into components</td>
+<td>Global Names Index</td>
+</tr>
+<tr>
+<td>gni_search</td>
+<td>Search EOL&#39;s global names index</td>
+<td>Global Names Index</td>
+</tr>
+<tr>
+<td>gnr_resolve</td>
+<td>Resolve names using EOL&#39;s global names index</td>
+<td>Global Names Resolver</td>
+</tr>
+<tr>
+<td>itis_downstream</td>
+<td>Downstream taxa to specified rank</td>
+<td>Integrated Taxonomic Information System</td>
+</tr>
+<tr>
+<td>iucn_status</td>
+<td>IUCN status</td>
+<td>IUCN Red List</td>
+</tr>
+<tr>
+<td>phylomatic_tree</td>
+<td>Get a plant Phylogeny</td>
+<td>Phylomatic</td>
+</tr>
+<tr>
+<td>plantminer</td>
+<td>Search Plantminer</td>
+<td>Plantminer</td>
+</tr>
+<tr>
+<td>tax_name</td>
+<td>Get taxonomic name for specific rank</td>
+<td>Various</td>
+</tr>
+<tr>
+<td>tax_rank</td>
+<td>Get rank of a taxonomic name</td>
+<td>Various</td>
+</tr>
+<tr>
+<td>tnrs</td>
+<td>Resolve names using iPlant</td>
+<td>iPlant Taxonomic Name Resolution Service</td>
+</tr>
+<tr>
+<td>tp_acceptednames</td>
+<td>Check for accepted names using Tropicos</td>
+<td>Tropicos</td>
+</tr>
+<tr>
+<td>tpl_search</td>
+<td>Search the Plant List</td>
+<td>The Plant List</td>
+</tr>
+<tr>
+<td>ubio_namebank</td>
+<td>Search uBio</td>
+<td>uBio</td>
+</tr>
+</tbody></table>
+
+</body>
+
+</html>
