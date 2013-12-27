@@ -24,10 +24,9 @@
 #' tax_rank(query = "Helianthus annuus", db = "itis")
 #' tax_rank(query = "Helianthus annuus", db = "ncbi")
 #' tax_rank(query = "Helianthus", db = "itis")
-#' tax_rank(query = "Baetis rhodani", db = "itis")
 #' 
 #' # query both
-#' tax_rank(query=c("Helianthus annuus", 'Baetis rhodani'), db="both")
+#' tax_rank(query=c("Helianthus annuus", 'Puma'), db="both")
 #' 
 #' # An alternative way would be to use \link{classification} and sapply over 
 #' the list
@@ -55,7 +54,7 @@ tax_rank <- function(query = NULL, db = "itis", pref = 'ncbi', verbose = TRUE, .
         out_tsn <- NA
       } else {
         tt <- classification(tsn, ...)[[1]]
-        out_tsn <- tt[nrow(tt), 'rankName']
+        out_tsn <- tt[nrow(tt), 'rank']
         if(length(out_tsn) == 0)
           out_tsn <- NA
       }
@@ -70,7 +69,7 @@ tax_rank <- function(query = NULL, db = "itis", pref = 'ncbi', verbose = TRUE, .
         out_uid <- NA
       } else {
         hierarchy <- classification(uid, ...)[[1]]
-        out_uid <- hierarchy[nrow(hierarchy), 'Rank']
+        out_uid <- hierarchy[nrow(hierarchy), 'rank']
         if(length(out_uid) == 0)
           out_uid <- NA
       }
@@ -87,6 +86,6 @@ tax_rank <- function(query = NULL, db = "itis", pref = 'ncbi', verbose = TRUE, .
     return(tolower(out))
   }
   out <- ldply(query, fun, get, db, verbose, ...)
-  names(out) <- 'Rank'
+  names(out) <- 'rank'
   return(out)
 }

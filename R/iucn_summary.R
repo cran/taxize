@@ -31,13 +31,12 @@
 #' # extract other available information
 #' ia[['Lynx lynx']]$history
 #' ia[['Panthera uncia']]$distr
-#' ia[[1]]$pop
 #' ia[[2]]$trend
 #' }
 #' 
-#' @author Eduard Szoecs, \email{szoe8822@@uni-landau.de}
 #' 
 #' @export
+#' @author Eduard Szoecs, \email{eduardszoecs@@gmail.com}
 iucn_summary <- function(sciname, silent = TRUE, parallel = FALSE, ...) 
 {
   fun <- function(sciname){

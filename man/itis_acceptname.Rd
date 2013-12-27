@@ -2,7 +2,7 @@
 \alias{itis_acceptname}
 \title{Retrieve accepted TSN (with accepted name).}
 \usage{
-  itis_acceptname(searchtsn = NA, ...)
+itis_acceptname(searchtsn = NA, ...)
 }
 \arguments{
   \item{searchtsn}{Quoted TSN for a taxonomic group
@@ -12,19 +12,19 @@
   getacceptednamesfromtsn}
 }
 \value{
-  Names or TSNs of all downstream taxa.
+Names or TSNs of all downstream taxa.
 }
 \description{
-  Retrieve accepted TSN (with accepted name).
+Retrieve accepted TSN (with accepted name).
 }
 \details{
-  You can print informative messages by setting
-  supmess=FALSE.
+You can print informative messages by setting
+supmess=FALSE.
 }
 \examples{
 \dontrun{
-itis_acceptname(searchtsn='208527')  # TSN accepted - good name
-itis_acceptname(searchtsn='504239')  # TSN not accepted - input TSN is old
+itis_acceptname('208527')  # TSN accepted - good name
+itis_acceptname('504239')  # TSN not accepted - input TSN is old
 }
 }
 

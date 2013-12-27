@@ -7,11 +7,11 @@
 #' @param key Your Tropicos API key; loads from .Rprofile.
 #' @return List or dataframe.
 #' @examples \dontrun{
-#' tp_acceptednames(id = 25503923)
-#' tp_acceptednames(id = 25503923, output = 'raw')
+#' tp_accnames(id = 25503923)
+#' tp_accnames(id = 25503923, output = 'raw')
 #' }
 #' @export
-tp_acceptednames <- function(id, format = 'json', output = 'df', key = NULL) 
+tp_accnames <- function(id, format = 'json', output = 'df', key = NULL) 
 {
   url = 'http://services.tropicos.org/Name/'
 	key <- getkey(key, "tropicosApiKey")
@@ -40,4 +40,18 @@ tp_acceptednames <- function(id, format = 'json', output = 'df', key = NULL)
     }
     ldply(searchresults, getdata)
   } else { searchresults }
+}
+
+#' Return all accepted names for a taxon name with a given id.
+#' 
+#' Function name changed to tp_accnames.
+#' 
+#' @param id the taxon identifier code 
+#' @param format return in json or xml format (defaults to json)
+#' @param output raw = json or xml; or df = data.frame 
+#' @param key Your Tropicos API key; loads from .Rprofile.
+#' @export
+tp_acceptednames <- function(id, format = 'json', output = 'df', key = NULL) 
+{
+  .Deprecated("tp_accnames", "taxize", "Function name changed. See tp_accnames", "tp_acceptednames") 
 }

@@ -19,12 +19,14 @@
 #'              'Vanessa atalanta (Linnaeus, 1758)'))
 #' }
 gbif_parse <- function(scientificname) {
-  u <- "http://apidev.gbif.org/parser/name"
-  tt <- POST('http://apidev.gbif.org/parser/name',
-                      config=c(add_headers('Content-Type' = 
-                                             'application/json')),
-                      body=RJSONIO::toJSON(scientificname))
+  url <- "http://apidev.gbif.org/parser/name"
+  tt <- POST(url,
+            config=c(add_headers('Content-Type' = 
+                                   'application/json')),
+            body=RJSONIO::toJSON(scientificname))
   stop_for_status(tt)
   res <- content(tt)
-  do.call(rbind.fill, lapply(res, as.data.frame))
+  tmp <- do.call(rbind.fill, lapply(res, as.data.frame))
+  names(tmp) <- tolower(names(tmp))
+  tmp
 }

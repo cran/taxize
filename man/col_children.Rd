@@ -2,9 +2,8 @@
 \alias{col_children}
 \title{Search Catalogue of Life for for direct children of a particular taxon.}
 \usage{
-  col_children(name = NULL, id = NULL, format = NULL,
-    start = NULL, checklist = NULL,
-    url = "http://www.catalogueoflife.org/col/webservice")
+col_children(name = NULL, id = NULL, format = NULL, start = NULL,
+  checklist = NULL, url = "http://www.catalogueoflife.org/col/webservice")
 }
 \arguments{
   \item{name}{The string to search for. Only exact matches
@@ -42,22 +41,22 @@
   left to default).}
 }
 \value{
-  A list of data.frame's.
+A list of data.frame's.
 }
 \description{
-  Search Catalogue of Life for for direct children of a
-  particular taxon.
+Search Catalogue of Life for for direct children of a
+particular taxon.
 }
 \details{
-  You must provide one of name or id. The other parameters
-  (format and start) are optional.
+You must provide one of name or id. The other parameters
+(format and start) are optional.
 }
 \examples{
 \dontrun{
 # A basic example
 col_children(name="Apis")
 
-# An example where there is no classification
+# An example where there is no classification, results in data.frame with no rows
 col_children(id=11935941)
 
 # Use a specific year's checklist
@@ -65,13 +64,14 @@ col_children(name="Apis", checklist="2012")
 col_children(name="Apis", checklist="2009")
 
 # Pass in many names or many id's
-out <- col_children(name=c("Buteo","Apis","Accipiter","asdf"),
-   checklist="2012")
+out <- col_children(name=c("Buteo","Apis","Accipiter","asdf"), checklist="2012")
 out$Apis # get just the output you want
+library(plyr)
 ldply(out) # or combine to one data.frame
 
 # or pass many id's
 out <- col_children(id=c(2346405,2344165,2346405), checklist="2012")
+library(plyr)
 ldply(out) # combine to one data.frame
 }
 }

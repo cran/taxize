@@ -2,8 +2,8 @@
 \alias{col_classification}
 \title{Search Catalogue of Life for taxonomic classifications.}
 \usage{
-  col_classification(name = NULL, id = NULL, format = NULL,
-    start = NULL, checklist = NULL)
+col_classification(name = NULL, id = NULL, format = NULL, start = NULL,
+  checklist = NULL)
 }
 \arguments{
   \item{name}{The string to search for. Only exact matches
@@ -38,14 +38,14 @@
   lastest as default (numeric).}
 }
 \value{
-  A list of data.frame's.
+A list of data.frame's.
 }
 \description{
-  Search Catalogue of Life for taxonomic classifications.
+THIS FUNCTION IS DEPRECATED.
 }
 \details{
-  You must provide one of name or id. The other parameters
-  (format and start) are optional.
+You must provide one of name or id. The other parameters
+(format and start) are optional.
 }
 \examples{
 \dontrun{
