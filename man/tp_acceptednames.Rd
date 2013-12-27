@@ -2,8 +2,7 @@
 \alias{tp_acceptednames}
 \title{Return all accepted names for a taxon name with a given id.}
 \usage{
-  tp_acceptednames(id, format = "json", output = "df",
-    key = NULL)
+tp_acceptednames(id, format = "json", output = "df", key = NULL)
 }
 \arguments{
   \item{id}{the taxon identifier code}
@@ -15,17 +14,7 @@
 
   \item{key}{Your Tropicos API key; loads from .Rprofile.}
 }
-\value{
-  List or dataframe.
-}
 \description{
-  Return all accepted names for a taxon name with a given
-  id.
-}
-\examples{
-\dontrun{
-tp_acceptednames(id = 25503923)
-tp_acceptednames(id = 25503923, output = 'raw')
-}
+Function name changed to tp_accnames.
 }
 

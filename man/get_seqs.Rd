@@ -1,13 +1,12 @@
 \name{get_seqs}
 \alias{get_seqs}
-\title{Retrieve nucleotide sequences from NCBI.}
+\title{Retrieve gene sequences from NCBI by accession number.}
 \usage{
-  get_seqs(taxon_name, gene, seqrange, getrelated,
-    writetodf = TRUE, filetowriteto)
+get_seqs(taxa, gene = "COI", seqrange = "1:3000", getrelated = FALSE,
+  verbose = TRUE)
 }
 \arguments{
-  \item{taxon_name}{Scientific name to search for
-  (character).}
+  \item{taxa}{Scientific name to search for (character).}
 
   \item{gene}{Gene (character) or genes (character vector)
   to search for.}
@@ -19,37 +18,10 @@
   sequences of a species in the same genus as the one
   searched for. If FALSE, get's nothing.}
 
-  \item{writetodf}{Write resulting data.frame of results to
-  a file on your machine (logical).}
-
-  \item{filetowriteto}{If writetodf=TRUE, then specify the
-  file name. Default=T.}
-}
-\value{
-  Data.frame of results.
+  \item{verbose}{logical; If TRUE (default), informative
+  messages printed.}
 }
 \description{
-  This function retrieves one sequences for each species,
-  picking the longest available for the given gene.
-}
-\details{
-  Removes predicted sequences so you don't have to remove
-  them.  Predicted sequences are those with accession
-  numbers that have "XM_" or "XR_" prefixes.
-}
-\examples{
-\dontrun{
-# A single species
-get_seqs(taxon_name="Acipenser brevirostrum", gene = c("coi", "co1"),
-		seqrange = "1:3000", getrelated=T, writetodf=F)
-
-# Many species, can run in parallel or not using plyr
-species <- c("Colletes similis","Halictus ligatus","Perdita trisignata")
-llply(species, get_seqs, gene = c("coi", "co1"), seqrange = "1:2000",
-   getrelated=T, writetodf=F)
-}
-}
-\author{
-  Scott Chamberlain \email{myrmecocystus@gmail.com}
+Function name changed to ncbi_getbyname.
 }
 

@@ -2,8 +2,8 @@
 \alias{gni_search}
 \title{Search for taxonomic names using the Global Names Index.}
 \usage{
-  gni_search(search_term = NULL, per_page = NULL,
-    page = NULL, justtotal = FALSE, parse_names = FALSE)
+gni_search(search_term = NULL, per_page = NULL, page = NULL,
+  justtotal = FALSE, parse_names = FALSE)
 }
 \arguments{
   \item{search_term}{Name pattern you want to search for
@@ -37,31 +37,36 @@
   to parse names.  Default is FALSE.}
 }
 \value{
-  Data.frame of results.
+Data.frame of results.
 }
 \description{
-  Uses the Global Names Index, see
-  \url{http://gni.globalnames.org/} for information.
+Uses the Global Names Index, see
+\url{http://gni.globalnames.org/} for information.
+}
+\details{
+Note that you can use fuzzy searching, e.g., by attaching
+an asterisk to the end of a search term. See the first two
+examples below.
 }
 \examples{
 \dontrun{
 gni_search(search_term = "ani*")
 gni_search(search_term = "ama*", per_page = 3, page = 21)
 gni_search(search_term = "animalia", per_page = 8, page = 1)
-gni_search(search_term = "animalia", per_page = 8, page = 1, justtotal=T)
+gni_search(search_term = "animalia", per_page = 8, page = 1, justtotal=TRUE)
 
 gni_search(search_term = "Cyanistes caeruleus", parse_names=TRUE)
 }
 }
 \author{
-  Scott Chamberlain {myrmecocystus@gmail.com}
+Scott Chamberlain {myrmecocystus@gmail.com}
 }
 \references{
-  \url{http://gni.globalnames.org/}
-  \url{https://github.com/dimus/gni/wiki/api}
+\url{http://gni.globalnames.org/},
+\url{https://github.com/dimus/gni/wiki/api}
 }
 \seealso{
-  \code{\link{gnr_datasources}}, \code{\link{gni_search}}.
+\code{\link{gnr_datasources}}, \code{\link{gni_search}}.
 }
 \keyword{globalnamesindex}
 \keyword{names}
