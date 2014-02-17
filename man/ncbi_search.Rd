@@ -2,7 +2,8 @@
 \alias{ncbi_search}
 \title{Search for gene sequences available for a species from NCBI.}
 \usage{
-ncbi_search(taxa, seqrange = "1:3000", getrelated = FALSE, verbose = TRUE)
+ncbi_search(taxa, seqrange = "1:3000", getrelated = FALSE, limit = 500,
+  verbose = TRUE)
 }
 \arguments{
   \item{taxa}{Scientific name to search for (character).}
@@ -13,6 +14,11 @@ ncbi_search(taxa, seqrange = "1:3000", getrelated = FALSE, verbose = TRUE)
   \item{getrelated}{Logical, if TRUE, gets the longest
   sequences of a species in the same genus as the one
   searched for. If FALSE, get's nothing.}
+
+  \item{limit}{Number of sequences to search for and
+  return. Max of 10,000.  If you search for 6000 records,
+  and only 5000 are found, you will of course only get 5000
+  back.}
 
   \item{verbose}{logical; If TRUE (default), informative
   messages printed.}

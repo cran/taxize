@@ -12,18 +12,24 @@ names_list(rank = "genus", size = 10)
   the rank.}
 }
 \value{
-List of taxonomic names
+Vector of taxonomic names.
 }
 \description{
-Get a random vector of species names.
+Family and order names come from the APG plant names list.
+Genus and species names come from Theplantlist.org.
 }
 \examples{
 names_list()
 names_list('species')
+names_list('genus')
 names_list('family')
 names_list('order')
 names_list('order', '2')
 names_list('order', '15')
+
+# You can get a lot of genus or species names if you want
+nrow(theplantlist)
+names_list('genus', 500)
 }
 \author{
 Scott Chamberlain \email{myrmecocystus@gmail.com}
