@@ -5,6 +5,7 @@
 \alias{classification.colid}
 \alias{classification.default}
 \alias{classification.eolid}
+\alias{classification.gbifid}
 \alias{classification.ids}
 \alias{classification.tpsid}
 \alias{classification.tsn}
@@ -27,11 +28,13 @@ classification(...)
 
 \method{classification}{tpsid}(id, key = NULL, callopts = list(), ...)
 
+\method{classification}{gbifid}(id, callopts = list(), ...)
+
 \method{classification}{ids}(id, ...)
 
-\method{cbind}{classification}(...)
+\method{cbind}{classification}(x)
 
-\method{rbind}{classification}(...)
+\method{rbind}{classification}(x)
 
 \method{cbind}{classification_ids}(...)
 
@@ -41,22 +44,24 @@ classification(...)
   \item{x}{character; taxons to query.}
 
   \item{db}{character; database to query. either
-  \code{ncbi}, \code{itis}, \code{eol}, \code{col} or
-  \code{tropicos}.}
+  \code{ncbi}, \code{itis}, \code{eol}, \code{col},
+  \code{tropicos}, \code{gbif}.}
 
   \item{id}{character; identifiers, returned by
   \code{\link[taxize]{get_tsn}},
   \code{\link[taxize]{get_uid}},
   \code{\link[taxize]{get_eolid}},
-  \code{\link[taxize]{get_colid}}, or
-  \code{\link[taxize]{get_tpsid}}.}
+  \code{\link[taxize]{get_colid}},
+  \code{\link[taxize]{get_tpsid}},
+  \code{\link[taxize]{get_gbifid}}.}
 
   \item{...}{Other arguments passed to
   \code{\link[taxize]{get_tsn}},
   \code{\link[taxize]{get_uid}},
   \code{\link[taxize]{get_eolid}},
-  \code{\link[taxize]{get_colid}}, or
-  \code{\link[taxize]{get_tpsid}}.}
+  \code{\link[taxize]{get_colid}},
+  \code{\link[taxize]{get_tpsid}},
+  \code{\link[taxize]{get_gbifid}}.}
 
   \item{start}{The first record to return. If omitted, the
   results are returned from the first record (start=0).
@@ -93,6 +98,7 @@ classification(c("Chironomus riparius", "aaa vva"), db = 'ncbi')
 classification(c("Chironomus riparius", "aaa vva"), db = 'itis')
 classification(c("Chironomus riparius", "aaa vva"), db = 'eol')
 classification(c("Chironomus riparius", "aaa vva"), db = 'col')
+classification(c("Chironomus riparius", "asdfasdfsfdfsd"), db = 'gbif')
 classification(c("Poa annua", "aaa vva"), db = 'tropicos')
 
 # Use methods for get_uid, get_tsn, get_eolid, get_colid, get_tpsid
@@ -105,14 +111,36 @@ classification(get_colid(c("Chironomus riparius", "aaa vva")))
 classification(get_tpsid(c("Poa annua", "aaa vva")))
 
 # Pass many ids from class "ids"
-out <- get_ids(names="Poa annua", db = c('ncbi','itis','col','eol','tropicos'))
+out <- get_ids(names="Puma concolor", db = c('ncbi','gbif'))
 cl <- classification(out)
 
-# Bind length-wise
+# Bind width-wise from class classification_ids
 cbind(cl)
 
-# Bind width-wise
+# Bind length-wise
 rbind(cl)
+
+# Many names to get_ids
+out <- get_ids(names=c("Puma concolor","Accipiter striatus"), db = c('ncbi','itis','col'))
+cl <- classification(out)
+rbind(cl)
+cbind(cl)
+
+# rbind and cbind on class classification (from a call to get_colid, get_tsn, etc.
+# - other than get_ids)
+cl_col <- classification(get_colid(c("Puma concolor","Accipiter striatus")))
+cl_uid <- classification(get_uid(c("Puma concolor","Accipiter striatus")))
+cl_tsn <- classification(get_tsn(c("Puma concolor","Accipiter striatus")))
+rbind(cl_col)
+rbind(cl_uid)
+rbind(cl_tsn)
+cbind(cl_col)
+cbind(cl_uid)
+cbind(cl_tsn)
+
+tsns <- get_tsn(c("Puma concolor","Accipiter striatus"))
+cl_tsns <- classification(tsns)
+cbind(cl_tsns)
 }
 }
 \seealso{
@@ -120,6 +148,7 @@ rbind(cl)
 \code{\link[taxize]{get_uid}},
 \code{\link[taxize]{get_eolid}},
 \code{\link[taxize]{get_colid}},
-\code{\link[taxize]{get_tpsid}}
+\code{\link[taxize]{get_tpsid}},
+\code{\link[taxize]{get_gbifid}}
 }
 

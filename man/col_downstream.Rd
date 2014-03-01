@@ -2,8 +2,8 @@
 \alias{col_downstream}
 \title{Use Catalogue of Life to get downstream taxa to a given taxonomic level.}
 \usage{
-col_downstream(name = NULL, downto, format = NULL, start = NULL,
-  checklist = NULL, url = "http://www.catalogueoflife.org/col/webservice")
+col_downstream(name = NULL, id = NULL, downto, format = NULL,
+  start = NULL, checklist = NULL, verbose = TRUE)
 }
 \arguments{
   \item{name}{The string to search for. Only exact matches
@@ -13,14 +13,14 @@ col_downstream(name = NULL, downto, format = NULL, start = NULL,
   character may also be used. The name must be at least 3
   characters long, not counting wildcard characters.}
 
+  \item{id}{The record ID of the specific record to return
+  (only for scientific names of species or infraspecific
+  taxa)}
+
   \item{downto}{The taxonomic level you want to go down to.
   See examples below.  The taxonomic level IS case
   sensitive, and you do have to spell it correctly. See
   \code{data(rank_ref)} for spelling.}
-
-  \item{checklist}{The year of the checklist to query, if
-  you want a specific year's checklist instead of the
-  lastest as default (numeric).}
 
   \item{format}{The returned format (default = NULL). If
   NULL xml is used.  Currently only xml is supported.}
@@ -33,8 +33,11 @@ col_downstream(name = NULL, downto, format = NULL, start = NULL,
   of results returned by a single query is 500 for terse
   queries and 50 for full queries).}
 
-  \item{url}{The base COL url for the function (should be
-  left to default).}
+  \item{checklist}{The year of the checklist to query, if
+  you want a specific year's checklist instead of the
+  lastest as default (numeric).}
+
+  \item{verbose}{Print or suppress messages.}
 }
 \value{
 A list of data.frame's.
@@ -56,7 +59,10 @@ col_downstream(name="Bryophyta", downto="Family")
 col_downstream(name=c("Plantae","Animalia"), downto="Class")
 
 # Using a checklist from a specific year
-col_downstream(name="Bryophyta", downto="Family", checklist="2009")
+col_downstream(name="Bryophyta", downto="Family", checklist=2009)
+
+# By id
+col_downstream(id=2346405, downto="Genus", checklist=2012)
 }
 }
 
