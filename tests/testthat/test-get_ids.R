@@ -19,3 +19,26 @@ test_that("get_ids accepts ask and verbose arguments", {
   expect_message(get_ids(names="Poa annua", db = 'ncbi'))
   expect_that(get_ids(names="Poa annua", db = 'ncbi', verbose=FALSE), not(shows_message()))
 })
+
+nn <- c('Imperata brasiliensis','Hylebates cordatus','Apocopis intermedius',
+        'Paspalum subciliatum','Bromus nottowayanus','Chimonobambusa marmorea',
+        'Panicum adenophorum','Otatea glauca','Himalayacalamus falconeri',
+        'Briza lamarckiana','Trisetum turcicum','Brachiaria subulifolia',
+        'Boissiera squarrosa','Arthrostylidium pubescens','Neyraudia reynaudiana'
+        ,'Bromus gunckelii','Poa sudicola','Pentameris thuarii',
+        'Calamagrostis inexpansa','Willkommia texana','Helictotrichon cantabricum',
+        'Muhlenbergia tenuifolia','Sporobolus ioclados','Bambusa cerosissima',
+        'Axonopus flabelliformis','Glyceria lithuanica','Pentaschistis malouinensis',
+        'Perrierbambus madagascariensis','Hierochloe alpina','Hemarthria compressa',
+        'Zizania latifolia','Festuca altaica','Gigantochloa wrayi','Festuca alpina',
+        'Aegilops caudata','Elymus cognatus','Agrostis gracililaxa','Gymnopogon foliosus')
+
+test_that("works on a variety of names", {
+  expect_that(get_ids(nn[13], db = c('ncbi','itis','col','eol','tropicos'), ask=FALSE), is_a("ids"))
+  expect_that(get_ids(nn[14], db = c('ncbi','itis','col','eol','tropicos'), ask=FALSE), is_a("ids"))
+  expect_that(get_ids(nn[15], db = c('ncbi','itis','col','eol','tropicos'), ask=FALSE), is_a("ids"))
+  expect_that(get_ids(nn[16], db = c('ncbi','itis','col','eol','tropicos'), ask=FALSE), is_a("ids"))
+  expect_that(get_ids(nn[17], db = c('ncbi','itis','col','eol','tropicos'), ask=FALSE), is_a("ids"))
+  expect_that(get_ids(nn[18], db = c('ncbi','itis','col','eol','tropicos'), ask=FALSE), is_a("ids"))
+  expect_that(get_ids(nn[19], db = c('ncbi','itis','col','eol','tropicos'), ask=FALSE), is_a("ids"))
+})
