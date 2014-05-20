@@ -1,6 +1,7 @@
-#' Search uBio by namebank ID.
+#' Search uBio for taxonomic synonyms by hierarchiesID.
 #' 
-#' @import httr XML RCurl plyr
+#' @import httr XML RCurl
+#' @export
 #' @param hierarchiesID you must include the hierarchiesID (ClassificationBankID) 
 #'    to receive the classification synonyms
 #' @param keyCode Your uBio API key; loads from .Rprofile. If you don't have 
@@ -9,8 +10,12 @@
 #' @return A data.frame.
 #' @examples \dontrun{
 #' ubio_synonyms(hierarchiesID = 4091702)
+#' ubio_synonyms(hierarchiesID = 2483153)
+#' ubio_synonyms(hierarchiesID = 2465599)
+#' ubio_synonyms(hierarchiesID = 1249021)
+#' ubio_synonyms(hierarchiesID = 4069372)
 #' }
-#' @export
+
 ubio_synonyms <- function(hierarchiesID = NULL, keyCode = NULL, callopts=list())
 {
   hierarchiesID <- as.numeric(as.character(hierarchiesID))
@@ -19,28 +24,27 @@ ubio_synonyms <- function(hierarchiesID = NULL, keyCode = NULL, callopts=list())
     
   url <- "http://www.ubio.org/webservices/service.php"
   keyCode <- getkey(keyCode, "ubioApiKey")
-  args <- compact(list(
+  args <- taxize_compact(list(
     'function' = 'synonym_list', hierarchiesID = hierarchiesID, keyCode = keyCode))
   tmp <- GET(url, query=args, callopts)
   stop_for_status(tmp)
   tt <- content(tmp)
-  out <- getxml_syns(obj=tt, todecode=c(5,6,12))
-  df <- data.frame(out)
+  out <- getxml_syns(obj=tt, todecode=c(2,3,9))
+  df <- data.frame(out, stringsAsFactors = FALSE)
   df
 }
 
 getxml_syns <- function(obj, todecode){
-  tmp <- xpathApply(obj, "//results", fun=xmlToList)
-  tmp2 <- unlist(tmp)
-  tmp2 <- lapply(tmp2, function(x){
+  toget <- c('classificationTitleID','classificationTitle','classificationDescription',
+             'classificationRoot','rankName','rankID','classificationsID','namebankID',
+             'nameString')
+  tmp <- sapply(toget, function(x) xpathApply(obj, sprintf("//results//%s", x), xmlValue))
+  tmp <- lapply(tmp, function(x){
     ss <- sapply(x, is.null)
     x[ss] <- "none"
     x
   })
-  tmp2[todecode] <- sapply(tmp2[todecode], RCurl::base64Decode)
-  tmp2 <- tmp2[-c(1:3)]
-  names(tmp2) <- tolower(c('classificationTitleID','classificationTitle','classificationDescription',
-                   'classificationRoot','rankName','rankID','classificationsID','namebankID',
-                   'nameString'))
-  tmp2
+  tmp[todecode] <- sapply(tmp[todecode], function(x) if(nchar(x)==0){x} else{ base64Decode(x) })
+  names(tmp) <- tolower(toget)
+  tmp
 }

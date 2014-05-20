@@ -20,22 +20,24 @@
 #' @examples \dontrun{
 #' # Plug in taxon names directly
 #' get_ids(names="Chironomus riparius", db = 'ncbi')
-#' get_ids(names=c("Chironomus riparius", "Poa annua"), db = 'ncbi')
-#' get_ids(names=c("Chironomus riparius", "Poa annua"), db = c('ncbi','itis'))
-#' get_ids(names=c("Chironomus riparius", "Poa annua"), db = c('ncbi','itis','col'))
-#' get_ids(names="Poa annua", db = c('ncbi','itis','col','eol','tropicos'))
+#' get_ids(names=c("Chironomus riparius", "Pinus contorta"), db = 'ncbi')
+#' get_ids(names=c("Chironomus riparius", "Pinus contorta"), db = c('ncbi','itis'))
+#' get_ids(names=c("Chironomus riparius", "Pinus contorta"), db = c('ncbi','itis','col'))
+#' get_ids(names="Pinus contorta", db = c('ncbi','itis','col','eol','tropicos'))
 #' get_ids(names="ava avvva", db = c('ncbi','itis','col','eol','tropicos'))
 #' get_ids(names="ava avvva", db = c('ncbi','itis','col','eol','tropicos'), verbose=FALSE)
 #' 
 #' # Pass on to other functions
-#' out <- get_ids(names="Poa annua", db = c('ncbi','itis','col','eol','tropicos'))
+#' out <- get_ids(names="Pinus contorta", db = c('ncbi','itis','col','eol','tropicos'))
 #' classification(out$itis)
 #' synonyms(out$tropicos)
 #' }
+
 get_ids <- function(names, db = NULL, ...)
 {
   if(is.null(db))
     stop("Must specify on or more values for db!")
+  db <- match.arg(db, choices = c('itis','ncbi','eol','col','tropicos','gbif'), several.ok = TRUE)
  
   foo <- function(x, names, ...){
     ids <- switch(x, 

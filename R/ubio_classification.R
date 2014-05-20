@@ -1,7 +1,7 @@
 #' This function will return all ClassificationBank data pertaining to a 
 #' particular ClassificationBankID
 #' 
-#' @import httr XML RCurl plyr
+#' @import httr XML RCurl
 #' @param hierarchiesID (string) - ClassificationBank identifier for the record you 
 #'    wish to receive
 #' @param childrenFlag (0 or 1) to include the taxon's children taxa
@@ -25,7 +25,7 @@ ubio_classification <- function(hierarchiesID = NULL, childrenFlag = 0,
 {
   url <- "http://www.ubio.org/webservices/service.php"
   keyCode <- getkey(keyCode, "ubioApiKey")
-  args <- compact(list(
+  args <- taxize_compact(list(
     'function' = 'classificationbank_object', hierarchiesID = hierarchiesID, 
     childrenFlag = childrenFlag, ancestryFlag = ancestryFlag, 
     justificationsFlag = justificationsFlag, synonymsFlag = synonymsFlag, keyCode = keyCode))
@@ -37,7 +37,7 @@ ubio_classification <- function(hierarchiesID = NULL, childrenFlag = 0,
              "recordedName/namebankID", "recordedName/nameString")
   temp <- lapply(toget, function(x) sapply(xpathApply(tt, paste("/results/", x, sep="")), xmlValue))
   temp[c(2,8)] <- sapply(temp[c(2,8)], base64Decode)
-  out <- data.frame(do.call(cbind, temp))
+  out <- data.frame(do.call(cbind, temp), stringsAsFactors = FALSE)
   names(out) <- c("classificationTitleID", "classificationTitle", 
                   "classificationRoot", "rankName", "rankID", "classificationsID", 
                   "namebankID", "nameString")

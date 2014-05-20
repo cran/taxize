@@ -32,7 +32,7 @@
 #' the list
 #' x <- 'Baetis'
 #' classi <- classification(get_uid(x))
-#' sapply(classi, function(x) x[nrow(x), 'Rank'])
+#' sapply(classi, function(x) x[nrow(x), 'rank'])
 #' }
 #' @export
 tax_rank <- function(query = NULL, db = "itis", pref = 'ncbi', verbose = TRUE, ...)
@@ -47,13 +47,13 @@ tax_rank <- function(query = NULL, db = "itis", pref = 'ncbi', verbose = TRUE, .
   fun <- function(query, get, db, verbose, ...){
     # ITIS
     if(db == "itis" | db == 'both'){
-      tsn <- get_tsn(query, searchtype = "sciname", verbose = verbose, ...)
+      tsn <- get_tsn(query, searchtype = "scientific", verbose = verbose, ...)
       if(is.na(tsn)) {
         if(verbose) 
           message("No TSN found for species '", query, "'!\n")
         out_tsn <- NA
       } else {
-        tt <- classification(tsn, ...)[[1]]
+        tt <- classification(tsn, verbose=verbose, ...)[[1]]
         out_tsn <- tt[nrow(tt), 'rank']
         if(length(out_tsn) == 0)
           out_tsn <- NA

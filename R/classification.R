@@ -1,6 +1,6 @@
 #' Retrieve the taxonomic hierarchy for a given taxon ID.
 #' 
-#' @import XML RCurl plyr rgbif
+#' @import XML RCurl plyr
 #' 
 #' @param x character; taxons to query.
 #' @param db character; database to query. either \code{ncbi}, \code{itis}, 
@@ -9,6 +9,7 @@
 #'    \code{\link[taxize]{get_uid}}, \code{\link[taxize]{get_eolid}}, 
 #'    \code{\link[taxize]{get_colid}}, \code{\link[taxize]{get_tpsid}}, 
 #'    \code{\link[taxize]{get_gbifid}}.
+#' @param callopts Curl options passed on to \code{\link[httr]{GET}}
 #' @param ... Other arguments passed to \code{\link[taxize]{get_tsn}}, 
 #'    \code{\link[taxize]{get_uid}}, \code{\link[taxize]{get_eolid}}, 
 #'    \code{\link[taxize]{get_colid}}, \code{\link[taxize]{get_tpsid}},
@@ -21,7 +22,6 @@
 #' @param checklist character; The year of the checklist to query, if you want a specific 
 #' 		year's checklist instead of the lastest as default (numeric).
 #' @param key Your API key; loads from .Rprofile.
-#' @param callopts Further args passed on to httr::GET.
 #' 
 #' @return A named list of data.frames with the taxonomic classifcation of 
 #'    every supplied taxa.
@@ -37,9 +37,12 @@
 #' @examples \dontrun{
 #' # Plug in taxon names directly
 #' classification(c("Chironomus riparius", "aaa vva"), db = 'ncbi')
+#' classification(c("Chironomus riparius", "aaa vva"), db = 'ncbi', verbose=FALSE)
 #' classification(c("Chironomus riparius", "aaa vva"), db = 'itis')
+#' classification(c("Chironomus riparius", "aaa vva"), db = 'itis', verbose=FALSE)
 #' classification(c("Chironomus riparius", "aaa vva"), db = 'eol')
 #' classification(c("Chironomus riparius", "aaa vva"), db = 'col')
+#' classification(c("Chironomus riparius", "aaa vva"), db = 'col', verbose=FALSE)
 #' classification(c("Chironomus riparius", "asdfasdfsfdfsd"), db = 'gbif')
 #' classification(c("Poa annua", "aaa vva"), db = 'tropicos')
 #' 
@@ -48,9 +51,11 @@
 #' 
 #' classification(get_uid(c("Chironomus riparius", "aaa vva")))
 #' classification(get_tsn(c("Chironomus riparius", "aaa vva")))
+#' classification(get_tsn(c("Chironomus riparius", "aaa vva"), verbose = FALSE))
 #' classification(get_eolid(c("Chironomus riparius", "aaa vva")))
 #' classification(get_colid(c("Chironomus riparius", "aaa vva")))
 #' classification(get_tpsid(c("Poa annua", "aaa vva")))
+#' classification(get_gbifid(c("Poa annua", "Bison bison")))
 #' 
 #' # Pass many ids from class "ids"
 #' out <- get_ids(names="Puma concolor", db = c('ncbi','gbif'))
@@ -96,53 +101,69 @@ classification <- function(...){
 #' @method classification default
 #' @export
 #' @rdname classification
-classification.default <- function(x, db = NULL, ...){
+classification.default <- function(x, db = NULL, callopts=list(), ...){
   if (is.null(db))
     stop("Must specify db!")
   if (db == 'itis') {
-    id <- get_tsn(x, ...)
-    out <- classification(id, ...)
+    id <- process_ids(x, get_tsn, ...)
+    out <- classification(id, callopts=callopts, ...)
     names(out) <- x
   }
   if (db == 'ncbi') {
-    id <- get_uid(x, ...)
+    id <- process_ids(x, get_uid, ...)
+#     id <- get_uid(x, ...)
     out <- classification(id, ...)
     names(out) <- x
   }
   if (db == 'eol') {
-    id <- get_eolid(x, ...)
-    out <- classification(id, ...)
+    id <- process_ids(x, get_eolid, ...)
+#     id <- get_eolid(x, ...)
+    out <- classification(id, callopts=callopts, ...)
     names(out) <- x
   }
   if (db == 'col') {
-    id <- get_colid(x, ...)
+    id <- process_ids(x, get_colid, ...)
+#     id <- get_colid(x, ...)
     out <- classification(id, ...)
     names(out) <- x
   }
   if (db == 'tropicos') {
-    id <- get_tpsid(x, ...)
-    out <- classification(id, ...)
+    id <- process_ids(x, get_tpsid, ...)
+#     id <- get_tpsid(x, ...)
+    out <- classification(id, callopts=callopts, ...)
     names(out) <- x
   }
   if (db == 'gbif') {
-    id <- get_gbifid(x, ...)
-    out <- classification(id, ...)
+    id <- process_ids(x, get_gbifid, ...)
+#     id <- get_gbifid(x, ...)
+    out <- classification(id, callopts=callopts, ...)
     names(out) <- x
   }
   return(out)
 }
 
+process_ids <- function(input, fxn, ...){
+  g <- tryCatch(as.numeric(as.character(input)), warning=function(e) e)
+  if(is(g,"numeric")){
+    id <- input
+    class(id) <- "tsn"
+  } else {
+    id <- eval(fxn)(input, ...)
+  }
+  id
+}
+
 #' @method classification tsn
 #' @export
 #' @rdname classification
-classification.tsn <- function(id, ...) 
+classification.tsn <- function(id, callopts = list(), ...) 
 {
   fun <- function(x){
     # return NA if NA is supplied
     if (is.na(x)) {
       out <- NA
     } else {
-    	out <- getfullhierarchyfromtsn(x, ...)
+    	out <- getfullhierarchyfromtsn(x, curlopts = callopts, ...)
     	# remove overhang
     	out <- out[1:which(out$tsn == x), c('taxonName', 'rankName')]
       names(out) <- c('name', 'rank')
@@ -210,7 +231,9 @@ classification.eolid <- function(id, key = NULL, callopts = list(), ...) {
       if(length(res$ancestors)==0){
         return(sprintf("No hierarchy information for %s", x))
       } else {
-        out <- do.call(rbind.fill, lapply(res$ancestors, data.frame))[,c('scientificName','taxonRank')]
+        out <- do.call(rbind.fill, lapply(res$ancestors, data.frame, stringsAsFactors = FALSE))[,c('scientificName','taxonRank')]
+        # add querried taxon
+        out <- rbind(out, c(res$scientificName, res$taxonRank))
         names(out) <- c('name', 'rank')
         return(out)
       }
@@ -250,6 +273,11 @@ classification.colid <- function(id, start = NULL, checklist = NULL, ...) {
       out <- data.frame(name = xpathSApply(tt, "//classification//name", xmlValue),
                         rank = xpathSApply(tt, "//classification//rank", xmlValue),
                         stringsAsFactors = FALSE)
+      # add querried taxon
+      out <- rbind(out, c(xpathSApply(tt, "//result/name", xmlValue), 
+                          xpathSApply(tt, "//result/rank", xmlValue)))
+
+      
     }
     return(out)
   }
@@ -271,7 +299,7 @@ classification.tpsid <- function(id, key = NULL, callopts = list(), ...) {
     } else {
       url <- sprintf('http://services.tropicos.org/Name/%s/HigherTaxa', x)
       key <- getkey(key, "tropicosApiKey")
-      args <- compact(list(format='json', apikey=key))
+      args <- taxize_compact(list(format='json', apikey=key))
       tt <- GET(url, query = args, callopts)
       stop_for_status(tt)
       out <- content(tt)
@@ -298,16 +326,16 @@ classification.gbifid <- function(id, callopts = list(), ...) {
     if(is.na(x)) {
       out <- NA
     } else {
-      out <- suppressWarnings(tryCatch(name_usage(key = x, ...), error=function(e) e))
+      out <- suppressWarnings(tryCatch(gbif_name_usage(key = x), error=function(e) e))
       if(is(out, "simpleError")){ 
-        df <- NA
+        out <- NA
       } else {
 #         out <- do.call(rbind.fill, lapply(out, data.frame))[,c('ScientificName','Rank')]
-        df <- ldply(out[c('kingdom','phylum','clazz','order','family','genus','species')])
-        df <- data.frame(name=df$V1, rank=df$.id)
+        out <- ldply(out[c('kingdom','phylum','clazz','order','family','genus','species')])
+        out <- data.frame(name=out$V1, rank=out$.id)
       }
     }
-    return( df )
+    return(out)
   }
   out <- lapply(id, fun)
   names(out) <- id
@@ -322,7 +350,7 @@ classification.ids <- function(id, ...)
 {
   fun <- function(x, ...){
     # return NA if NA is supplied
-    if (is.na(x)) {
+    if (all(is.na(x))) {
       out <- NA
     } else {
       out <- classification(x, ...)
