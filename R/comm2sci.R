@@ -2,7 +2,7 @@
 #' 
 #' @param commnames One or more common names or partial names.
 #' @param db Data source, one of \emph{"eol"} (default), \emph{"itis"}, \emph{"tropicos"}
-#' or \emph{"ncbi"}.
+#'    or \emph{"ncbi"}.
 #' @param itisby Search for common names across entire names (search, default),
 #'    at beginning of names (begin), or at end of names (end).
 #' @param simplify (logical) If TRUE, simplify output to a vector of names. If FALSE,
@@ -16,7 +16,7 @@
 #' @export
 #' @seealso \code{\link[taxize]{sci2comm}}
 #' @author Scott Chamberlain (myrmecocystus@@gmail.com)
-#' @examples \dontrun{
+#' @examples \donttest{
 #' comm2sci(commnames='black bear')
 #' comm2sci(commnames='black bear', db='itis')
 #' comm2sci(commnames='annual blue grass', db='tropicos')
@@ -74,7 +74,7 @@ comm2sci <- function(commnames, db='eol', itisby='search', simplify=TRUE, ...)
       as.character(tmp$scientificname)
     } else{ tmp }
   }
-
+  
   getsci <- function(nn, ...){
     switch(db, 
            eol = eol_search_(terms=nn, simplify, ...),

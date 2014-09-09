@@ -1,7 +1,8 @@
 taxize
 =======
 
-[![Build Status](https://api.travis-ci.org/ropensci/taxize.png)](https://travis-ci.org/ropensci/taxize)
+[![Build Status](https://api.travis-ci.org/ropensci/taxize.png?branch=master)](https://travis-ci.org/ropensci/taxize)
+[![Build status](https://ci.appveyor.com/api/projects/status/6mgc02mkd8j4sq3g/branch/master)](https://ci.appveyor.com/project/sckott/taxize-175/branch/master)
 
 `taxize` allows users to search over many taxonomic data sources for species names (scientific and common) and download up and downstream taxonomic hierarchical information - among other things.
 
@@ -22,10 +23,15 @@ You need API keys for Encyclopedia of Life (EOL), the Universal Biological Index
 
 The following are URL's for API documentation, where to get API keys, and what prefix they have in function names.
 
+#### SOAP
+
+Note that a few data sources require SOAP web services, which are difficult to support. Thus, data sources that require SOAP web services are included in a full version of the package, but are only available installing from GitHub (see installation notes below). All the remaining data sources are available on the `master` branch and on CRAN. See the column _soap branch only_ in the table below.
+
 ### Currently implemented in `taxize`
 
 <table>
 <colgroup>
+<col style="text-align:left;"/>
 <col style="text-align:left;"/>
 <col style="text-align:left;"/>
 <col style="text-align:left;"/>
@@ -38,6 +44,7 @@ The following are URL's for API documentation, where to get API keys, and what p
 	<th style="text-align:left;">Function prefix</th>
 	<th style="text-align:left;">API Docs</th>
 	<th style="text-align:left;">API key</th>
+	<th style="text-align:left;"><em>soap branch only</em></th>
 </tr>
 </thead>
 
@@ -47,215 +54,207 @@ The following are URL's for API documentation, where to get API keys, and what p
 	<td style="text-align:left;"><code>eol</code></td>
 	<td style="text-align:left;"><a href="http://www.eol.org/api/">link</a></td>
 	<td style="text-align:left;"><a href="http://eol.org/users/register">link</a></td>
+	<td style="text-align:left;">false</td>
 </tr>
 <tr>
 	<td style="text-align:left;">Taxonomic Name Resolution Service</td>
 	<td style="text-align:left;"><code>tnrs</code></td>
 	<td style="text-align:left;"><a href="http://api.phylotastic.org/tnrs">link</a></td>
 	<td style="text-align:left;">none</td>
+	<td style="text-align:left;">false</td>
 </tr>
 <tr>
 	<td style="text-align:left;">Integrated Taxonomic Information Service</td>
 	<td style="text-align:left;"><code>itis</code></td>
 	<td style="text-align:left;"><a href="http://www.itis.gov/ws_description.html">link</a></td>
 	<td style="text-align:left;">none</td>
+	<td style="text-align:left;">false</td>
 </tr>
 <tr>
 	<td style="text-align:left;">Phylomatic</td>
 	<td style="text-align:left;"><code>phylomatic</code></td>
 	<td style="text-align:left;"><a href="http://www.phylodiversity.net/phylomatic/phylomatic_api.html">link</a></td>
 	<td style="text-align:left;">none</td>
+	<td style="text-align:left;">false</td>
 </tr>
 <tr>
 	<td style="text-align:left;">uBio</td>
 	<td style="text-align:left;"><code>ubio</code></td>
 	<td style="text-align:left;"><a href="http://www.ubio.org/index.php?pagename=xml_services">link</a></td>
 	<td style="text-align:left;"><a href="http://www.ubio.org/index.php?pagename=form">link</a></td>
+	<td style="text-align:left;">false</td>
 </tr>
 <tr>
 	<td style="text-align:left;">Global Names Resolver</td>
 	<td style="text-align:left;"><code>gnr</code></td>
 	<td style="text-align:left;"><a href="http://resolver.globalnames.org/api">link</a></td>
 	<td style="text-align:left;">none</td>
+	<td style="text-align:left;">false</td>
 </tr>
 <tr>
 	<td style="text-align:left;">Global Names Index</td>
 	<td style="text-align:left;"><code>gni</code></td>
 	<td style="text-align:left;"><a href="https://github.com/dimus/gni/wiki/api">link</a></td>
 	<td style="text-align:left;">none</td>
+	<td style="text-align:left;">false</td>
 </tr>
 <tr>
 	<td style="text-align:left;">IUCN Red List</td>
 	<td style="text-align:left;"><code>iucn</code></td>
 	<td style="text-align:left;"><a href="https://www.assembla.com/spaces/sis/wiki/Red_List_API?version=3">link</a></td>
 	<td style="text-align:left;">none</td>
+	<td style="text-align:left;">false</td>
 </tr>
 <tr>
 	<td style="text-align:left;">Tropicos</td>
 	<td style="text-align:left;"><code>tp</code></td>
 	<td style="text-align:left;"><a href="http://services.tropicos.org/help">link</a></td>
 	<td style="text-align:left;"><a href="http://services.tropicos.org/help?requestkey">link</a></td>
+	<td style="text-align:left;">false</td>
 </tr>
 <tr>
 	<td style="text-align:left;">Plantminer</td>
 	<td style="text-align:left;"><code>plantminer</code></td>
 	<td style="text-align:left;"><a href="http://www.plantminer.com/help">link</a></td>
 	<td style="text-align:left;"><a href="http://www.plantminer.com/help">link</a></td>
+	<td style="text-align:left;">false</td>
 </tr>
 <tr>
 	<td style="text-align:left;">Theplantlist dot org</td>
 	<td style="text-align:left;"><code>tpl</code></td>
 	<td style="text-align:left;">**</td>
 	<td style="text-align:left;">none</td>
+	<td style="text-align:left;">false</td>
 </tr>
 <tr>
 	<td style="text-align:left;">Catalogue of Life</td>
 	<td style="text-align:left;"><code>col</code></td>
 	<td style="text-align:left;"><a href="http://www.catalogueoflife.org/colwebsite/content/web-services">link</a></td>
 	<td style="text-align:left;">none</td>
+	<td style="text-align:left;">false</td>
 </tr>
 <tr>
 	<td style="text-align:left;">Global Invasive Species Database</td>
 	<td style="text-align:left;"><code>gisd</code></td>
 	<td style="text-align:left;">***</td>
 	<td style="text-align:left;">none</td>
+	<td style="text-align:left;">false</td>
 </tr>
 <tr>
 	<td style="text-align:left;">National Center for Biotechnology Information</td>
 	<td style="text-align:left;"><code>ncbi</code></td>
 	<td style="text-align:left;">none</td>
 	<td style="text-align:left;">none</td>
+	<td style="text-align:left;">false</td>
 </tr>
 <tr>
 	<td style="text-align:left;">CANADENSYS Vascan name search API</td>
 	<td style="text-align:left;"><code>vascan</code></td>
 	<td style="text-align:left;"><a href="http://data.canadensys.net/vascan/api">link</a></td>
 	<td style="text-align:left;">none</td>
+	<td style="text-align:left;">false</td>
 </tr>
 <tr>
 	<td style="text-align:left;">International Plant Names Index (IPNI)</td>
 	<td style="text-align:left;"><code>ipni</code></td>
 	<td style="text-align:left;"><a href="http://www.ipni.org/link_to_ipni.html">link</a></td>
 	<td style="text-align:left;">none</td>
+	<td style="text-align:left;">false</td>
+</tr>
+<tr>
+	<td style="text-align:left;">World Register of Marine Species (WoRMS)</td>
+	<td style="text-align:left;"><code>worms</code></td>
+	<td style="text-align:left;"><a href="http://www.marinespecies.org/aphia.php?p=webservice">link</a></td>
+	<td style="text-align:left;">none</td>
+	<td style="text-align:left;"><strong>TRUE</strong></td>
+</tr>
+<tr>
+	<td style="text-align:left;">Barcode of Life Data Systems (BOLD)</td>
+	<td style="text-align:left;"><code>bold</code></td>
+	<td style="text-align:left;"><a href="http://www.boldsystems.org/index.php/Resources">link</a></td>
+	<td style="text-align:left;">none</td>
+	<td style="text-align:left;">false</td>
+</tr>
+<tr>
+	<td style="text-align:left;">Pan-European Species directories Infrastructure (PESI)</td>
+	<td style="text-align:left;"><code>pesi</code></td>
+	<td style="text-align:left;"><a href="http://www.eu-nomen.eu/portal/webservices.php">link</a></td>
+	<td style="text-align:left;">none</td>
+	<td style="text-align:left;"><strong>TRUE</strong></td>
+</tr>
+<tr>
+	<td style="text-align:left;">Mycobank</td>
+	<td style="text-align:left;"><code>myco</code></td>
+	<td style="text-align:left;"><a href="http://www.mycobank.org/Services/Generic/Help.aspx?s=searchservice">link</a></td>
+	<td style="text-align:left;">none</td>
+	<td style="text-align:left;"><strong>TRUE</strong></td>
 </tr>
 </tbody>
 </table>
 
-<!-- |Souce|Function prefix| API Docs|API key|
-|---|---|---|---|
-|Encylopedia of Life|`eol`|[link](http://www.eol.org/api/)|[link](http://eol.org/users/register)|
-|Taxonomic Name Resolution Service|`tnrs`|[link](http://api.phylotastic.org/tnrs)|none|
-|Integrated Taxonomic Information Service|`itis`|[link](http://www.itis.gov/ws_description.html)|none|
-|Phylomatic|`phylomatic`|[link](http://www.phylodiversity.net/phylomatic/phylomatic_api.html)|none|
-|uBio|`ubio`|[link](http://www.ubio.org/index.php?pagename=xml_services)|[link](http://www.ubio.org/index.php?pagename=form)|
-|Global Names Resolver|`gnr`|[link](http://resolver.globalnames.org/api)|none|
-|Global Names Index|`gni`|[link](https://github.com/dimus/gni/wiki/api)|none|
-|IUCN Red List|`iucn`|[link](https://www.assembla.com/spaces/sis/wiki/Red_List_API?version=3)|none|
-|Tropicos|`tp`|[link](http://services.tropicos.org/help)|[link](http://services.tropicos.org/help?requestkey)|
-|Plantminer|`plantminer`|[link](http://www.plantminer.com/help)|[link](http://www.plantminer.com/help)|
-|Theplantlist dot org|`tpl`|\*\*|none|
-|Catalogue of Life|`col`|[link](http://www.catalogueoflife.org/colwebsite/content/web-services)|none|
-|Global Invasive Species Database|`gisd`|\*\*\*|none|
-|National Center for Biotechnology Information|`ncbi`|none|none|
-|CANADENSYS Vascan name search API|`vascan`|[link](http://data.canadensys.net/vascan/api)|none| -->
-
 **: There are none! We suggest using `TPL` and `TPLck` functions in the [taxonstand package](http://cran.r-project.org/web/packages/Taxonstand/index.html). We provide two functions to get bullk data: `tpl_families` and `tpl_get`.
 
 \***: There are none! The function scrapes the web directly.
-
-<!-- ### Currently implemented in `taxize`
-+ Encyclopedia of Life (EOL)
-	+ [API docs](http://www.eol.org/api/)
-	+ [Get an API key: start an account on EOL to get your API key](http://eol.org/users/register)
-	+ [API forum](https://eol.uservoice.com/forums/15429-encyclopedia-of-life-api)
-	+ function prefix: `eol`
-+ Taxonomic Name Resolution Service (TNRS)
-	+ [API docs](http://api.phylotastic.org/tnrs)
-	+ function prefix: `tnrs`
-+ Integrated Taxonomic Information Service (ITIS)
-	+ [API docs](http://www.itis.gov/ws_description.html)
-	+ function prefix: `itis`
-+ Phylomatic
-	+ [API docs](http://www.phylodiversity.net/phylomatic/phylomatic_api.html)
-	+ function prefix: `phylomatic`
-+ uBio
-	+ [API docs](http://www.ubio.org/index.php?pagename=xml_services)
-	+ [Get an API key](http://www.ubio.org/index.php?pagename=form)
-	+ function prefix: `ubio`
-+ Global Names Resolver (from EOL/GBIF)
-	+ [Use](http://resolver.globalnames.org/)
-	+ [API docs](http://resolver.globalnames.org/api)
-	+ function prefix: `gnr`
-+ Global Names Index (from EOL/GBIF)
-	+ [Use](http://gni.globalnames.org/)
-	+ [API docs](https://github.com/dimus/gni/wiki/api)
-	+ function prefix: `gni`
-+ IUCN Red List
-  	+ [API docs](https://www.assembla.com/spaces/sis/wiki/Red_List_API?version=3)
-  	+ function prefix: `iucn`
-+ Tropicos (from Missouri Botanical Garden)
-	+ [API docs](http://services.tropicos.org/help)
-	+ [Get an API key](http://services.tropicos.org/help?requestkey)
-	+ function prefix: `tp`
-+ Plantminer
-	+ [Their website](http://www.plantminer.com/)
- 	+ [API docs](http://www.plantminer.com/help)
- 	+ function prefix: `plantminer`
-+ Theplantlist dot org
-	+ [Their website](http://www.theplantlist.org/)
- 	+ API docs: There are none! We wrap functions in the [taxonstand package](http://cran.r-project.org/web/packages/Taxonstand/index.html)
- 	+ function prefix: `tpl`
-+ Catalogue of Life
- 	+ [API docs](http://www.catalogueoflife.org/colwebsite/content/web-services)
- 	+ function prefix: `col`
-+ Global Invasive Species Database
-  + [Their website](http://www.issg.org/database/welcome/)
- 	+ API docs: There are none! The function scraps the web directly.
- 	+ function prefix: `gisd` -->
 
 #### May be in taxize in the future...
 
 + [USDA Plants](http://plants.usda.gov/java/)
 + [NatureServe](http://www.natureserve.org/)
 + [Lichen Taxon dictionary](http://www.thebls.org.uk/)
-+ [MycoBank](http://www.mycobank.org/)
 
 ## Quickstart
 
+For more examples [click here](http://ropensci.org/tutorials/taxize_tutorial.html)
+
 ### Install taxize
 
-+ Stable version from CRAN:
+#### Stable version from CRAN:
 
-```coffee
+```r
 install.packages("taxize")
-library(taxize)
+library('taxize')
 ```
 
-+ Or, development version from GitHub:
+#### Development version from GitHub:
 
-```coffee
+You'll need the `devtools` package, installs from the `master` branch
+
+```r
 install.packages("devtools")
-library(devtools)
-install_github("taxize", "ropensci")
-library(taxize)
+devtools::install_github("taxize", "ropensci")
+library('taxize')
 ```
 
-### A few examples (for more [click here](http://ropensci.org/tutorials/taxize_tutorial.html))
+#### Version with SOAP data sources
 
-#### Get unique taxonomic identifier from NCBI
+You'll need the `devtools` package, and the `XMLSchema` and `SSOAP` packages. The canonical source of `XMLSchema` and `SSOAP` is [here](http://www.omegahat.org/Prerelease/), but they were cloned to this other Github location (`github.com/sckott`) to ease installation.
 
-```coffee
+```r
+install.packages("devtools")
+devtools::install_github(c("sckott/XMLSchema", "sckott/SSOAP"))
+```
+
+Install from the `soap` branch
+
+```r
+devtools::install_github("taxize", "ropensci", ref='soap')
+library('taxize')
+```
+
+### Get unique taxonomic identifier from NCBI
+
+```r
 uids <- get_uid(c("Chironomus riparius", "Chaetopteryx"))
 ```
 
-#### And retrieve classification
+### Retrieve classifications
 
-```coffee
+```r
 out <- classification(uids)
 lapply(out, head)
 ```
 
-```coffee
+```r
 [[1]]
                 name         rank
 1 cellular organisms      no rank
@@ -275,31 +274,105 @@ lapply(out, head)
 6          Bilateria      no rank
 ```
 
-### Make a phylogeny from Phylomatic
+### Get synonyms
+
+```r
+synonyms("Poa annua", db="itis")
+```
+
+```r
+$`Poa annua`
+                          name    tsn
+1      Poa annua var. aquatica 538978
+2       Poa annua var. reptans 538979
+3                  Aira pumila 785854
+4             Catabrosa pumila 787993
+5               Ochlopoa annua 791574
+6               Poa aestivalis 793946
+7                   Poa algida 793954
+8         Poa annua var. annua 802116
+9     Poa annua var. eriolepis 802117
+10 Poa annua var. rigidiuscula 802119
+11        Poa annua f. reptans 803667
+```
+
+### Get taxonomic IDs from many sources
+
+```r
+get_ids(names="Chironomus riparius", db = c('ncbi','itis','col'), verbose=FALSE)
+```
+
+```r
+$ncbi
+Chironomus riparius
+					"315576"
+attr(,"match")
+[1] "found"
+attr(,"uri")
+[1] "http://www.ncbi.nlm.nih.gov/taxonomy/315576"
+attr(,"class")
+[1] "uid"
+
+$itis
+Chironomus riparius
+					"129313"
+attr(,"match")
+[1] "found"
+attr(,"uri")
+[1] "http://www.itis.gov/servlet/SingleRpt/SingleRpt?search_topic=TSN&search_value=129313"
+attr(,"class")
+[1] "tsn"
+
+$col
+Chironomus riparius
+					"8663146"
+attr(,"class")
+[1] "colid"
+attr(,"uri")
+[1] "http://www.catalogueoflife.org/col/details/species/id/8663146"
+
+attr(,"class")
+[1] "ids"
+```
+
+
+### Get common names from scientific names
+
+```r
+sci2comm(scinames='Helianthus annuus', db='itis')
+```
+
+```r
+$`Helianthus annuus`
+[1] "common sunflower" "sunflower"        "wild sunflower"   "annual sunflower"
+```
+
+
+<!-- ### Make a phylogeny from Phylomatic
 
 #### Input the taxonomic names
 
-```coffee
+```r
 taxa <- c("Poa annua", "Phlox diffusa", "Helianthus annuus")
 ```
 
 #### Fetch the tree - the formatting of names and higher taxonmy is done within the function
 
-```coffee
+```r
 tree <- phylomatic_tree(taxa=taxa, storedtree = "R20120829")
 ```
 
 #### Plot
 
-```coffee
+```r
 plot(tree)
 ```
 
-![](http://f.cl.ly/items/0o253B453R3I0D20082E/Screen%20Shot%202013-12-27%20at%209.03.49%20AM.png)
+![phylogeny](http://f.cl.ly/items/0o253B453R3I0D20082E/Screen%20Shot%202013-12-27%20at%209.03.49%20AM.png) -->
 
 ## Meta
 
-Please report any issues or bugs](https://github.com/ropensci/taxize/issues).
+Please [report any issues or bugs](https://github.com/ropensci/taxize/issues).
 
 License: MIT
 
@@ -307,7 +380,7 @@ This package is part of the [rOpenSci](http://ropensci.org/packages) project.
 
 To cite package `taxize` in publications use:
 
-```coffee
+```r
 To cite taxize in publications use:
 
   Scott Chamberlain and Eduard Szocs (2013). taxize - taxonomic search
@@ -327,4 +400,4 @@ A BibTeX entry for LaTeX users is
 
 Get citation information for `taxize` in R doing `citation(package = 'taxize')`
 
-[![](http://ropensci.org/public_images/github_footer.png)](http://ropensci.org)
+[![ropensci](http://ropensci.org/public_images/github_footer.png)](http://ropensci.org)

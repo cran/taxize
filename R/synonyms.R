@@ -1,29 +1,34 @@
 #' Retrieve synonyms from various sources given input taxonomic names or identifiers.
-#' 
+#'
 #' @param x character; taxons to query.
-#' @param db character; database to query. either \code{itis} or \code{tropicos}.
-#' @param id character; identifiers, returned by \code{\link[taxize]{get_tsn}} 
-#'    or \code{\link[taxize]{get_tpsid}}
+#' @param db character; database to query. either \code{itis}, \code{tropicos},
+#' or \code{ubio}.
+#' @param id character; identifiers, returned by \code{\link[taxize]{get_tsn}},
+#'    \code{\link[taxize]{get_tpsid}}, or \code{\link[taxize]{get_ubioid}}
 #' @param ... Other passed arguments.
-#' 
+#'
 #' @return A named list of data.frames with the synonyms of every supplied taxa.
-#' @note If IDs are supplied directly (not from the \code{get_*} functions) you 
+#' @note If IDs are supplied directly (not from the \code{get_*} functions) you
 #'    must specify the type of ID.
-#' 
+#'
 #' @seealso \code{\link[taxize]{get_tsn}}, \code{\link[taxize]{get_tpsid}}
-#' 
+#'
 #' @export
-#' @examples \dontrun{
+#' @examples \donttest{
 #' # Plug in taxon names directly
 #' synonyms("Poa annua", db="itis")
 #' synonyms(c("Poa annua",'Pinus contorta','Puma concolor'), db="itis")
 #' synonyms("Poa annua", db="tropicos")
 #' synonyms("Pinus contorta", db="tropicos")
 #' synonyms(c("Poa annua",'Pinus contorta'), db="tropicos")
-#' 
-#' # Use methods for get_uid and get_tsn
+#' synonyms("Salmo friderici", db='ubio')
+#' synonyms(c("Salmo friderici",'Carcharodon carcharias','Puma concolor'), db="ubio")
+#'
+#' # Use methods for get_tsn, get_tpsid
 #' synonyms(get_tsn("Poa annua"))
-#' 
+#' synonyms(get_tpsid("Poa annua"))
+#' synonyms(get_ubioid("Carcharodon carcharias"))
+#'
 #' # Pass many ids from class "ids"
 #' out <- get_ids(names="Poa annua", db = c('itis','tropicos'))
 #' synonyms(out)
@@ -49,13 +54,18 @@ synonyms.default <- function(x, db = NULL, ...){
     out <- synonyms(id, ...)
     names(out) <- x
   }
+  if (db == 'ubio') {
+    id <- get_ubioid(x, searchtype = 'scientific', ...)
+    out <- synonyms(id, ...)
+    names(out) <- x
+  }
   return(out)
 }
 
 #' @method synonyms tsn
 #' @export
 #' @rdname synonyms
-synonyms.tsn <- function(id, ...) 
+synonyms.tsn <- function(id, ...)
 {
   fun <- function(x){
     if (is.na(x)) {
@@ -67,13 +77,16 @@ synonyms.tsn <- function(id, ...)
     }
     out
   }
-  return( lapply(id, fun) )
+  tmp <- lapply(id, fun)
+  names(tmp) <- id
+  return(tmp)
+#   return( lapply(id, fun) )
 }
 
 #' @method synonyms tpsid
 #' @export
 #' @rdname synonyms
-synonyms.tpsid <- function(id, ...) 
+synonyms.tpsid <- function(id, ...)
 {
   fun <- function(x){
     if (is.na(x)) {
@@ -83,14 +96,35 @@ synonyms.tpsid <- function(id, ...)
     }
     out
   }
-  return( lapply(id, fun) )
+  tmp <- lapply(id, fun)
+  names(tmp) <- id
+  return(tmp)
+#   return( lapply(id, fun) )
+}
+
+#' @method synonyms ubioid
+#' @export
+#' @rdname synonyms
+synonyms.ubioid <- function(id, ...)
+{
+  fun <- function(x){
+    if (is.na(x)) {
+      out <- NA
+    } else {
+      out <- ubio_id(namebankID = x, ...)[['synonyms']]
+    }
+    out
+  }
+  tmp <- lapply(id, fun)
+  names(tmp) <- id
+  return(tmp)
 }
 
 
 #' @method synonyms ids
 #' @export
 #' @rdname synonyms
-synonyms.ids <- function(id, ...) 
+synonyms.ids <- function(id, ...)
 {
   fun <- function(x){
     if (is.na(x)) {
@@ -104,13 +138,13 @@ synonyms.ids <- function(id, ...)
 }
 
 # x <- "Poa annua"
-# # ubioout <- ubio_search(searchName=x, sci = 1) 
+# # ubioout <- ubio_search(searchName=x, sci = 1)
 # # let's use 5408026
 # # ubiodat <- ubio_synonyms(hierarchiesID = 5408026)
-# 
+#
 # searchbyscientificname(srchkey=x) # let's use 41107
 # getsynonymnamesfromtsn(tsn = 41107)
-# 
+#
 # tpout <- tp_search(name = 'Poa annua')
 # tp_search('Pinus contorta')
 # head(tpout) # use 25509881

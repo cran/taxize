@@ -2,6 +2,8 @@
 #' particular ClassificationBankID
 #' 
 #' @import httr XML RCurl
+#' @export
+#' 
 #' @param hierarchiesID (string) - ClassificationBank identifier for the record you 
 #'    wish to receive
 #' @param childrenFlag (0 or 1) to include the taxon's children taxa
@@ -13,12 +15,12 @@
 #' @param callopts Parameters passed on to httr::GET call.
 #' @return A list of four data.frame's, one for the name itself, one for synonyms, 
 #' one for vernacular names, and one for citations.
-#' @examples \dontrun{
+#' @examples \donttest{
 #' ubio_classification(hierarchiesID = 2483153)
 #' ubio_classification(hierarchiesID = 2483153, childrenFlag=1)
 #' ubio_classification(hierarchiesID = 2483153, ancestryFlag=1)
 #' }
-#' @export
+
 ubio_classification <- function(hierarchiesID = NULL, childrenFlag = 0, 
   ancestryFlag = 0, justificationsFlag = 0, synonymsFlag = 0,
   keyCode = NULL, callopts=list())
@@ -48,7 +50,7 @@ ubio_classification <- function(hierarchiesID = NULL, childrenFlag = 0,
     }
   }
   out <- tolowerfxn(out)
-  child <- ifelsedata(tt, childrenFlag, "children", 4)
+  child <- ifelsedata(a=tt, x = childrenFlag, y = "children", z = 4)
   child <- tolowerfxn(child)
   ancestry <- ifelsedata(tt, ancestryFlag, "ancestry", 4)
   ancestry <- tolowerfxn(ancestry)

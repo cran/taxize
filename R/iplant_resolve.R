@@ -1,17 +1,16 @@
-#' iplant resolution
+#' iPlant name resolution
 #' 
-#' @import httr RJSONIO
+#' @import httr jsonlite
 #' @export
 #' @param query Vector of one or more taxonomic names. (no common names)
 #' @param retrieve Specifies whether to retrieve all matches for the names submitted. One of 'best' 
 #' (retrieves only the single best match for each name submitted) or 'all' (retrieves all matches)
 #' @param callopts Curl options passed on to \code{httr::GET}
 #' @return A data frame
-#' @examples \dontrun{
+#' @examples \donttest{
 #' iplant_resolve(query=c("Helianthus annuus", "Homo sapiens"))
 #' iplant_resolve("Helianthusss")
-#' res <- iplant_resolve("Pooa")
-#' do.call(rbind, lapply(res, data.frame, stringsAsFactors = FALSE))
+#' iplant_resolve("Pooa")
 #' 
 #' library("httr")
 #' iplant_resolve("Helianthusss", callopts=verbose())
@@ -28,6 +27,7 @@ iplant_resolve <- function(query, retrieve='all', callopts=list()){
   out <- GET(url, query=args, callopts)
   warn_for_status(out)
   tt <- content(out, as = "text")
-  res <- RJSONIO::fromJSON(tt)$items
-  return( res )
+  res <- jsonlite::fromJSON(tt, FALSE)$items
+  res2 <- do.call(rbind, lapply(res, data.frame, stringsAsFactors = FALSE))
+  return( res2 )
 }

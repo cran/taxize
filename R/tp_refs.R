@@ -1,14 +1,15 @@
 #' Return all reference records for for a taxon name with a given id.
 #'
-#' @import httr plyr
+#' @import httr plyr jsonlite
+#' @export
+#' 
 #' @param id the taxon identifier code
 #' @param key Your Tropicos API key; loads from .Rprofile.
 #' @param callopts Curl options.
 #' @return List or dataframe.
-#' @examples \dontrun{
+#' @examples \donttest{
 #' tp_refs(id = 25509881)
 #' }
-#' @export
 tp_refs <- function(id, key = NULL, callopts=list())
 {
   url = sprintf('http://services.tropicos.org/Name/%s/References', id)
@@ -18,7 +19,7 @@ tp_refs <- function(id, key = NULL, callopts=list())
   tmp <- GET(url, query = args, callopts)
   stop_for_status(tmp)
   tmp2 <- content(tmp, as = "text")
-  res <- fromJSON(tmp2)
+  res <- jsonlite::fromJSON(tmp2, FALSE)
   do.call(rbind.fill, lapply(res, function(x){
     x <- x$Reference
     names(x) <- tolower(names(x))

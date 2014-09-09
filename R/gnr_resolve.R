@@ -2,7 +2,7 @@
 #'
 #' Uses the Global Names Index, see \url{http://gni.globalnames.org/}.
 #'
-#' @import stringr plyr httr
+#' @import stringr plyr httr jsonlite
 #' @param names character; taxonomic names to be resolved.
 #' @param data_source_ids character; IDs to specify what data source
 #'     is searched. See \code{\link[taxize]{gnr_datasources}}.
@@ -14,8 +14,8 @@
 #'    all supplied names from matches in data sources that have classification
 #'    tree paths. Names out of determined context are penalized during score
 #'    calculation.
-#' @param stripauthority logical; If \code{TRUE}, gives back names with
-#'    taxonomic authorities. If \code{FALSE}, strips author names.
+#' @param stripauthority logical; If FALSE (default), gives back names with
+#'    taxonomic authorities. If TRUE, strips author names.
 #' @param highestscore logical; Return those names with the highest score for
 #'    each searched name?
 #' @param best_match_only (logical) If TRUE, best match only returned.
@@ -29,7 +29,7 @@
 #' @seealso \code{\link[taxize]{gnr_datasources}}
 #' @export
 #' @keywords resolve names taxonomy
-#' @examples \dontrun{
+#' @examples \donttest{
 #' gnr_resolve(names = c("Helianthus annuus", "Homo sapiens"))
 #' gnr_resolve(names = c("Asteraceae", "Plantae"))
 #'
@@ -49,6 +49,10 @@
 #' 
 #' # Preferred data source
 #' gnr_resolve(names = "Helianthus annuus", preferred_data_sources = c(3,4))
+#' 
+#' # Strip taxonomic authorities - default is stripauthority=FALSE
+#' head(gnr_resolve(names = "Helianthus annuus")$results)
+#' head(gnr_resolve(names = "Helianthus annuus", stripauthority=TRUE)$results)
 #' }
 
 gnr_resolve <- function(names, data_source_ids = NULL, resolve_once = FALSE,
@@ -76,7 +80,7 @@ gnr_resolve <- function(names, data_source_ids = NULL, resolve_once = FALSE,
     tmp <- GET(url, query=args, callopts)
     warn_for_status(tmp)
     tmp2 <- content(tmp, as = "text")
-    dat <- RJSONIO::fromJSON(tmp2, simplifyWithNames = FALSE)$data
+    dat <- jsonlite::fromJSON(tmp2, FALSE)$data
   } else
     if(http=='post'){
       args <- args[!names(args) %in% "names"]

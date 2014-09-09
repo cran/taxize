@@ -3,7 +3,7 @@
 #' Uses the Global Names Index, see \url{http://gni.globalnames.org/} for 
 #' information. 
 #' 
-#' @import stringr RJSONIO RCurl plyr
+#' @import stringr jsonlite RCurl plyr
 #' @param id Name id.
 #' @param all_records  If all_records is 1, GNI returns all records from all 
 #' 		repositories for the name string (takes 0, or 1, default is 1).
@@ -12,7 +12,7 @@
 #' @return Data.frame of results.
 #' @seealso \code{\link{gnr_datasources}}, \code{\link{gni_search}}.
 #' @keywords globalnamesindex names taxonomy
-#' @examples \dontrun{
+#' @examples \donttest{
 #' gni_details(id = 17802847)
 #' library("plyr")
 #' ldply(list(1265133, 17802847), gni_details)
@@ -23,7 +23,9 @@ gni_details <- function(id = NULL, all_records = NULL,
 {
 	url2 <- paste(url, id, ".json", sep="")
 	query <- compact(list(all_records = all_records))
-	out <- content( GET(url2, query = query), "parsed")
+	tt <- GET(url2, query = query)
+  res <- content(tt, as = "text")
+  out <- jsonlite::fromJSON(res, FALSE)
 	checknull <- function(x) {if(is.null(x)){"none"} else{x}}
 	outdf <- 
 		ldply(out$data, function(x) data.frame(t(c(checknull(x$records[[1]]$created_at),
