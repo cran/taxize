@@ -5,7 +5,7 @@
 #'
 #' @param x An API key, defaults to NULL.
 #' @param service The API data provider, used to match to default guest key.
-#' @examples \donttest{
+#' @examples \dontrun{
 #' getkey(service="tropicos")
 #' getkey(service="eol")
 #' }
@@ -119,25 +119,25 @@ gbif_name_usage <- function(key=NULL, name=NULL, data='all', language=NULL, data
       stop('You must specify a key if data does not equal "all"')
 
     if(x == 'all' && is.null(key)){
-      url <- 'http://api.gbif.org/v0.9/species'
+      url <- 'http://api.gbif.org/v1/species'
     } else
     {
       if(x=='all' && !is.null(key)){
-        url <- sprintf('http://api.gbif.org/v0.9/species/%s', key)
+        url <- sprintf('http://api.gbif.org/v1/species/%s', key)
       } else
         if(x %in% c('verbatim', 'name', 'parents', 'children',
                     'related', 'synonyms', 'descriptions',
                     'distributions', 'images', 'references', 'species_profiles',
                     'vernacular_names', 'type_specimens')){
-          url <- sprintf('http://api.gbif.org/v0.9/species/%s/%s', key, x)
+          url <- sprintf('http://api.gbif.org/v1/species/%s/%s', key, x)
         } else
           if(x == 'root'){
-            url <- sprintf('http://api.gbif.org/v0.9/species/root/%s/%s', uuid, shortname)
+            url <- sprintf('http://api.gbif.org/v1/species/root/%s/%s', uuid, shortname)
           }
     }
     tt <- GET(url, query=args, callopts)
     stop_for_status(tt)
-    assert_that(tt$headers$`content-type`=='application/json')
+    stopifnot(tt$headers$`content-type`=='application/json')
     res <- content(tt, as = 'text', encoding = "UTF-8")
     jsonlite::fromJSON(res, FALSE)
   }
@@ -147,4 +147,78 @@ gbif_name_usage <- function(key=NULL, name=NULL, data='all', language=NULL, data
   { out <- lapply(data, getdata) }
 
   out
+}
+
+taxize_compact <- function (l) Filter(Negate(is.null), l)
+
+pluck <- function(x, name, type) {
+  if (missing(type)) {
+    lapply(x, "[[", name)
+  } else {
+    vapply(x, "[[", name, FUN.VALUE = type)
+  }
+}
+
+collapse <- function(x, fxn, class, match=TRUE, ...){
+  tmp <- lapply(x, fxn, ...)
+  if(match){
+    structure(sapply(tmp, unclass), class=class,
+              match=sapply(tmp, attr, which="match"),
+              uri=sapply(tmp, attr, which="uri"))
+  } else {
+    structure(sapply(tmp, unclass), class=class, uri=sapply(tmp, attr, which="uri"))
+  }
+}
+
+make_generic <- function(x, uu, clz, check=TRUE){
+  if(check){
+    if( evalfxn(clz)(x) ) toid(x, uu, clz) else structure(NA, class=clz, match="not found", uri=NA)
+  } else {
+    toid(x, uu, clz)
+  }
+}
+
+evalfxn <- function(x) eval(parse(text = paste0("check", "_", x)))
+
+add_uri <- function(ids, url){
+  if( !all(is.na(ids)) ){
+    attr(ids, 'uri') <- sapply(ids, function(x){
+      if(!is.na(x)) sprintf(url, x) else NA
+    }, USE.NAMES = FALSE)
+  }
+  ids
+}
+
+check_rows <- function(x){
+  stopifnot(is.numeric(x) || any(is.na(x)))
+  x
+  # if(length(x) == 1 && !any(is.na(x))) 1:x else x
+}
+
+sub_rows <- function(x, rows){
+  rows <- check_rows(rows)
+  if( any(is.na(rows)) ){
+    x
+  } else {
+    if(NROW(x) == 0) x else x[rows,]
+  }
+}
+
+sub_vector <- function(x, rows){
+  rows <- check_rows(rows)
+  if( any(is.na(rows)) ) x else x[rows]
+}
+
+nstop <- function(x, arg='db') if (is.null(x)) stop(sprintf("Must specify %s!", arg), call. = FALSE)
+
+colClasses <- function(d, colClasses) {
+  colClasses <- rep(colClasses, len=length(d))
+  d[] <- lapply(seq_along(d), function(i) switch(colClasses[i],
+                                                 numeric=as.numeric(d[[i]]),
+                                                 character=as.character(d[[i]]),
+                                                 Date=as.Date(d[[i]], origin='1970-01-01'),
+                                                 POSIXct=as.POSIXct(d[[i]], origin='1970-01-01'),
+                                                 factor=as.factor(d[[i]]),
+                                                 as(d[[i]], colClasses[i]) ))
+  d
 }

@@ -1,23 +1,25 @@
 #' Retrieve immediate children taxa for a given taxon name or ID.
 #'
-#' This function is different from \code{downstream()} in that it only collects immediate
-#' taxonomic children, while \code{downstream()} collects taxonomic names down to a specified
+#' This function is different from \code{\link{downstream}} in that it only collects immediate
+#' taxonomic children, while \code{\link{downstream}} collects taxonomic names down to a specified
 #' taxonomic rank, e.g., getting all species in a family.
 #'
 #' @export
-#' 
+#'
 #' @param x character; taxons to query.
-#' @param db character; database to query. One or more of \code{itis}, or \code{col}.
-#' @param ... Further args passed on to \code{col_children}, or
-#' \code{gethierarchydownfromtsn}. See those functions for what parameters can be passed on.
+#' @param db character; database to query. One or more of \code{itis}, \code{col}, or \code{ncbi}.
+#' @param ... Further args passed on to \code{\link{col_children}},
+#'   \code{\link{gethierarchydownfromtsn}}, or \code{\link{ncbi_children}}.
+#'   See those functions for what parameters can be passed on.
 #'
 #' @return A named list of data.frames with the children names of every supplied taxa.
 #' You get an NA if there was no match in the database.
 #'
-#' @examples \donttest{
+#' @examples \dontrun{
 #' # Plug in taxon names
 #' children("Salmo", db = 'col')
 #' children("Salmo", db = 'itis')
+#' children("Salmo", db = 'ncbi')
 #'
 #' # Plug in IDs
 #' (id <- get_colid("Apis"))
@@ -51,25 +53,37 @@ children <- function(...){
 #' @rdname children
 children.default <- function(x, db = NULL, ...)
 {
-  if (is.null(db))
-    stop("Must specify db value!")
-  
-  if (db == 'itis') {
-    id <- get_tsn(x, ...)
-    out <- children(id, ...)
-    names(out) <- x
-  }
-  if (db == 'col') {
-    id <- get_colid(x, ...)
-    out <- children(id, ...)
-    names(out) <- x
-  }
-#   if (db == 'ubio') {
-#     id <- get_ubioid(x, ...)
-#     out <- children(id, ...)
-#     names(out) <- x
-#   }
-  return(out)
+  nstop(db)
+  switch(db,
+         itis = {
+           id <- get_tsn(x, ...)
+           setNames(children(id, ...), x)
+         },
+
+         col = {
+           id <- get_colid(x, ...)
+           setNames(children(id, ...), x)
+         },
+
+         ncbi = {
+           if (all(grepl("^[[:digit:]]*$", x))) {
+             id <- x
+             class(id) <- "uid"
+             setNames(children(id, ...), x)
+           } else {
+             out <- ncbi_children(name = x, ...)
+             structure(out, class='children', db='ncbi', .Names=x)
+           }
+         },
+
+#        ubio = {
+#          id <- get_ubioid(x, ...)
+#          out <- children(id, ...)
+#          names(out) <- x
+#        },
+
+         stop("the provided db value was not recognised", call. = FALSE)
+  )
 }
 
 #' @method children tsn
@@ -146,5 +160,16 @@ children.ids <- function(x, db = NULL, ...)
   }
   out <- lapply(x, fun)
   class(out) <- 'children_ids'
+  return(out)
+}
+
+#' @method children uid
+#' @export
+#' @rdname children
+children.uid <- function(x, db = NULL, ...)
+{
+  out <- ncbi_children(id = x, ...)
+  class(out) <- 'children'
+  attr(out, 'db') <- 'ncbi'
   return(out)
 }

@@ -10,6 +10,14 @@
 #' If TRUE and more than one TSN is found for teh species, the user is asked for
 #' input. If FALSE NA is returned for multiple matches.
 #' @param verbose logical; should progress be printed?
+#' @param rows numeric; Any number from 1 to inifity. If the default NA, all rows are considered.
+#' Note that this function still only gives back a ubioid class object with one to many identifiers.
+#' See \code{\link[taxize]{get_ubioid_}} to get back all, or a subset, of the raw data that you are
+#' presented during the ask process.
+#' @param x Input to \code{\link{as.ubioid}}
+#' @param ... Ignored
+#' @param check logical; Check if ID matches any existing on the DB, only used in
+#' \code{\link{as.ubioid}}
 #'
 #' @return A vector of uBio ids. If a taxon is not found NA is given. If more than one uBio
 #'    id is found the function asks for user input (if ask = TRUE), otherwise returns NA.
@@ -19,12 +27,18 @@
 #' @seealso \code{\link[taxize]{get_uid}}, \code{\link[taxize]{ubio_search}}
 #'
 #' @export
-#' @examples \donttest{
+#' @examples \dontrun{
 #' get_ubioid(searchterm = "Astragalus aduncus")
 #' get_ubioid(c("Salvelinus fontinalis","Pomacentrus brachialis"))
 #' splist <- c("Salvelinus fontinalis", 'Pomacentrus brachialis', "Leptocottus armatus",
 #' 		"Clinocottus recalvus", "Trachurus trachurus", "Harengula clupeola")
 #' get_ubioid(splist, verbose=FALSE)
+#'
+#' # specify rows to limit choices available
+#' get_ubioid('Astragalus aduncus')
+#' get_ubioid('Astragalus aduncus', rows=1)
+#' get_ubioid('Astragalus aduncus', rows=8)
+#' get_ubioid('Astragalus aduncus', rows=1:2)
 #'
 #' # When not found
 #' get_ubioid(searchterm="howdy")
@@ -33,17 +47,42 @@
 #' # Using common names
 #' get_ubioid(searchterm="great white shark", searchtype="common")
 #' get_ubioid(searchterm=c("bull shark", "whale shark"), searchtype="common")
+#'
+#' # Convert a ubioid without class information to a ubioid class
+#' as.ubioid(get_ubioid("Astragalus aduncus")) # already a ubioid, returns the same
+#' as.ubioid(get_ubioid(c("Chironomus riparius","Pinus contorta"))) # same
+#' as.ubioid(2843601) # numeric
+#' as.ubioid(c(2843601,3339,9696)) # numeric vector, length > 1
+#' as.ubioid("2843601") # character
+#' as.ubioid(c("2843601","3339","9696")) # character vector, length > 1
+#' as.ubioid(list("2843601","3339","9696")) # list, either numeric or character
+#' ## dont check, much faster
+#' as.ubioid("2843601", check=FALSE)
+#' as.ubioid(2843601, check=FALSE)
+#' as.ubioid(c("2843601","3339","9696"), check=FALSE)
+#' as.ubioid(list("2843601","3339","9696"), check=FALSE)
+#'
+#' (out <- as.ubioid(c(2843601,3339,9696)))
+#' data.frame(out)
+#' as.ubioid( data.frame(out) )
+#'
+#' # Get all data back
+#' get_ubioid_("Zootoca vivipara")
+#' get_ubioid_("Zootoca vivipara", rows=2)
+#' get_ubioid_("Zootoca vivipara", rows=1:2)
+#' get_ubioid_(c("asdfadfasd","Zootoca vivipara"), rows=1:5)
 #' }
 
-get_ubioid <- function(searchterm, searchtype = "scientific", ask = TRUE, verbose = TRUE)
+get_ubioid <- function(searchterm, searchtype = "scientific", ask = TRUE, verbose = TRUE, rows = NA)
 {
-  fun <- function(x, searchtype, ask, verbose)
+  fun <- function(x, searchtype, ask, verbose, rows)
   {
     mssg(verbose, "\nRetrieving data for taxon '", x, "'\n")
 
     searchtype <- match.arg(searchtype, c("scientific","common"))
     if(searchtype=='scientific'){ sci <- 1; vern <- 0 } else { sci <- 0; vern <- 1; searchtype='vernacular' }
     ubio_df <-  tryCatch(ubio_search(searchName = x, sci = sci, vern = vern)[[searchtype]], error=function(e) e)
+    ubio_df <- sub_rows(ubio_df, rows)
 
     if(is(ubio_df, "simpleError")){
       ubioid <- NA
@@ -97,8 +136,10 @@ get_ubioid <- function(searchterm, searchtype = "scientific", ask = TRUE, verbos
             Enter rownumber of taxon (other inputs will return 'NA'):\n") # prompt
           take <- scan(n = 1, quiet = TRUE, what = 'raw')
 
-          if(length(take) == 0)
+          if(length(take) == 0){
             take <- 'notake'
+            att <- 'nothing chosen'
+          }
           if(take %in% seq_len(nrow(ubio_df))){
             take <- as.numeric(take)
             message("Input accepted, took taxon '", as.character(ubio_df$target[take]), "'.\n")
@@ -111,7 +152,7 @@ get_ubioid <- function(searchterm, searchtype = "scientific", ask = TRUE, verbos
           }
         } else {
           ubioid <- NA
-          att <- 'multi match'
+          att <- 'NA due to ask=FALSE'
         }
       }
 
@@ -119,14 +160,71 @@ get_ubioid <- function(searchterm, searchtype = "scientific", ask = TRUE, verbos
     return(data.frame(ubioid = as.character(ubioid), att = att, stringsAsFactors=FALSE))
   }
   searchterm <- as.character(searchterm)
-  outd <- ldply(searchterm, fun, searchtype, ask, verbose)
-  out <- outd$ubioid
-  attr(out, 'match') <- outd$att
-  if( !all(is.na(out)) ){
-    urlmake <- na.omit(out)
-    attr(out, 'uri') <-
-      sprintf('http://www.ubio.org/browser/details.php?namebankID=%s', urlmake)
+  outd <- ldply(searchterm, fun, searchtype, ask, verbose, rows)
+  out <- structure(outd$ubioid, class="ubioid", match=outd$att)
+  add_uri(out, 'http://www.ubio.org/browser/details.php?namebankID=%s')
+}
+
+
+#' @export
+#' @rdname get_ubioid
+as.ubioid <- function(x, check=TRUE) UseMethod("as.ubioid")
+
+#' @export
+#' @rdname get_ubioid
+as.ubioid.ubioid <- function(x, check=TRUE) x
+
+#' @export
+#' @rdname get_ubioid
+as.ubioid.character <- function(x, check=TRUE) if(length(x) == 1) make_ubioid(x, check) else collapse(x, make_ubioid, "ubioid", check=check)
+
+#' @export
+#' @rdname get_ubioid
+as.ubioid.list <- function(x, check=TRUE) if(length(x) == 1) make_ubioid(x, check) else collapse(x, make_ubioid, "ubioid", check=check)
+
+#' @export
+#' @rdname get_ubioid
+as.ubioid.numeric <- function(x, check=TRUE) as.ubioid(as.character(x), check)
+
+#' @export
+#' @rdname get_ubioid
+as.ubioid.data.frame <- function(x, check=TRUE) structure(x$ids, class="ubioid", match=x$match, uri=x$uri)
+
+#' @export
+#' @rdname get_ubioid
+as.data.frame.ubioid <- function(x, ...){
+  data.frame(ids = as.character(unclass(x)),
+             class = "ubioid",
+             match = attr(x, "match"),
+             uri = attr(x, "uri"),
+             stringsAsFactors = FALSE)
+}
+
+make_ubioid <- function(x, check=TRUE) make_generic(x, 'http://www.ubio.org/browser/details.php?namebankID=%s', "ubioid", check)
+
+check_ubioid <- function(x){
+  res <- ubio_id(x)
+  is(res$data, "data.frame")
+}
+
+#' @export
+#' @rdname get_ubioid
+get_ubioid_ <- function(searchterm, verbose = TRUE, searchtype = "scientific", rows = NA){
+  setNames(lapply(searchterm, get_ubioid_help, verbose = verbose, searchtype=searchtype, rows=rows), searchterm)
+}
+
+get_ubioid_help <- function(searchterm, verbose, searchtype, rows){
+  mssg(verbose, "\nRetrieving data for taxon '", searchterm, "'\n")
+  searchtype <- match.arg(searchtype, c("scientific","common"))
+  if(searchtype=='scientific'){ sci <- 1; vern <- 0 } else { sci <- 0; vern <- 1; searchtype='vernacular' }
+  ubio_df <-  tryCatch(ubio_search(searchName = searchterm, sci = sci, vern = vern)[[searchtype]], error=function(e) e)
+  if(is(ubio_df, "simpleError")){
+    NULL
+  } else {
+    ubio_df <- switch(searchtype,
+                      scientific=ubio_df[,c("namebankid","namestring","packagename","rankname")],
+                      vernacular=ubio_df[,c("namebankid","namestring","packagename")])
+    ubio_df <- rename(ubio_df, c('packagename' = 'family'))
+    sub_rows(ubio_df, rows)
   }
-  class(out) <- "ubioid"
-  return(out)
 }

@@ -2,19 +2,21 @@
 #'
 #' @param x character; taxons to query.
 #' @param db character; database to query. either \code{itis}, \code{tropicos},
-#' or \code{ubio}.
+#' \code{ubio}, or \code{nbn}.
 #' @param id character; identifiers, returned by \code{\link[taxize]{get_tsn}},
-#'    \code{\link[taxize]{get_tpsid}}, or \code{\link[taxize]{get_ubioid}}
+#'    \code{\link[taxize]{get_tpsid}}, \code{\link[taxize]{get_ubioid}}, or
+#'    \code{\link[taxize]{get_nbnid}}
 #' @param ... Other passed arguments.
 #'
 #' @return A named list of data.frames with the synonyms of every supplied taxa.
 #' @note If IDs are supplied directly (not from the \code{get_*} functions) you
 #'    must specify the type of ID.
 #'
-#' @seealso \code{\link[taxize]{get_tsn}}, \code{\link[taxize]{get_tpsid}}
+#' @seealso \code{\link[taxize]{get_tsn}}, \code{\link[taxize]{get_tpsid}},
+#' \code{\link[taxize]{get_ubioid}}, \code{\link[taxize]{get_nbnid}}
 #'
 #' @export
-#' @examples \donttest{
+#' @examples \dontrun{
 #' # Plug in taxon names directly
 #' synonyms("Poa annua", db="itis")
 #' synonyms(c("Poa annua",'Pinus contorta','Puma concolor'), db="itis")
@@ -23,11 +25,13 @@
 #' synonyms(c("Poa annua",'Pinus contorta'), db="tropicos")
 #' synonyms("Salmo friderici", db='ubio')
 #' synonyms(c("Salmo friderici",'Carcharodon carcharias','Puma concolor'), db="ubio")
+#' synonyms("Pinus sylvestris", db='nbn')
 #'
-#' # Use methods for get_tsn, get_tpsid
+#' # Use get_* methods
 #' synonyms(get_tsn("Poa annua"))
 #' synonyms(get_tpsid("Poa annua"))
 #' synonyms(get_ubioid("Carcharodon carcharias"))
+#' synonyms(get_nbnid("Carcharodon carcharias"))
 #'
 #' # Pass many ids from class "ids"
 #' out <- get_ids(names="Poa annua", db = c('itis','tropicos'))
@@ -38,90 +42,89 @@ synonyms <- function(...){
   UseMethod("synonyms")
 }
 
-#' @method synonyms default
 #' @export
 #' @rdname synonyms
 synonyms.default <- function(x, db = NULL, ...){
-  if (is.null(db))
-    stop("Must specify Identifier!")
-  if (db == 'itis') {
-    id <- get_tsn(x, ...)
-    out <- synonyms(id, ...)
-    names(out) <- x
-  }
-  if (db == 'tropicos') {
-    id <- get_tpsid(x, ...)
-    out <- synonyms(id, ...)
-    names(out) <- x
-  }
-  if (db == 'ubio') {
-    id <- get_ubioid(x, searchtype = 'scientific', ...)
-    out <- synonyms(id, ...)
-    names(out) <- x
-  }
-  return(out)
+  nstop(db)
+  switch(db,
+         itis = {
+           id <- get_tsn(x, ...)
+           setNames(synonyms(id, ...), x)
+         },
+         tropicos = {
+           id <- get_tpsid(x, ...)
+           setNames(synonyms(id, ...), x)
+         },
+         ubio = {
+           id <- get_ubioid(x, searchtype = 'scientific', ...)
+           setNames(synonyms(id, ...), x)
+         },
+         nbn = {
+           id <- get_nbnid(x, ...)
+           setNames(synonyms(id, ...), x)
+         },
+         stop("the provided db value was not recognised", call. = FALSE)
+  )
 }
 
-#' @method synonyms tsn
 #' @export
 #' @rdname synonyms
 synonyms.tsn <- function(id, ...)
 {
   fun <- function(x){
-    if (is.na(x)) {
-      out <- NA
-    } else {
+    if (is.na(x)) { NA } else {
       out <- getsynonymnamesfromtsn(x, ...)
-      if(as.character(out[1,1]) == 'nomatch')
-        names(out) <- c('name','tsn')
+      if(as.character(out[1,1]) == 'nomatch') names(out) <- c('name','tsn')
+      out
     }
-    out
   }
   tmp <- lapply(id, fun)
   names(tmp) <- id
   return(tmp)
-#   return( lapply(id, fun) )
 }
 
-#' @method synonyms tpsid
 #' @export
 #' @rdname synonyms
 synonyms.tpsid <- function(id, ...)
 {
   fun <- function(x){
-    if (is.na(x)) {
-      out <- NA
-    } else {
-      out <- tp_synonyms(x, ...)$synonyms
+    if (is.na(x)) { NA } else {
+      tp_synonyms(x, ...)$synonyms
     }
-    out
   }
   tmp <- lapply(id, fun)
   names(tmp) <- id
   return(tmp)
-#   return( lapply(id, fun) )
 }
 
-#' @method synonyms ubioid
 #' @export
 #' @rdname synonyms
 synonyms.ubioid <- function(id, ...)
 {
   fun <- function(x){
-    if (is.na(x)) {
-      out <- NA
-    } else {
-      out <- ubio_id(namebankID = x, ...)[['synonyms']]
+    if (is.na(x)) { NA  } else {
+      ubio_id(namebankID = x, ...)[['synonyms']]
     }
-    out
   }
   tmp <- lapply(id, fun)
   names(tmp) <- id
   return(tmp)
 }
 
+#' @export
+#' @rdname synonyms
+synonyms.nbnid <- function(id, ...)
+{
+  fun <- function(x){
+    if (is.na(x)) { NA } else {
+      nbn_synonyms(x, ...)
+    }
+  }
+  tmp <- lapply(id, fun)
+  names(tmp) <- id
+  return(tmp)
+}
 
-#' @method synonyms ids
 #' @export
 #' @rdname synonyms
 synonyms.ids <- function(id, ...)
@@ -136,17 +139,3 @@ synonyms.ids <- function(id, ...)
   }
   return( lapply(id, fun) )
 }
-
-# x <- "Poa annua"
-# # ubioout <- ubio_search(searchName=x, sci = 1)
-# # let's use 5408026
-# # ubiodat <- ubio_synonyms(hierarchiesID = 5408026)
-#
-# searchbyscientificname(srchkey=x) # let's use 41107
-# getsynonymnamesfromtsn(tsn = 41107)
-#
-# tpout <- tp_search(name = 'Poa annua')
-# tp_search('Pinus contorta')
-# head(tpout) # use 25509881
-# tp_synonyms(id = 25509881)
-# tp_synonyms(id = 24900183)

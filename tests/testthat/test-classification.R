@@ -1,6 +1,26 @@
 # tests for classification fxn in taxize
 context("classification")
 
+# is_up <- function(seconds=3, which="itis"){
+#   itisfxn <- function(x) tryCatch(itis_ping(config=timeout(x)), error=function(e) e)
+#   eolfxn <- function(x) tryCatch(eol_ping(config=timeout(x)), error=function(e) e)
+#   switch(which,
+#          itis = !is(itisfxn(seconds), "OPERATION_TIMEDOUT"),
+#          eol = !is(eolfxn(seconds), "OPERATION_TIMEDOUT")
+#   )
+# }
+#
+# is_up()
+# is_up(which = "eol")
+# is_up(which = "col")
+# is_up(which = "ncbi")
+#
+# skip_if <- function(x){
+#   if(!res) skip("API down")
+#
+#   expect_is(classification(c("Chironomus riparius", "aaa vva"), db = 'itis', verbose=FALSE), "classification")
+# }
+
 uids <- get_uid(c("Chironomus riparius", "aaa vva"), verbose=FALSE)
 tsns <- get_tsn(c("Chironomus riparius", "aaa vva"), verbose=FALSE)
 # eolids <- get_tsn(c("Chironomus riparius", "aaa vva"), verbose=FALSE)
@@ -14,12 +34,11 @@ names(clas_tsns) <- NULL
 # clas_colids <- classification(colids)
 # clas_tpids <- classification(tpsids, verbose=FALSE)
 
-clas_ncbi <- classification(c("Chironomus riparius", "aaa vva"), db = 'ncbi', 
+clas_ncbi <- classification(c("Chironomus riparius", "aaa vva"), db = 'ncbi',
                             verbose=FALSE)
 names(clas_ncbi) <- NULL
 
-clas_itis <- classification(c("Chironomus riparius", "aaa vva"), db = 'itis', 
-                            verbose=FALSE)
+clas_itis <- classification(c("Chironomus riparius", "aaa vva"), db = 'itis', verbose=FALSE)
 names(clas_itis) <- NULL
 
 # clas_eol <- classification(c("Helianthus petiolaris Nutt.", "aaa vva"), db = 'eol')
@@ -46,19 +65,19 @@ test_that("classification returns the correct class", {
 	expect_that(clas_ncbi, is_a("classification"))
 	expect_that(clas_ncbi[[1]], is_a("data.frame"))
 	expect_that(length(clas_ncbi), equals(2))
-	
+
   expect_that(clas_itis, is_a("classification"))
 	expect_that(clas_itis[[1]], is_a("data.frame"))
   expect_that(length(clas_itis), equals(2))
-  
+
 # 	expect_that(clas_eol, is_a("list"))
 # 	expect_that(clas_eol[[1]], is_a("data.frame"))
 # 	expect_that(length(clas_eol), equals(2))
-  
+
 # 	expect_that(clas_col, is_a("list"))
 # 	expect_that(clas_col[[1]], is_a("data.frame"))
 # 	expect_that(length(clas_col), equals(2))
-  
+
 # 	expect_that(clas_tp, is_a("classification"))
 # 	expect_that(clas_tp[[1]], is_a("data.frame"))
 # 	expect_that(length(clas_tp), equals(2))
@@ -69,32 +88,32 @@ test_that("check S3-methods for tsn and uid class", {
   expect_equal(clas_tsns, clas_itis)
 #   expect_identical(clas_eolids, clas_ncbi)
   #### FIX THESE TWO, SHOULD BE MATCHING
-  expect_identical(clas_colids, clas_col) 
+  expect_identical(clas_colids, clas_col)
 #   expect_identical(clas_tpids, clas_tp)
 })
 
 # test_that("rbind works correctly", {
-# 
+#
 # })
-# 
+#
 # test_that("cbind works correctly", {
-# 	
+#
 # })
 
 df <- theplantlist[sample(1:nrow(theplantlist), 50), ]
 nn <- apply(df, 1, function(x) paste(x["genus"], x["sp"], collapse = " "))
 
 test_that("works on a variety of names", {
-	expect_that(classification(nn[1], db = "ncbi"), is_a("classification"))
-	expect_that(classification(nn[2], db = "ncbi"), is_a("classification"))
-	expect_that(classification(nn[3], db = "ncbi"), is_a("classification"))
-	expect_that(classification(nn[4], db = "ncbi"), is_a("classification"))
-	expect_that(classification(nn[5], db = "ncbi"), is_a("classification"))
-	expect_that(classification(nn[6], db = "ncbi"), is_a("classification"))
-	expect_that(classification(nn[7], db = "ncbi"), is_a("classification"))
-	expect_that(classification(nn[8], db = "ncbi"), is_a("classification"))
-	expect_that(classification(nn[9], db = "ncbi"), is_a("classification"))
-	expect_that(classification(nn[10], db = "ncbi"), is_a("classification"))
-	expect_that(classification(nn[11], db = "ncbi"), is_a("classification"))
-	expect_that(classification(nn[12], db = "ncbi"), is_a("classification"))
+	expect_that(classification(nn[1], db = "ncbi", verbose=FALSE), is_a("classification"))
+	expect_that(classification(nn[2], db = "ncbi", verbose=FALSE), is_a("classification"))
+	expect_that(classification(nn[3], db = "ncbi", verbose=FALSE), is_a("classification"))
+	expect_that(classification(nn[4], db = "ncbi", verbose=FALSE), is_a("classification"))
+	expect_that(classification(nn[5], db = "ncbi", verbose=FALSE), is_a("classification"))
+	expect_that(classification(nn[6], db = "ncbi", verbose=FALSE), is_a("classification"))
+	expect_that(classification(nn[7], db = "ncbi", verbose=FALSE), is_a("classification"))
+	expect_that(classification(nn[8], db = "ncbi", verbose=FALSE), is_a("classification"))
+	expect_that(classification(nn[9], db = "ncbi", verbose=FALSE), is_a("classification"))
+	expect_that(classification(nn[10], db = "ncbi", verbose=FALSE), is_a("classification"))
+	expect_that(classification(nn[11], db = "ncbi", verbose=FALSE), is_a("classification"))
+	expect_that(classification(nn[12], db = "ncbi", verbose=FALSE), is_a("classification"))
 })

@@ -1,10 +1,10 @@
 #' Search Catalogue of Life for taxonomic classifications.
 #'
-#' THIS FUNCTION IS DEPRECATED.
+#' THIS FUNCTION IS DEFUNCT.
 #'
 #' @import RCurl XML plyr
 #' @param name The string to search for. Only exact matches found the name given
-#'   	will be returned, unless one or wildcards are included in the search
+#'     will be returned, unless one or wildcards are included in the search
 #'   	string. An * (asterisk) character denotes a wildcard; a % (percentage)
 #'    character may also be used. The name must be at least 3 characters long,
 #'    not counting wildcard characters.
@@ -26,9 +26,9 @@
 #' 		and start) are optional.
 #' @return A list of data.frame's.
 #' @export
-#' @rdname col_classification-deprecated
+#' @rdname col_classification-defunct
 #' @keywords internal
-#' @examples \donttest{
+#' @examples \dontrun{
 #' # A basic example
 #' col_classification(name="Apis")
 #'
@@ -50,7 +50,7 @@
 #' }
 col_classification <- function(name=NULL, id=NULL, format=NULL, start=NULL, checklist=NULL)
 {
-  .Deprecated(msg="This function is deprecated. See classification().")
+  .Defunct(msg="This function is defunct. See classification().")
 
   # url <- "http://www.catalogueoflife.org/col/webservice"
   # func <- function(x, y) {
@@ -83,90 +83,4 @@ col_classification <- function(name=NULL, id=NULL, format=NULL, start=NULL, chec
   #   names(temp) <- id
   # }
   # return(temp)
-}
-
-
-#' Retrieve the taxonomic hierarchy from given EOL taxonID.
-#'
-#' THIS FUNCTION IS DEPRECATED.
-#'
-#' @import httr plyr
-#' @param taxonid the EOL page identifier (character)
-#' @param common_names Return common names or not (defaults to returning them,
-#'   	give commonnames=0 if not)
-#' @param synonyms Return synonyms or not (defaults to returning them,
-#' 		give synonyms=0 if not)
-#' @param key Your EOL API key; loads from .Rprofile.
-#' @param callopts Further args passed on to GET.
-#' @details It's possible to return JSON or XML with the EOL API. However,
-#' 		this function only returns JSON for now.
-#' @return List or dataframe of results.
-#' @export
-#' @rdname eol_hierarchy-deprecated
-#' @keywords internal
-#' @examples \donttest{
-#' # Using get_eolid
-#' eol_hierarchy(get_eolid(sciname='Poa annua'))
-#' }
-eol_hierarchy <- function(taxonid, common_names = NULL, synonyms = NULL,
-                          key = NULL, callopts=list())
-{
-  .Deprecated(msg="This function is deprecated. See classification().")
-
-  # # if NA input, return NA
-  # if(is.na(taxonid)){ NA } else
-  # {
-  #   url = 'http://www.eol.org/api/hierarchy_entries/1.0/'
-  #   key <- getkey(key, "eolApiKey")
-  #   urlget <- paste(url, taxonid, '.json', sep="")
-  #   args <- compact(list(common_names=common_names, synonyms=synonyms))
-  #   tt <- GET(urlget, query=args, callopts)
-  #   stop_for_status(tt)
-  #   res <- content(tt)
-  #   if(length(res$ancestors)==0){
-  #     sprintf("No hierarchy information for %s", taxonid)
-  #   } else
-  #   {
-  #     do.call(rbind.fill, lapply(res$ancestors, data.frame))[,c('taxonID','scientificName','taxonRank')]
-  #   }
-  # }
-}
-
-
-#' Return all synonyms for a taxon name with a given id.
-#'
-#' THIS FUNCTION IS DEPRECATED.
-#'
-#' @import httr plyr
-#' @param id A Tropicos name ID
-#' @param key Your Tropicos API key; loads from .Rprofile.
-#' @param callopts Further args passed on to httr::GET
-#' @return A data.frame giving the hierarchy.
-#' @references \url{http://services.tropicos.org/help?method=GetNameHigherTaxaXml}
-#' @export
-#' @rdname tp_classification-deprecated
-#' @keywords internal
-#' @examples \donttest{
-#' tp_classification(id = 25509881)
-#' tp_classification(id = c(25509881,2700851))
-#' tp_classification(id = c(25509881,2700851), callopts=verbose())
-#' }
-tp_classification <- function(id=NULL, key=NULL, callopts=list())
-{
-  .Deprecated(msg="This function is deprecated. See classification().")
-
-  # fun <- function(x){
-  #   url <- sprintf('http://services.tropicos.org/Name/%s/HigherTaxa', x)
-  #   key <- getkey(key, "tropicosApiKey")
-  #   args <- compact(list(format='json', apikey=key))
-  #   tt <- GET(url, query=args, callopts)
-  #   stop_for_status(tt)
-  #   out <- content(tt)
-  #   if(names(out[[1]])[[1]] == "Error"){ data.frame(NameId=NA, ScientificName=NA, Rank=NA) } else {
-  #     do.call(rbind.fill, lapply(out, data.frame))[,c('NameId','ScientificName','Rank')]
-  #   }
-  # }
-  # tmp <- lapply(id, fun)
-  # names(tmp) <- id
-  # tmp
 }

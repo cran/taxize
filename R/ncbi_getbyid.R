@@ -12,7 +12,8 @@
 #' @return Data.frame of results.
 #' @seealso \code{\link[taxize]{ncbi_search}}, \code{\link[taxize]{ncbi_getbyname}}
 #' @author Scott Chamberlain \email{myrmecocystus@@gmail.com}
-#' @examples \donttest{
+#' @rdname ncbi_getbyid-deprecated
+#' @examples \dontrun{
 #' # A single gene
 #' ncbi_getbyid(ids="360040093", format="fasta")
 #'
@@ -21,6 +22,8 @@
 #' }
 ncbi_getbyid <- function(ids, format="fasta", verbose=TRUE)
 {
+  .Deprecated(msg="This function is deprecated - will be removed in a future version of this pacakge. See ?`taxize-deprecated`")
+
 	mssg(verbose, "Retrieving sequence IDs...")
 
 	ids <- paste(ids, collapse=",")
@@ -38,11 +41,11 @@ ncbi_getbyid <- function(ids, format="fasta", verbose=TRUE)
 		desc <- str_split(str_split(x, "\\|")[[1]][[5]], "\n")[[1]][[1]]
 		outt <- list(desc, as.character(idaccess[1]), idaccess[2], nchar(seq), seq)
 		spused <- paste(str_split(str_trim(str_split(temp, "\\|")[[1]][[5]], "both"), " ")[[1]][1:2], sep="", collapse=" ")
-		outoutout <- data.frame(spused=spused, outt)
+		outoutout <- data.frame(spused=spused, outt, stringsAsFactors = FALSE)
 		names(outoutout) <- c("taxon","gene_desc","gi_no","acc_no","length","sequence")
 		outoutout
 	}
-	df <- data.frame(rbindlist(lapply(outseq2, foo)))
+	df <- data.frame(rbindlist(lapply(outseq2, foo)), stringsAsFactors = FALSE)
 	mssg(verbose, "...done")
 	return(df)
 }
@@ -60,5 +63,5 @@ ncbi_getbyid <- function(ids, format="fasta", verbose=TRUE)
 
 get_genes <- function(ids, format="fasta", verbose=TRUE)
 {
-  .Deprecated("ncbi_getbyid", "taxize", "Function name changed. See ncbi_getbyid", "get_genes")
+  .Defunct("ncbi_getbyid", "taxize", "Function name changed. See ncbi_getbyid")
 }
