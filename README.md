@@ -6,6 +6,10 @@ taxize
 
 [![Build Status](https://api.travis-ci.org/ropensci/taxize.png?branch=master)](https://travis-ci.org/ropensci/taxize)
 [![Build status](https://ci.appveyor.com/api/projects/status/6mgc02mkd8j4sq3g/branch/master)](https://ci.appveyor.com/project/sckott/taxize-175/branch/master)
+[![Coverage Status](https://coveralls.io/repos/ropensci/taxize/badge.svg)](https://coveralls.io/r/ropensci/taxize)
+[![rstudio mirror downloads](http://cranlogs.r-pkg.org/badges/taxize)](https://github.com/metacran/cranlogs.app)
+[![cran version](http://www.r-pkg.org/badges/version/taxize)](http://cran.rstudio.com/web/packages/taxize)
+
 
 `taxize` allows users to search over many taxonomic data sources for species names (scientific and common) and download up and downstream taxonomic hierarchical information - among other things.
 
@@ -48,7 +52,7 @@ Note that a few data sources require SOAP web services, which are difficult to s
 <tr>
 	<td style="text-align:left;">Taxonomic Name Resolution Service</td>
 	<td style="text-align:left;"><code>tnrs</code></td>
-	<td style="text-align:left;"><a href="http://api.phylotastic.org/tnrs">link</a></td>
+	<td style="text-align:left;">"api.phylotastic.org/tnrs"</td>
 	<td style="text-align:left;">none</td>
 </tr>
 <tr>
@@ -60,7 +64,7 @@ Note that a few data sources require SOAP web services, which are difficult to s
 <tr>
 	<td style="text-align:left;">Phylomatic</td>
 	<td style="text-align:left;"><code>phylomatic</code></td>
-	<td style="text-align:left;"><a href="http://www.phylodiversity.net/phylomatic/phylomatic_api.html">link</a></td>
+	<td style="text-align:left;"><a href="http://phylodiversity.net/phylomatic/html/documentation.html">link</a></td>
 	<td style="text-align:left;">none</td>
 </tr>
 <tr>
@@ -176,6 +180,8 @@ install.packages("taxize")
 
 #### Development version from GitHub
 
+Windows users install [Rtools](http://cran.r-project.org/bin/windows/Rtools/) first.
+
 
 ```r
 install.packages("devtools")
@@ -189,7 +195,7 @@ library('taxize')
 
 ### Get unique taxonomic identifier from NCBI
 
-Alot of `taxize` revolves around taxonomic identifiers. Because, as you know, names can be a mess (misspelled, synonyms, etc.), it's better to get an identifier that a particular data sources knows about, then we can move forth acquiring more fun taxonomic data. 
+Alot of `taxize` revolves around taxonomic identifiers. Because, as you know, names can be a mess (misspelled, synonyms, etc.), it's better to get an identifier that a particular data sources knows about, then we can move forth acquiring more fun taxonomic data.
 
 
 ```r
@@ -205,22 +211,22 @@ Classifications - think of a species, then all the taxonomic ranks up from that 
 out <- classification(uids)
 lapply(out, head)
 #> $`315576`
-#>                 name         rank
-#> 1 cellular organisms      no rank
-#> 2          Eukaryota superkingdom
-#> 3       Opisthokonta      no rank
-#> 4            Metazoa      kingdom
-#> 5          Eumetazoa      no rank
-#> 6          Bilateria      no rank
+#>                 name         rank     id
+#> 1 cellular organisms      no rank 131567
+#> 2          Eukaryota superkingdom   2759
+#> 3       Opisthokonta      no rank  33154
+#> 4            Metazoa      kingdom  33208
+#> 5          Eumetazoa      no rank   6072
+#> 6          Bilateria      no rank  33213
 #> 
 #> $`492549`
-#>                 name         rank
-#> 1 cellular organisms      no rank
-#> 2          Eukaryota superkingdom
-#> 3       Opisthokonta      no rank
-#> 4            Metazoa      kingdom
-#> 5          Eumetazoa      no rank
-#> 6          Bilateria      no rank
+#>                 name         rank     id
+#> 1 cellular organisms      no rank 131567
+#> 2          Eukaryota superkingdom   2759
+#> 3       Opisthokonta      no rank  33154
+#> 4            Metazoa      kingdom  33208
+#> 5          Eumetazoa      no rank   6072
+#> 6          Bilateria      no rank  33213
 ```
 
 ### Immediate children
@@ -320,9 +326,9 @@ upstream("Pinus contorta", db = 'itis', upto = 'Genus', verbose=FALSE)
 
 ```r
 synonyms("Salmo friderici", db='ubio')
-#>   namebankid          target family rankname
-#> 1    2529704 Salmo friderici Pisces  species
-#> 2     169693 Salmo friderici Pisces  species
+#>    ubioid          target family    rank
+#> 1 2529704 Salmo friderici Pisces species
+#> 2  169693 Salmo friderici Pisces species
 #> $`Salmo friderici`
 #>   namebankid                    namestring
 #> 1     130562 Leporinus friderici friderici
@@ -339,13 +345,13 @@ synonyms("Salmo friderici", db='ubio')
 
 ```r
 get_ids(names="Salvelinus fontinalis", db = c('ubio','ncbi'), verbose=FALSE)
-#>   namebankid                target     family  rankname
-#> 1    2501330 Salvelinus fontinalis     Pisces   species
-#> 2    6581534 Salvelinus fontinalis Salmonidae   species
-#> 3     137827 Salvelinus fontinalis     Pisces   species
-#> 4    6244425 Salvelinus fontinalis Salmonidae trinomial
-#> 5    7130714 Salvelinus fontinalis Salmonidae trinomial
-#> 6    6653671 Salvelinus fontinalis Salmonidae trinomial
+#>    ubioid                target     family      rank
+#> 1 2501330 Salvelinus fontinalis     Pisces   species
+#> 2 6581534 Salvelinus fontinalis Salmonidae   species
+#> 3  137827 Salvelinus fontinalis     Pisces   species
+#> 4 6244425 Salvelinus fontinalis Salmonidae trinomial
+#> 5 7130714 Salvelinus fontinalis Salmonidae trinomial
+#> 6 6653671 Salvelinus fontinalis Salmonidae trinomial
 #> $ubio
 #> Salvelinus fontinalis 
 #>             "2501330" 
@@ -374,7 +380,7 @@ You can limit to certain rows when getting ids in any `get_*()` functions
 
 
 ```r
-get_ids(names="Poa annua", db=c("gbif","eol"), rows=1)
+get_ids(names="Poa annua", db = "gbif", rows=1)
 #> $gbif
 #> Poa annua 
 #> "2704179" 
@@ -384,18 +390,6 @@ get_ids(names="Poa annua", db=c("gbif","eol"), rows=1)
 #> [1] "found"
 #> attr(,"uri")
 #> [1] "http://www.gbif.org/species/2704179"
-#> 
-#> $eol
-#> Poa annua 
-#>  43518589 
-#> attr(,"class")
-#> [1] "eolid"
-#> attr(,"provider")
-#> [1] "GBIF"
-#> attr(,"match")
-#> [1] "found"
-#> attr(,"uri")
-#> [1] "http://eol.org/pages/43518589/overview"
 #> 
 #> attr(,"class")
 #> [1] "ids"
@@ -410,8 +404,8 @@ get_ids_(c("Chironomus riparius", "Pinus contorta"), db = 'nbn', rows=1:3)
 #> $nbn$`Chironomus riparius`
 #>   ptaxonVersionKey    searchMatchTitle    rank  nameStatus
 #> 1 NBNSYS0000027573 Chironomus riparius Species Recommended
-#> 2 NBNSYS0000023345   Paederus riparius Species Recommended
-#> 3 NHMSYS0001718042   Elaphrus riparius Species Recommended
+#> 2 NHMSYS0001718042   Elaphrus riparius Species Recommended
+#> 3 NBNSYS0000023345   Paederus riparius Species Recommended
 #> 
 #> $nbn$`Pinus contorta`
 #>   ptaxonVersionKey               searchMatchTitle       rank  nameStatus
@@ -428,7 +422,7 @@ get_ids_(c("Chironomus riparius", "Pinus contorta"), db = 'nbn', rows=1:3)
 
 
 ```r
-sci2comm('Helianthus annuus', db='itis')
+sci2comm('Helianthus annuus', db = 'itis')
 #> $`Helianthus annuus`
 #> [1] "common sunflower" "sunflower"        "wild sunflower"  
 #> [4] "annual sunflower"
@@ -438,21 +432,12 @@ sci2comm('Helianthus annuus', db='itis')
 
 
 ```r
-comm2sci("black bear")
+comm2sci("black bear", db = "itis")
 #> $`black bear`
-#>  [1] "Ursus americanus americanus Pallas, 1780"   
-#>  [2] "Ursus americanus Pallas, 1780"              
-#>  [3] "Ursus thibetanus G. [Baron] Cuvier, 1823"   
-#>  [4] "Ursus americanus floridanus Merriam, 1896"  
-#>  [5] "Ursus americanus luteolus Griffith, 1821"   
-#>  [6] "Ursus thibetanus formosanus Swinhoe, 1864"  
-#>  [7] "Ursus americanus kermodei Hornaday, 1905"   
-#>  [8] "Ursus americanus perniger J. A. Allen, 1910"
-#>  [9] "Ursus americanus eremicus Merriam, 1904"    
-#> [10] "Ursus thibetanus ussuricus (Heude, 1901)"   
-#> [11] "Ursus thibetanus japonicus Schlegel, 1857"  
-#> [12] "Prosimulium ursinum (Edwards, 1935)"        
-#> [13] "Pyrrharctia isabella Smith 1797"
+#> [1] "Ursus thibetanus"            "Ursus thibetanus"           
+#> [3] "Chiropotes satanas"          "Ursus americanus luteolus"  
+#> [5] "Ursus americanus"            "Ursus americanus"           
+#> [7] "Ursus americanus americanus"
 ```
 
 ### Coerce codes to taxonomic id classes
@@ -475,7 +460,7 @@ as.uid(315567)
 
 
 ```r
-as.uid(list("315567","3339","9696"))
+as.uid(list("315567", "3339", "9696"))
 #> [1] "315567" "3339"   "9696"  
 #> attr(,"class")
 #> [1] "uid"
@@ -491,7 +476,7 @@ as.uid(list("315567","3339","9696"))
 
 
 ```r
-out <- as.uid(c(315567,3339,9696))
+out <- as.uid(c(315567, 3339, 9696))
 (res <- data.frame(out))
 #>      ids class match                                         uri
 #> 1 315567   uid found http://www.ncbi.nlm.nih.gov/taxonomy/315567
@@ -499,11 +484,9 @@ out <- as.uid(c(315567,3339,9696))
 #> 3   9696   uid found   http://www.ncbi.nlm.nih.gov/taxonomy/9696
 ```
 
-### 
-
 ## Contributors
 
-+ [Scott Chamberlain](https://github.com/SChamberlain)
++ [Scott Chamberlain](https://github.com/sckott)
 + [Eduard Szöcs](https://github.com/EDiLD)
 + [Zachary Foster](https://github.com/zachary-foster)
 + [Carl Boettiger](https://github.com/cboettig)

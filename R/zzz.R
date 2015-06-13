@@ -62,6 +62,7 @@ taxize_ldfast <- function(x, convertvec=FALSE){
 mssg <- function(v, ...) if(v) message(...)
 
 taxize_compact <- function (l) Filter(Negate(is.null), l)
+tc <- taxize_compact
 
 #' Lookup details for specific names in all taxonomies in GBIF.
 #'
@@ -221,4 +222,40 @@ colClasses <- function(d, colClasses) {
                                                  factor=as.factor(d[[i]]),
                                                  as(d[[i]], colClasses[i]) ))
   d
+}
+
+strtrim <- function(str) {
+  gsub("^\\s+|\\s+$", "", str)
+}
+
+# function to help filter get_*() functions for a rank name or rank itself --------------
+filt <- function(df, rank, z) {
+  if (!is.null(z)) {
+    mtch <- grep(tolower(z), tolower(df[,rank]))
+    if (length(mtch) != 0) {
+      df[mtch, ]
+    } else {
+      df
+    }
+  } else {
+    df
+  }
+}
+
+# failwith replacment ------------------
+try_default <- function(expr, default, quiet = FALSE){
+  result <- default
+  if (quiet) {
+    tryCatch(result <- expr, error = function(e) {
+    })
+  }
+  else {
+    try(result <- expr)
+  }
+  result
+}
+
+failwith <- function(default = NULL, f, quiet = FALSE){
+  f <- match.fun(f)
+  function(...) try_default(f(...), default, quiet = quiet)
 }

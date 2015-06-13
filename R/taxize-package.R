@@ -60,42 +60,93 @@
 NULL
 
 #' Lookup-table for IDs of taxonomic ranks
+#'
 #' @name rank_ref
 #' @docType data
 #' @keywords data
 NULL
 
 #' Lookup-table for family, genus, and species names for ThePlantList
+#'
+#' These names are from \url{http://www.theplantlist.org/}, and are from
+#' version 1.1 of their data. This data is used in the functions
+#' \code{\link{phylomatic_format}} and \code{\link{names_list}}. This
+#' is a randomly selected subset of the ~350K accepted species names
+#' in Theplantlist.
+#'
+#' @format A data frame with 10,000 rows and 3 variables:
+#' \describe{
+#'   \item{family}{family name}
+#'   \item{genus}{genus name}
+#'   \item{species}{specific epithet name}
+#' }
+#' @source \url{http://www.theplantlist.org/}
 #' @name theplantlist
 #' @docType data
 #' @keywords data
 NULL
 
-#' Table of APGIII generic names
-#' @name apg_genera
-#' @docType data
-#' @keywords data
-NULL
-
-#' Lookup-table for APGIII family names
+#' MOBOT family names
+#'
+#' Family names and their replacements from the Angiosperm Phylogeny
+#' Website system of flowering plant classification.
+#'
+#' This dataset is from Version 13, incorporated on 2015-04-29.
+#'
+#' @format A data frame with 1597 rows and 4 variables:
+#' \describe{
+#'   \item{original}{original data record from APG website}
+#'   \item{this}{Order name}
+#'   \item{that}{Replacment order name}
+#'   \item{order}{Order name}
+#' }
+#' @source \url{http://www.mobot.org/MOBOT/research/APweb/}
 #' @name apg_families
 #' @docType data
 #' @keywords data
 NULL
 
-#' Lookup-table for APGIII order names
+#' MOBOT order names
+#'
+#' Order names and their replacements from the Angiosperm Phylogeny
+#' Website system of flowering plant classification.
+#'
+#' This dataset is from Version 13, incorporated on 2015-04-29.
+#'
+#' @format A data frame with 494 rows and 3 variables:
+#' \describe{
+#'   \item{original}{original data record from APG website}
+#'   \item{this}{Order name}
+#'   \item{that}{Replacment order name}
+#' }
+#' @source \url{http://www.mobot.org/MOBOT/research/APweb/}
 #' @name apg_orders
 #' @docType data
 #' @keywords data
 NULL
 
-#' Vector of 1,182 species names of plants
+#' Vector of plant species (genus - specific epithet) names from ThePlantList
+#'
+#' These names are from \url{http://www.theplantlist.org/}, and are a
+#' randomly chosen subset of names of the form genus/specific epithet
+#' for the purpose of having some names to play with for examples in
+#' this package.
+#'
+#' @format A vector of length 1182
+#' @source \url{http://www.theplantlist.org/}
 #' @name plantNames
 #' @docType data
 #' @keywords data
 NULL
 
-#' Vector of 793 genus names of plants
+#' Vector of plant genus names from ThePlantList
+#'
+#' These names are from \url{http://www.theplantlist.org/}, and are a
+#' randomly chosen subset of genera names for the purpose of having some
+#' names to play with for examples in this package.
+#'
+#' @format A vector of length 793
+#' @source \url{http://www.theplantlist.org/}
 #' @name plantGenusNames
 #' @docType data
 #' @keywords data
@@ -106,23 +157,10 @@ NULL
 #' The following functions are now deprecated:
 #'
 #' \itemize{
-#'  \item \code{\link{ncbi_getbyname}}: This function is deprecated and will be removed in a future
-#'  version of this package.
-#'  \item \code{\link{ncbi_getbyid}}: This function is deprecated and will be removed in a future
-#'  version of this package.
-#'  \item \code{\link{ncbi_search}}: This function is deprecated and will be removed in a future
-#'  version of this package.
-#'  \item \code{\link{phylomatic_tree}}: This function is deprecated and will be removed in a future
-#'  version of this package.
-#'  \item \code{\link{eol_invasive}}: This function is deprecated and will be removed in a future
-#'  version of this package.
-#'  \item \code{\link{gisd_isinvasive}}: This function is deprecated and will be removed in a future
-#'  version of this package.
+#'  \item \code{\link{phylomatic_tree}}: This function is deprecated and will be removed
+#'  in a future version of this package. Use this same function in another package called
+#'  \code{branching} (see \url{https://github.com/ropensci/branching}).
 #' }
-#'
-#' All of the above functions will be available in an R package in development called traits
-#' \url{https://github.com/ropensci/traits} that will be available on CRAN before these functions
-#' are made defunct here.
 #'
 #' @name taxize-deprecated
 NULL
@@ -140,6 +178,11 @@ NULL
 #'  \item \code{\link{get_seqs}}: This function changed name to \code{\link{ncbi_getbyname}}.
 #'  \item \code{\link{get_genes}}: This function changed name to \code{\link{ncbi_getbyid}}.
 #'  \item \code{\link{get_genes_avail}}: This function changed name to \code{\link{ncbi_search}}.
+#'  \item \code{\link{ncbi_getbyname}}: See \code{ncbi_byname} in the \code{traits} package.
+#'  \item \code{\link{ncbi_getbyid}}: See \code{ncbi_byid} in the \code{traits} package.
+#'  \item \code{\link{ncbi_search}}: See \code{ncbi_searcher} in the \code{traits} package.
+#'  \item \code{\link{eol_invasive}}: See \code{eol_invasive_} in the \code{traits} package.
+#'  \item \code{\link{gisd_isinvasive}}: See \code{g_invasive} in the \code{traits} package.
 #' }
 #'
 #' @name taxize-defunct

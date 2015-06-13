@@ -25,6 +25,7 @@
 #' @param intermediate (logical) If TRUE, return a list of length two with target
 #'    taxon rank names, with additional list of data.frame's of intermediate
 #'    taxonomic groups. Default: FALSE
+#' @param ... Curl options passed on to \code{\link[httr]{GET}}
 #' @details Provide only names instead of id's
 #' @return A list of data.frame's.
 #' @export
@@ -48,16 +49,17 @@
 #' }
 
 col_downstream <- function(name = NULL, id = NULL, downto, format = NULL, start = NULL,
-  checklist = NULL, verbose = TRUE, intermediate = FALSE)
+  checklist = NULL, verbose = TRUE, intermediate = FALSE, ...)
 {
   url = "http://www.catalogueoflife.org/col/webservice"
   downto <- taxize_capwords(downto)
   poss_ranks <- unique(do.call(c, sapply(rank_ref$ranks, strsplit, split=",", USE.NAMES = FALSE)))
   downto <- match.arg(downto, choices = poss_ranks)
 
-  searchcol <- function(x=NULL, y=NULL) {
+  searchcol <- function(x=NULL, y=NULL, ...) {
     args <- compact(list(name=x, id=y, format=format, response="full", start=start))
-    out_ <- getForm(url, .params = args)
+    out_ <- GET(url, query = args, ...)
+    out_ <- content(out_, "text")
     tt <- xmlParse(out_)
 
     childtaxa_id <- xpathSApply(tt, "//child_taxa//id", xmlValue)
@@ -67,8 +69,8 @@ col_downstream <- function(name = NULL, id = NULL, downto, format = NULL, start 
     return(out)
   }
 
-  func <- function(x=NULL, y=NULL) {
-    if(!is.null(checklist)){
+  func <- function(x=NULL, y=NULL, ...) {
+    if(!is.null(checklist)) {
       cc <- match.arg(as.character(checklist), choices=c(2012,2011,2010,2009,2008,2007))
       if(cc %in% c(2012,2011,2010)){
         url <- gsub("col", paste("annual-checklist/", cc, sep=""), url)
@@ -78,7 +80,7 @@ col_downstream <- function(name = NULL, id = NULL, downto, format = NULL, start 
       }
     }
 
-    torank <-sapply(rank_ref[grep(downto, rank_ref$ranks),"ranks"],
+    torank <- sapply(rank_ref[grep(downto, rank_ref$ranks),"ranks"],
                 function(x) strsplit(x, ",")[[1]][[1]], USE.NAMES=FALSE)
 
     toget <- ifelse(is.null(y), x, y)
@@ -90,9 +92,9 @@ col_downstream <- function(name = NULL, id = NULL, downto, format = NULL, start 
     while(stop_ == "not"){
       iter <- iter + 1
       if(is.null(x)){
-        tt <- ldply(toget, function(z) searchcol(y=z))
+        tt <- ldply(toget, function(z) searchcol(y=z, ...))
       } else {
-        tt <- ldply(toget, function(z) searchcol(x=z))
+        tt <- ldply(toget, function(z) searchcol(x=z, ...))
       }
 
       # remove
@@ -123,13 +125,13 @@ col_downstream <- function(name = NULL, id = NULL, downto, format = NULL, start 
   } # end fxn func
 
   safe_func <- plyr::failwith(NULL, func)
-  if(is.null(id)){
-    temp <- setNames(lapply(name, safe_func, y=NULL), name)
+  if (is.null(id)) {
+    temp <- setNames(lapply(name, safe_func, y=NULL, ...), name)
   } else {
-    temp <- setNames(lapply(id, function(z) safe_func(x=NULL, y=id)), id)
+    temp <- setNames(lapply(id, function(z) safe_func(x=NULL, y=id, ...)), id)
   }
 
   nas <- sapply(temp, function(z) NROW(na.omit( if(intermediate) z$target else z )))
-  if(verbose) message(sprintf('These taxa with no data: %s\nTry adjusting input parameters', names(nas[nas==0])))
+  if (verbose) message(sprintf('These taxa with no data: %s\nTry adjusting input parameters', names(nas[nas==0])))
   return( temp )
 }

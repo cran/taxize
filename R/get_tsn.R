@@ -5,8 +5,8 @@
 #' @import plyr
 #' @param searchterm character; A vector of common or scientific names.
 #' @param searchtype character; One of 'scientific' or 'common', or any unique abbreviation
-#' @param accepted logical; If TRUE (default), removes names that are not accepted valid names
-#' by ITIS. Set to FALSE to give back both accepted and unaccepted names.
+#' @param accepted logical; If TRUE, removes names that are not accepted valid names
+#' by ITIS. Set to FALSE (default) to give back both accepted and unaccepted names.
 #' @param ask logical; should get_tsn be run in interactive mode?
 #' If TRUE and more than one TSN is found for teh species, the user is asked for
 #' input. If FALSE NA is returned for multiple matches.
@@ -38,10 +38,9 @@
 #' get_tsn(splist, verbose=FALSE)
 #'
 #' # specify rows to limit choices available
-#' get_tsn('Poa annua')
-#' get_tsn('Poa annua', rows=1)
-#' get_tsn('Poa annua', rows=25)
-#' get_tsn('Poa annua', rows=1:2)
+#' get_tsn('Arni')
+#' get_tsn('Arni', rows=1)
+#' get_tsn('Arni', rows=1:2)
 #'
 #' # When not found
 #' get_tsn("howdy")
@@ -69,13 +68,18 @@
 #' as.tsn( data.frame(out) )
 #'
 #' # Get all data back
-#' get_tsn_("Poa annua")
-#' get_tsn_("Poa annua", rows=1)
-#' get_tsn_("Poa annua", rows=1:2)
+#' get_tsn_("Arni")
+#' get_tsn_("Arni", rows=1)
+#' get_tsn_("Arni", rows=1:2)
 #' get_tsn_(c("asdfadfasd","Pinus contorta"), rows=1:5)
+#'
+#' # use curl options
+#' library("httr")
+#' get_tsn("Quercus douglasii", config=verbose())
+#' bb <- get_tsn("Quercus douglasii", config=progress())
 #' }
 
-get_tsn <- function(searchterm, searchtype = "scientific", accepted = TRUE, ask = TRUE,
+get_tsn <- function(searchterm, searchtype = "scientific", accepted = FALSE, ask = TRUE,
   verbose = TRUE, rows = NA, ...)
 {
   fun <- function(x, searchtype, ask, verbose, ...)

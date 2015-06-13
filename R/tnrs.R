@@ -27,11 +27,8 @@
 #' @details If there is no match in the Taxosaurus database, nothing is
 #'    returned, so youwill not get anything back for non matches.
 #' @examples \dontrun{
-#' # Default, uses GET curl method, you can't specify any other parameters when
-#' using GET
-#' mynames <- c("Panthera tigris", "Neotamias minimus", "Magnifera indica")
-#' tnrs(query = mynames)
-#'
+#' # Default, uses GET curl method, you can't specify any other
+#' # parameters when using GET
 #' # Specifying the source to match against
 #' mynames <- c("Helianthus annuus", "Poa annua")
 #' tnrs(query = mynames, source = "iPlant_TNRS")
@@ -84,11 +81,12 @@ tnrs <- function(query = NA, source = NULL, code = NULL, getpost = "POST",
       loc <- tempfile(fileext=".txt")
       write.table(data.frame(x), file=loc, col.names=FALSE, row.names=FALSE)
       args <- compact(list(file = upload_file(loc), source = source, code = code))
-			out <- POST(url, body = args, config=compact(c(followlocation = 0L, callopts)))
+			out <- POST(url, body = args, config = config(compact(c(followlocation = 0L, callopts))))
 			error_handle(out)
       tt <- content(out, as="text")
 			message <- jsonlite::fromJSON(tt, FALSE)[["message"]]
-			retrieve <- str_replace_all(str_extract(message, "http.+"), "\\.$", "")
+			retrieve <- out$url
+			# retrieve <- str_replace_all(str_extract(message, "http.+"), "\\.$", "")
 		}
 
 		mssg(verbose, sprintf("Calling %s", retrieve))
@@ -96,12 +94,14 @@ tnrs <- function(query = NA, source = NULL, code = NULL, getpost = "POST",
 		iter <- 0
 		output <- list()
 		timeout <- "wait"
-		while(timeout == "wait"){
+		while (timeout == "wait") {
 			iter <- iter + 1
       ss <- GET(retrieve, callopts)
 			error_handle(ss, TRUE)
-      temp <- jsonlite::fromJSON(content(ss, as="text"), FALSE)
-			if(grepl("is still being processed", temp["message"])==TRUE){timeout <- "wait"} else {
+      temp <- jsonlite::fromJSON(content(ss, as = "text"), FALSE)
+			if (grepl("is still being processed", temp["message"]) == TRUE) {
+			  timeout <- "wait"
+			} else {
 				output[[iter]] <- temp
 				timeout <- "done"
 			}
@@ -110,7 +110,7 @@ tnrs <- function(query = NA, source = NULL, code = NULL, getpost = "POST",
 
 		# Parse results into data.frame
     df <- data.frame(rbindlist(lapply(out$names, parseres)))
-    f <- function(x) str_replace_all(x, pattern="\\+", replacement=" ")
+    f <- function(x) str_replace_all(x, pattern = "\\+", replacement = " ")
     df2 <- colwise(f)(df)
 
     # replace quotes

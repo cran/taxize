@@ -204,6 +204,7 @@ hr {
 <!--
 %\VignetteEngine{knitr::knitr}
 %\VignetteIndexEntry{taxize vignette}
+%\VignetteEncoding{UTF-8}
 -->
 
 <h1>taxize vignette - a taxonomic toolbelt for R</h1>
@@ -224,7 +225,7 @@ hr {
 
 <h2>Resolve taxonomic name</h2>
 
-<p>This is a common task in biology. We often have a list of species names and we want to know a) if we have the most up to date names, b) if our names are spelled correctly, and c) the scientific name for a common name. One way to resolve names is via the Global Names Resolver (GNR) service provided by the <a href="http://eol.org/">Encyclopedia of Life</a>. Here, we are searching for two misspelled names:</p>
+<p>This is a common task in biology. We often have a list of species names and we want to know a) if we have the most up to date names, b) if our names are spelled correctly, and c) the scientific name for a common name. One way to resolve names is via the Global Names Resolver (GNR) service provided by the <a href="http://www.eol.org/">Encyclopedia of Life</a>. Here, we are searching for two misspelled names:</p>
 
 <pre><code class="r">temp &lt;- gnr_resolve(names = c(&quot;Helianthos annus&quot;, &quot;Homo saapiens&quot;))
 head( temp$results )
@@ -239,14 +240,11 @@ head( temp$results )
 #&gt; 6 Helianthos annus    Helianthus annuus              NCBI  0.75
 </code></pre>
 
-<p>The correct spellings are <em>Helianthus annuus</em> and <em>Homo sapiens</em>. Another approach uses the <a href="http://api.phylotastic.org/tnrs">Taxonomic Name Resolution Service via the Taxosaurus API</a> developed by iPLant and the Phylotastic organization. In this example, we provide a list of species names, some of which are misspelled, and we&#39;ll call the API with the <em>tnrs</em> function.</p>
+<p>The correct spellings are <em>Helianthus annuus</em> and <em>Homo sapiens</em>. Another approach uses the Taxonomic Name Resolution Service via the Taxosaurus API developed by iPLant and the Phylotastic organization. In this example, we provide a list of species names, some of which are misspelled, and we&#39;ll call the API with the <em>tnrs</em> function.</p>
 
 <pre><code class="r">mynames &lt;- c(&quot;Helianthus annuus&quot;, &quot;Pinus contort&quot;, &quot;Poa anua&quot;, &quot;Abis magnifica&quot;,
     &quot;Rosa california&quot;, &quot;Festuca arundinace&quot;, &quot;Sorbus occidentalos&quot;,&quot;Madia sateva&quot;)
 tnrs(query = mynames, source = &quot;iPlant_TNRS&quot;)[ , -c(5:7)]
-</code></pre>
-
-<pre><code>#&gt; Calling http://taxosaurus.org/retrieve/f2be9ae38992ada133d90edd3a5e6322
 </code></pre>
 
 <pre><code>#&gt;         submittedname        acceptedname    sourceid score
@@ -281,14 +279,20 @@ attr(,&quot;class&quot;)
 [1] &quot;tsn&quot;
 </code></pre>
 
-<pre><code class="r">library(&quot;plyr&quot;)
-ldply(tsn, itis_acceptname)
+<pre><code class="r">lapply(tsn, itis_acceptname)
 </code></pre>
 
-<pre><code>  submittedtsn      acceptedname acceptedtsn
+<pre><code>[[1]]
+  submittedtsn      acceptedname acceptedtsn
 1       525928 Helianthus annuus       36616
-2       525929 Helianthus annuus       36616
-3       525930 Helianthus annuus       36616
+
+[[2]]
+  submittedtsn      acceptedname acceptedtsn
+1       525929 Helianthus annuus       36616
+
+[[3]]
+  submittedtsn      acceptedname acceptedtsn
+1       525930 Helianthus annuus       36616
 </code></pre>
 
 <h2>Retrieve higher taxonomic names</h2>
@@ -301,40 +305,35 @@ ldply(tsn, itis_acceptname)
 classification(specieslist, db = &#39;itis&#39;)
 </code></pre>
 
-<pre><code>#&gt; 
-#&gt; Retrieving data for taxon &#39;Abies procera&#39;
-#&gt; 
-#&gt; 
-#&gt; Retrieving data for taxon &#39;Pinus contorta&#39;
-</code></pre>
-
 <pre><code>#&gt; $`Abies procera`
 #&gt;               name          rank     id
 #&gt; 1          Plantae       Kingdom 202422
-#&gt; 2   Viridaeplantae    Subkingdom 846492
+#&gt; 2    Viridiplantae    Subkingdom 954898
 #&gt; 3     Streptophyta  Infrakingdom 846494
-#&gt; 4     Tracheophyta      Division 846496
-#&gt; 5  Spermatophytina   Subdivision 846504
-#&gt; 6     Gymnospermae Infradivision 846506
+#&gt; 4      Embryophyta Superdivision 954900
+#&gt; 5     Tracheophyta      Division 846496
+#&gt; 6  Spermatophytina   Subdivision 846504
 #&gt; 7        Pinopsida         Class 500009
-#&gt; 8          Pinales         Order 500028
-#&gt; 9         Pinaceae        Family  18030
-#&gt; 10           Abies         Genus  18031
-#&gt; 11   Abies procera       Species 181835
+#&gt; 8          Pinidae      Subclass 954916
+#&gt; 9          Pinales         Order 500028
+#&gt; 10        Pinaceae        Family  18030
+#&gt; 11           Abies         Genus  18031
+#&gt; 12   Abies procera       Species 181835
 #&gt; 
 #&gt; $`Pinus contorta`
 #&gt;               name          rank     id
 #&gt; 1          Plantae       Kingdom 202422
-#&gt; 2   Viridaeplantae    Subkingdom 846492
+#&gt; 2    Viridiplantae    Subkingdom 954898
 #&gt; 3     Streptophyta  Infrakingdom 846494
-#&gt; 4     Tracheophyta      Division 846496
-#&gt; 5  Spermatophytina   Subdivision 846504
-#&gt; 6     Gymnospermae Infradivision 846506
+#&gt; 4      Embryophyta Superdivision 954900
+#&gt; 5     Tracheophyta      Division 846496
+#&gt; 6  Spermatophytina   Subdivision 846504
 #&gt; 7        Pinopsida         Class 500009
-#&gt; 8          Pinales         Order 500028
-#&gt; 9         Pinaceae        Family  18030
-#&gt; 10           Pinus         Genus  18035
-#&gt; 11  Pinus contorta       Species 183327
+#&gt; 8          Pinidae      Subclass 954916
+#&gt; 9          Pinales         Order 500028
+#&gt; 10        Pinaceae        Family  18030
+#&gt; 11           Pinus         Genus  18035
+#&gt; 12  Pinus contorta       Species 183327
 #&gt; 
 #&gt; attr(,&quot;class&quot;)
 #&gt; [1] &quot;classification&quot;
@@ -347,10 +346,6 @@ classification(specieslist, db = &#39;itis&#39;)
 <p>Instead of a full classification, you may only want a single name, say a family name for your species of interest. The function *tax_name} is built just for this purpose. As with the <code>classification</code> function you can specify the data source with the <code>db</code> argument, either ITIS or NCBI.</p>
 
 <pre><code class="r">tax_name(query = &quot;Helianthus annuus&quot;, get = &quot;family&quot;, db = &quot;ncbi&quot;)
-</code></pre>
-
-<pre><code>#&gt; 
-#&gt; Retrieving data for taxon &#39;Helianthus annuus&#39;
 </code></pre>
 
 <pre><code>#&gt;     db             query     family
@@ -368,24 +363,12 @@ classification(specieslist, db = &#39;itis&#39;)
 <pre><code class="r">get_uid(sciname = &quot;Pinus&quot;)
 </code></pre>
 
-<pre><code>#&gt; 
-#&gt; Retrieving data for taxon &#39;Pinus&#39;
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; More than one UID found for taxon &#39;Pinus&#39;!
-#&gt; 
-#&gt;             Enter rownumber of taxon (other inputs will return &#39;NA&#39;):
-</code></pre>
-
-<pre><code>#&gt;      UID     Rank    Division
-#&gt; 1 139271 subgenus seed plants
-#&gt; 2   3337    genus seed plants
-</code></pre>
-
-<pre><code>#&gt; Input accepted, took UID &#39;139271&#39;.
+<pre><code>#&gt;   status     rank    division scientificname commonname    uid genus
+#&gt; 1 active subgenus seed plants          Pinus hard pines 139271      
+#&gt; 2 active    genus seed plants          Pinus              3337      
+#&gt;   species subsp modificationdate
+#&gt; 1               2010/12/13 00:00
+#&gt; 2               2004/09/10 00:00
 </code></pre>
 
 <pre><code>#&gt; [1] &quot;139271&quot;
@@ -401,16 +384,6 @@ classification(specieslist, db = &#39;itis&#39;)
 
 <pre><code class="r">splist &lt;- c(&quot;annona cherimola&quot;, &#39;annona muricata&#39;, &quot;quercus robur&quot;)
 get_tsn(searchterm = splist, searchtype = &quot;scientific&quot;)
-</code></pre>
-
-<pre><code>#&gt; 
-#&gt; Retrieving data for taxon &#39;annona cherimola&#39;
-#&gt; 
-#&gt; 
-#&gt; Retrieving data for taxon &#39;annona muricata&#39;
-#&gt; 
-#&gt; 
-#&gt; Retrieving data for taxon &#39;quercus robur&#39;
 </code></pre>
 
 <pre><code>#&gt; [1] &quot;506198&quot; &quot;18098&quot;  &quot;19405&quot; 
@@ -441,13 +414,6 @@ get_tsn(searchterm = splist, searchtype = &quot;scientific&quot;)
 <pre><code class="r">get_nbnid(c(&quot;Zootoca vivipara&quot;,&quot;Pinus contorta&quot;), rows = 1)
 </code></pre>
 
-<pre><code>#&gt; 
-#&gt; Retrieving data for taxon &#39;Zootoca vivipara&#39;
-#&gt; 
-#&gt; 
-#&gt; Retrieving data for taxon &#39;Pinus contorta&#39;
-</code></pre>
-
 <pre><code>#&gt; [1] &quot;NHMSYS0001706186&quot; &quot;NHMSYS0000494848&quot;
 #&gt; attr(,&quot;class&quot;)
 #&gt; [1] &quot;nbnid&quot;
@@ -463,18 +429,6 @@ get_tsn(searchterm = splist, searchtype = &quot;scientific&quot;)
 <pre><code class="r">get_nbnid(c(&quot;Zootoca vivipara&quot;,&quot;Pinus contorta&quot;), rows = 1:3)
 </code></pre>
 
-<pre><code>#&gt; 
-#&gt; Retrieving data for taxon &#39;Zootoca vivipara&#39;
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; More than one nbnid found for taxon &#39;Zootoca vivipara&#39;!
-#&gt; 
-#&gt;             Enter rownumber of taxon (other inputs will return &#39;NA&#39;):
-</code></pre>
-
 <pre><code>#&gt;              nbnid                  searchMatchTitle       rank
 #&gt; 1 NHMSYS0001706186                  Zootoca vivipara    Species
 #&gt; 2 NHMSYS0020784960 Zootoca vivipara subsp. pannonica Subspecies
@@ -483,29 +437,10 @@ get_tsn(searchterm = splist, searchtype = &quot;scientific&quot;)
 #&gt; 1 Recommended
 #&gt; 2 Recommended
 #&gt; 3 Recommended
-</code></pre>
-
-<pre><code>#&gt; Input accepted, took nbnid &#39;NHMSYS0001706186&#39;.
-#&gt; 
-#&gt; 
-#&gt; Retrieving data for taxon &#39;Pinus contorta&#39;
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; More than one nbnid found for taxon &#39;Pinus contorta&#39;!
-#&gt; 
-#&gt;             Enter rownumber of taxon (other inputs will return &#39;NA&#39;):
-</code></pre>
-
-<pre><code>#&gt;              nbnid               searchMatchTitle       rank  nameStatus
+#&gt;              nbnid               searchMatchTitle       rank  nameStatus
 #&gt; 1 NHMSYS0000494848   Pinus contorta var. contorta    Variety Recommended
 #&gt; 2 NBNSYS0000004786                 Pinus contorta    Species Recommended
 #&gt; 3 NHMSYS0000494848 Pinus contorta subsp. contorta Subspecies Recommended
-</code></pre>
-
-<pre><code>#&gt; Input accepted, took nbnid &#39;NHMSYS0000494848&#39;.
 </code></pre>
 
 <pre><code>#&gt; [1] &quot;NHMSYS0001706186&quot; &quot;NHMSYS0000494848&quot;
@@ -521,13 +456,7 @@ get_tsn(searchterm = splist, searchtype = &quot;scientific&quot;)
 <p>In addition, in case you don&#39;t want to do interactive name selection in the case where there are a lot of names, you can get all data back with functions of the form, e.g., <code>get_tsn_()</code>, and likewise for other data sources. For example:</p>
 
 <pre><code class="r">out &lt;- get_nbnid_(&quot;Poa annua&quot;)
-</code></pre>
-
-<pre><code>#&gt; 
-#&gt; Retrieving data for taxon &#39;Poa annua&#39;
-</code></pre>
-
-<pre><code class="r">NROW(out)
+NROW(out)
 </code></pre>
 
 <pre><code>#&gt; [1] 1
@@ -538,22 +467,18 @@ get_tsn(searchterm = splist, searchtype = &quot;scientific&quot;)
 <pre><code class="r">get_nbnid_(&quot;Poa annua&quot;, rows = 1:10)
 </code></pre>
 
-<pre><code>#&gt; 
-#&gt; Retrieving data for taxon &#39;Poa annua&#39;
-</code></pre>
-
 <pre><code>#&gt; $`Poa annua`
-#&gt;    ptaxonVersionKey searchMatchTitle    rank   nameStatus
-#&gt; 1  NBNSYS0000002544        Poa annua Species  Recommended
-#&gt; 2  NHMSYS0000461798              Poa   Genus  Recommended
-#&gt; 3  NHMSYS0000461804         Poa laxa Species      Synonym
-#&gt; 4  NHMSYS0021060390           Poales   Order  Recommended
-#&gt; 5  NBNSYS0000002551       Poa glauca Species  Recommended
-#&gt; 6  NBNSYS0000002547       Poa alpina Species  Recommended
-#&gt; 7  NHMSYS0000456981       Poa rigida Species      Synonym
-#&gt; 8  NBNSYS0000002545       Poa exilis Species Undetermined
-#&gt; 9  NBNSYS0000002551       Poa caesia Species      Synonym
-#&gt; 10 NBNSYS0000160753          Poaceae  Family  Recommended
+#&gt;    ptaxonVersionKey searchMatchTitle    rank  nameStatus
+#&gt; 1  NBNSYS0000002544        Poa annua Species Recommended
+#&gt; 2  NHMSYS0000461798              Poa   Genus Recommended
+#&gt; 3  NHMSYS0000461804         Poa laxa Species     Synonym
+#&gt; 4  NHMSYS0021060390           Poales   Order Recommended
+#&gt; 5  NBNSYS0000002547       Poa alpina Species Recommended
+#&gt; 6  NBNSYS0000002551       Poa glauca Species Recommended
+#&gt; 7  NBNSYS0000160753          Poaceae  Family Recommended
+#&gt; 8  NHMSYS0000461804        Poa minor Species     Synonym
+#&gt; 9  NBNSYS0000002551       Poa caesia Species     Synonym
+#&gt; 10 NHMSYS0000456981       Poa rigida Species     Synonym
 </code></pre>
 
 <h2>Coerce numerics/alphanumerics to taxon IDs</h2>
@@ -565,8 +490,48 @@ get_tsn(searchterm = splist, searchtype = &quot;scientific&quot;)
 <pre><code class="r">as.gbifid(get_gbifid(&quot;Poa annua&quot;)) # already a uid, returns the same
 </code></pre>
 
-<pre><code>#&gt; 
-#&gt; Retrieving data for taxon &#39;Poa annua&#39;
+<pre><code>#&gt;     gbifid        phylum  order  family         canonicalname       rank
+#&gt; 1  2704179 Magnoliophyta Poales Poaceae             Poa annua    SPECIES
+#&gt; 2  7262139 Magnoliophyta Poales Poaceae       Poa annua annua SUBSPECIES
+#&gt; 3  6313731 Magnoliophyta Poales Poaceae       Poa annua varia SUBSPECIES
+#&gt; 4  6313730 Magnoliophyta Poales Poaceae      Poa annua exilis SUBSPECIES
+#&gt; 5  5947756 Magnoliophyta Poales Poaceae      Poa annua supina SUBSPECIES
+#&gt; 6  4128735 Magnoliophyta Poales Poaceae  Poa annua raniglumis SUBSPECIES
+#&gt; 7  4128771 Magnoliophyta Poales Poaceae   Poa annua notabilis SUBSPECIES
+#&gt; 8  6431931 Magnoliophyta Poales Poaceae  Poa annua raniglumis    VARIETY
+#&gt; 9  6431930 Magnoliophyta Poales Poaceae       Poa annua annua    VARIETY
+#&gt; 10 5947873 Magnoliophyta Poales Poaceae  Poa annua hypsophila    VARIETY
+#&gt; 11 6313732 Magnoliophyta Poales Poaceae      Poa annua supina    VARIETY
+#&gt; 12 6313765 Magnoliophyta Poales Poaceae     Poa annua reptans    VARIETY
+#&gt; 13 5947510 Magnoliophyta Poales Poaceae     Poa annua stricta    VARIETY
+#&gt; 14 5947556 Magnoliophyta Poales Poaceae Poa annua sikkimensis    VARIETY
+#&gt; 15 5947757 Magnoliophyta Poales Poaceae       Poa annua varia    VARIETY
+#&gt; 16 5947582 Magnoliophyta Poales Poaceae      Poa annua exilis    VARIETY
+#&gt; 17 5947584 Magnoliophyta Poales Poaceae Poa annua remotiflora    VARIETY
+#&gt; 18 5947754 Magnoliophyta Poales Poaceae      Poa annua exigua    VARIETY
+#&gt; 19 5947585 Magnoliophyta Poales Poaceae  Poa annua tommasinii    VARIETY
+#&gt; 20 5947583 Magnoliophyta Poales Poaceae   Poa annua maroccana    VARIETY
+#&gt;         class
+#&gt; 1  Liliopsida
+#&gt; 2  Liliopsida
+#&gt; 3  Liliopsida
+#&gt; 4  Liliopsida
+#&gt; 5  Liliopsida
+#&gt; 6  Liliopsida
+#&gt; 7  Liliopsida
+#&gt; 8  Liliopsida
+#&gt; 9  Liliopsida
+#&gt; 10 Liliopsida
+#&gt; 11 Liliopsida
+#&gt; 12 Liliopsida
+#&gt; 13 Liliopsida
+#&gt; 14 Liliopsida
+#&gt; 15 Liliopsida
+#&gt; 16 Liliopsida
+#&gt; 17 Liliopsida
+#&gt; 18 Liliopsida
+#&gt; 19 Liliopsida
+#&gt; 20 Liliopsida
 </code></pre>
 
 <pre><code>#&gt; [1] &quot;2704179&quot;
@@ -622,7 +587,7 @@ get_tsn(searchterm = splist, searchtype = &quot;scientific&quot;)
 </code></pre>
 
 <pre><code>#&gt;    user  system elapsed 
-#&gt;   0.202   0.007   2.191
+#&gt;   0.187   0.005   2.186
 </code></pre>
 
 <pre><code class="r">system.time( replicate(3, as.gbifid(c(&quot;2704179&quot;,&quot;2435099&quot;,&quot;3171445&quot;), check=FALSE)) )
@@ -634,13 +599,9 @@ get_tsn(searchterm = splist, searchtype = &quot;scientific&quot;)
 
 <h2>What taxa are downstream of my taxon of interest?</h2>
 
-<p>If someone is not a taxonomic specialist on a particular taxon he likely does not know what children taxa are within a family, or within a genus. This task becomes especially unwieldy when there are a large number of taxa downstream. You can of course go to a website like <a href="http://species.wikimedia.org/wiki/Main_Page">Wikispecies</a> or <a href="http://eol.org/">Encyclopedia of Life</a> to get downstream names. However, taxize provides an easy way to programatically search for downstream taxa, both for the <a href="http://www.catalogueoflife.org/">Catalogue of Life (CoL)</a> and the <a href="http://www.itis.gov/">Integrated Taxonomic Information System</a>. Here is a short example using the CoL in which we want to find all the species within the genus <em>Apis</em> (honey bees).</p>
+<p>If someone is not a taxonomic specialist on a particular taxon he likely does not know what children taxa are within a family, or within a genus. This task becomes especially unwieldy when there are a large number of taxa downstream. You can of course go to a website like <a href="http://species.wikimedia.org/wiki/Main_Page">Wikispecies</a> or <a href="http://www.eol.org/">Encyclopedia of Life</a> to get downstream names. However, taxize provides an easy way to programatically search for downstream taxa, both for the <a href="http://www.catalogueoflife.org/">Catalogue of Life (CoL)</a> and the <a href="http://www.itis.gov/">Integrated Taxonomic Information System</a>. Here is a short example using the CoL in which we want to find all the species within the genus <em>Apis</em> (honey bees).</p>
 
 <pre><code class="r">downstream(&quot;Apis&quot;, downto = &quot;Species&quot;, db = &quot;col&quot;)
-</code></pre>
-
-<pre><code>#&gt; 
-#&gt; Retrieving data for taxon &#39;Apis&#39;
 </code></pre>
 
 <pre><code>#&gt; $Apis
@@ -662,10 +623,6 @@ get_tsn(searchterm = splist, searchtype = &quot;scientific&quot;)
 <p>We can also request data from ITIS</p>
 
 <pre><code class="r">downstream(&quot;Apis&quot;, downto = &quot;Species&quot;, db = &quot;itis&quot;)
-</code></pre>
-
-<pre><code>#&gt; 
-#&gt; Retrieving data for taxon &#39;Apis&#39;
 </code></pre>
 
 <pre><code>#&gt; $Apis
@@ -691,11 +648,7 @@ get_tsn(searchterm = splist, searchtype = &quot;scientific&quot;)
 <pre><code class="r">children(get_colid(&quot;Apis&quot;))
 </code></pre>
 
-<pre><code>#&gt; 
-#&gt; Retrieving data for taxon &#39;Apis&#39;
-</code></pre>
-
-<pre><code>#&gt; $`20126217`
+<pre><code>#&gt; $`22425863`
 #&gt;   childtaxa_id     childtaxa_name childtaxa_rank
 #&gt; 1      6971712 Apis andreniformis        Species
 #&gt; 2      6971713        Apis cerana        Species

@@ -10,6 +10,14 @@
 #' Note that this function still only gives back a gbifid class object with one to many identifiers.
 #' See \code{\link[taxize]{get_gbifid_}} to get back all, or a subset, of the raw data that you are
 #' presented during the ask process.
+#' @param phylum (character) A phylum (aka division) name. Optional. See \code{Filtering}
+#' below.
+#' @param class (character) A class name. Optional. See \code{Filtering} below.
+#' @param order (character) An order name. Optional. See \code{Filtering} below.
+#' @param family (character) A family name. Optional. See \code{Filtering} below.
+#' @param rank (character) A taxonomic rank name. See \code{\link{rank_ref}} for possible
+#' options. Though note that some data sources use atypical ranks, so inspect the
+#' data itself for options. Optional. See \code{Filtering} below.
 #' @param x Input to \code{\link{as.gbifid}}
 #' @param check logical; Check if ID matches any existing on the DB, only used in
 #' \code{\link{as.gbifid}}
@@ -29,6 +37,12 @@
 #' and if we find an exact match we return the ID for that match. If there isn't an
 #' exact match we return the options to you to pick from.
 #'
+#' @section Filtering:
+#' The parameters \code{phylum}, \code{class}, \code{order}, \code{family}, and \code{rank}
+#' are not used in the search to the data provider, but are used in filtering the data down
+#' to a subset that is closer to the target you want.  For all these parameters,
+#' you can use regex strings since we use \code{\link{grep}} internally to match.
+#'
 #' @examples \dontrun{
 #' get_gbifid(sciname='Poa annua')
 #' get_gbifid(sciname='Pinus contorta')
@@ -45,6 +59,28 @@
 #' # When not found, NA given
 #' get_gbifid(sciname="uaudnadndj")
 #' get_gbifid(c("Chironomus riparius", "uaudnadndj"))
+#'
+#' # Narrow down results to a division or rank, or both
+#' ## Satyrium example
+#' ### Results w/o narrowing
+#' get_gbifid("Satyrium")
+#' ### w/ phylum
+#' get_gbifid("Satyrium", phylum = "Magnoliophyta")
+#' get_gbifid("Satyrium", phylum = "Arthropoda")
+#' ### w/ phylum & rank
+#' get_gbifid("Satyrium", phylum = "Arthropoda", rank = "genus")
+#'
+#' ## Rank example
+#' get_gbifid("Poa")
+#' get_gbifid("Poa", rank = "order")
+#' get_gbifid("Poa", rank = "family")
+#' get_gbifid("Poa", family = "Coccidae")
+#'
+#' # Fuzzy filter on any filtering fields
+#' ## uses grep on the inside
+#' get_gbifid("Satyrium", phylum = "arthropoda")
+#' get_gbifid("Poa", order = "*tera")
+#' get_gbifid("Poa", order = "*ales")
 #'
 #' # Convert a uid without class information to a uid class
 #' as.gbifid(get_gbifid("Poa annua")) # already a uid, returns the same
@@ -70,104 +106,130 @@
 #' get_gbifid_(c("Pinus", "uaudnadndj"))
 #' get_gbifid_(c("Pinus", "Puma"), rows=5)
 #' get_gbifid_(c("Pinus", "Puma"), rows=1:5)
+#'
+#' # use curl options
+#' library("httr")
+#' get_gbifid("Quercus douglasii", config=verbose())
+#' bb <- get_gbifid("Quercus douglasii", config=progress())
 #' }
 
-get_gbifid <- function(sciname, ask = TRUE, verbose = TRUE, rows = NA){
-  fun <- function(sciname, ask, verbose, rows) {
-    mssg(verbose, "\nRetrieving data for taxon '", sciname, "'\n")
-    df <- gbif_name_suggest(q=sciname, fields = c("key","canonicalName","rank"))
-    df <- sub_rows(df, rows)
+get_gbifid <- function(sciname, ask = TRUE, verbose = TRUE, rows = NA,
+                       phylum = NULL, class = NULL, order = NULL,
+                       family = NULL, rank = NULL, ...){
 
-    if(is.null(df))
+  fun <- function(sciname, ask, verbose, rows, ...) {
+    mssg(verbose, "\nRetrieving data for taxon '", sciname, "'\n")
+    df <- gbif_name_suggest(q = sciname, fields = c("key", "canonicalName", "rank",
+                                                    "class", "phylum", "order", "family"), ...)
+    df <- sub_rows(df, rows)
+    df <- rename(df, c('canonicalName' = 'canonicalname'))
+
+    if (is.null(df))
       df <- data.frame(NULL)
 
-    if(nrow(df)==0){
+    if (nrow(df) == 0) {
       mssg(verbose, "Not found. Consider checking the spelling or alternate classification")
       id <- NA
       att <- "not found"
-    } else
-    {
+    } else {
       names(df)[1] <- 'gbifid'
       id <- df$gbifid
       att <- "found"
     }
 
     # not found
-    if(length(id) == 0){
+    if (length(id) == 0) {
       mssg(verbose, "Not found. Consider checking the spelling or alternate classification")
       id <- NA
       att <- "not found"
     }
 
     # more than one found -> user input
-    if(length(id) > 1){
+    if (length(id) > 1) {
       # check for exact match
       matchtmp <- df[df$canonicalName %in% sciname, "gbifid"]
-      if(length(matchtmp) == 1){
+      if (length(matchtmp) == 1) {
         id <- as.character(matchtmp)
-      } else
-      {
-        if(ask){
-          rownames(df) <- 1:nrow(df)
-          # prompt
-          message("\n\n")
-          message("\nMore than one eolid found for taxon '", sciname, "'!\n
-            Enter rownumber of taxon (other inputs will return 'NA'):\n")
-          print(df)
-          take <- scan(n = 1, quiet = TRUE, what = 'raw')
+      } else {
+        if (ask) {
+          if (!is.null(phylum) || !is.null(class) || !is.null(order) ||
+              !is.null(family) || !is.null(rank)) {
+            df <- filt(df, "phylum", phylum)
+            df <- filt(df, "class", class)
+            df <- filt(df, "order", order)
+            df <- filt(df, "family", family)
+            df <- filt(df, "rank", rank)
+            id <- df$gbifid
+            if (length(id) == 1) {
+              rank_taken <- as.character(df$rank)
+              att <- "found"
+            }
+          }
 
-          if(length(take) == 0){
-            take <- 'notake'
-            att <- 'nothing chosen'
+          if (length(id) > 1) {
+            # prompt
+            message("\n\n")
+            message("\nMore than one eolid found for taxon '", sciname, "'!\n
+            Enter rownumber of taxon (other inputs will return 'NA'):\n")
+            rownames(df) <- 1:nrow(df)
+            print(df)
+            take <- scan(n = 1, quiet = TRUE, what = 'raw')
+
+            if (length(take) == 0) {
+              take <- 'notake'
+              att <- 'nothing chosen'
+            }
+            if (take %in% seq_len(nrow(df))) {
+              take <- as.numeric(take)
+              message("Input accepted, took gbifid '", as.character(df$gbifid[take]), "'.\n")
+              id <- as.character(df$gbifid[take])
+              att <- "found"
+            } else {
+              id <- NA
+              att <- "not found"
+              mssg(verbose, "\nReturned 'NA'!\n\n")
+            }
           }
-          if(take %in% seq_len(nrow(df))){
-            take <- as.numeric(take)
-            message("Input accepted, took gbifid '", as.character(df$gbifid[take]), "'.\n")
-            id <- as.character(df$gbifid[take])
-            att <- "found"
-          } else {
-            id <- NA
-            att <- "not found"
-            mssg(verbose, "\nReturned 'NA'!\n\n")
-          }
-        } else{
+        } else {
           id <- NA
           att <- "NA due to ask=FALSE"
         }
       }
     }
-    c(id=id, att=att)
+    c(id = id, att = att)
   }
-  out <- lapply(as.character(sciname), fun, ask, verbose, rows)
-  ids <- structure(sapply(out, "[[", "id"), class="gbifid", match=sapply(out, "[[", "att"))
+  out <- lapply(as.character(sciname), fun, ask, verbose, rows, ...)
+  ids <- structure(sapply(out, "[[", "id"), class = "gbifid", match = sapply(out, "[[", "att"))
   add_uri(ids, 'http://www.gbif.org/species/%s')
 }
 
 gbif_name_suggest <- function(q=NULL, datasetKey=NULL, rank=NULL, fields=NULL, start=NULL,
-                         limit=20, callopts=list())
-{
+                         limit=20, ...) {
+
   url = 'http://api.gbif.org/v1/species/suggest'
-  args <- compact(list(q=q, rank=rank, offset=start, limit=limit))
-  temp <- GET(url, query=args, callopts)
+  args <- compact(list(q = q, rank = rank, offset = start, limit = limit))
+  temp <- GET(url, query = args, ...)
   stop_for_status(temp)
   tt <- content(temp)
-  if(is.null(fields)){
-    toget <- c("key","scientificName","rank")
-  } else { toget <- fields }
+  if (is.null(fields)) {
+    toget <- c("key", "scientificName", "rank")
+  } else {
+    toget <- fields
+  }
   matched <- sapply(toget, function(x) x %in% gbif_suggestfields())
-  if(!any(matched))
-    stop(sprintf("the fields %s are not valid", paste0(names(matched[matched == FALSE]),collapse=",")))
+  if (!any(matched))
+    stop(sprintf("the fields %s are not valid", paste0(names(matched[matched == FALSE]), collapse = ",")))
   out <- lapply(tt, function(x) x[names(x) %in% toget])
-  do.call(rbind.fill, lapply(out,data.frame))
+  do.call(rbind.fill, lapply(out, data.frame))
 }
 
-gbif_suggestfields <- function(){
-  c("key","datasetTitle","datasetKey","nubKey","parentKey","parent",
-    "kingdom","phylum","clazz","order","family","genus","species",
-    "kingdomKey","phylumKey","classKey","orderKey","familyKey","genusKey",
-    "speciesKey","scientificName","canonicalName","authorship",
-    "accordingTo","nameType","taxonomicStatus","rank","numDescendants",
-    "numOccurrences","sourceId","nomenclaturalStatus","threatStatuses",
+gbif_suggestfields <- function() {
+  c("key", "datasetTitle", "datasetKey", "nubKey", "parentKey", "parent",
+    "kingdom", "phylum", "clazz", "order", "family", "genus", "species",
+    "kingdomKey", "phylumKey", "classKey", "orderKey", "familyKey", "genusKey",
+    "speciesKey", "scientificName", "canonicalName", "authorship",
+    "accordingTo", "nameType", "taxonomicStatus", "rank", "numDescendants",
+    "numOccurrences", "sourceId", "nomenclaturalStatus", "threatStatuses",
     "synonym")
 }
 

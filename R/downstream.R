@@ -17,6 +17,9 @@
 #' @param intermediate (logical) If TRUE, return a list of length two with target
 #' taxon rank names, with additional list of data.frame's of intermediate
 #' taxonomic groups. Default: FALSE
+#' @param rows (numeric) Any number from 1 to inifity. If the default NA, all rows are
+#' considered. Note that this parameter is ignored if you pass in a taxonomic id of any of the
+#' acceptable classes: tsn, colid.
 #' @param ... Further args passed on to \code{itis_downstream} or \code{col_downstream}
 #'
 #' @return A named list of data.frames with the downstream names of every supplied taxa.
@@ -63,6 +66,15 @@
 #' ## col
 #' downstream(get_colid("Animalia"), downto="Class")
 #' downstream(get_colid("Animalia"), downto="Class", intermediate=TRUE)
+#'
+#' # Use the rows parameter
+#' ## note how in the second function call you don't get the prompt
+#' downstream("Poa", db = 'col', downto="Species")
+#' downstream("Poa", db = 'col', downto="Species", rows=1)
+#'
+#' # use curl options
+#' res <- downstream("Apis", db = 'col', downto = 'Species', config=verbose())
+#' res <- downstream("Apis", db = 'itis', downto = 'Species', config=verbose())
 #' }
 downstream <- function(...){
   UseMethod("downstream")
@@ -70,16 +82,16 @@ downstream <- function(...){
 
 #' @export
 #' @rdname downstream
-downstream.default <- function(x, db = NULL, downto = NULL, intermediate = FALSE, ...){
+downstream.default <- function(x, db = NULL, downto = NULL, intermediate = FALSE, rows=NA, ...){
   nstop(downto, "downto")
   nstop(db)
   switch(db,
          itis = {
-           id <- get_tsn(x, ...)
+           id <- get_tsn(x, rows=rows, ...)
            setNames(downstream(id, downto = downto, intermediate = intermediate, ...), x)
          },
          col = {
-           id <- get_colid(x, ...)
+           id <- get_colid(x, rows=rows, ...)
            setNames(downstream(id, downto = downto, intermediate = intermediate, ...), x)
          },
          stop("the provided db value was not recognised", call. = FALSE)
