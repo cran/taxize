@@ -25,7 +25,7 @@ downstream(...)
 \arguments{
 \item{...}{Further args passed on to \code{itis_downstream} or \code{col_downstream}}
 
-\item{x}{character; taxons to query.}
+\item{x}{Vector of taxa names (character) or IDs (character or numeric) to query.}
 
 \item{db}{character; database to query. One or both of \code{itis}, \code{col}.}
 
@@ -57,6 +57,13 @@ the function.
 }
 \examples{
 \dontrun{
+# Plug in taxon IDs
+## col Ids have to be character, as they are alphanumeric IDs
+downstream("015be25f6b061ba517f495394b80f108", db = "col", downto = "Species")
+## ITIS tsn ids can be numeric or character
+downstream("154395", db = "itis", downto = "Species")
+downstream(154395, db = "itis", downto = "Species")
+
 # Plug in taxon names
 downstream("Insecta", db = 'col', downto = 'Order')
 downstream("Apis", db = 'col', downto = 'Species')

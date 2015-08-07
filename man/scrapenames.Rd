@@ -6,7 +6,7 @@
 \usage{
 scrapenames(url = NULL, file = NULL, text = NULL, engine = NULL,
   unique = NULL, verbatim = NULL, detect_language = NULL,
-  all_data_sources = NULL, data_source_ids = NULL, callopts = list())
+  all_data_sources = NULL, data_source_ids = NULL, ...)
 }
 \arguments{
 \item{url}{An encoded URL for a web page, PDF, Microsoft Office document, or
@@ -21,23 +21,24 @@ examples}
 \item{engine}{(optional) (integer) Default: 0. Either 1 for TaxonFinder,
 2 for NetiNeti, or 0 for both. If absent, both engines are used.}
 
-\item{unique}{(optional) (logical) If TRUE (default), response has unique names without offsets.}
+\item{unique}{(optional) (logical) If \code{TRUE} (default), response has unique
+names without offsets.}
 
-\item{verbatim}{(optional) Type: boolean, If TRUE (default to FALSE), response excludes verbatim
-strings.}
+\item{verbatim}{(optional) Type: boolean, If \code{TRUE} (default to \code{FALSE}),
+response excludes verbatim strings.}
 
-\item{detect_language}{(optional) Type: boolean, When TRUE (default), NetiNeti is not used if
-the language of incoming text is determined not to be English. When 'false', NetiNeti will
-be used if requested.}
+\item{detect_language}{(optional) Type: boolean, When \code{TRUE} (default), NetiNeti
+is not used if the language of incoming text is determined not to be English. When
+\code{FALSE}, NetiNeti will be used if requested.}
 
-\item{all_data_sources}{(optional) Type: bolean. Resolve found names against all available
+\item{all_data_sources}{(optional) Type: boolean. Resolve found names against all available
 Data Sources.}
 
 \item{data_source_ids}{(optional) Type: string. Pipe separated list of data source ids to
 resolve found names against. See list of Data Sources
 \url{http://resolver.globalnames.org/data_sources}.}
 
-\item{callopts}{Further args passed to \code{\link[httr]{GET}}}
+\item{...}{Further args passed to \code{\link[httr]{GET}}}
 }
 \value{
 A list of length two, first is metadata, second is the data as a data.frame.
@@ -45,11 +46,11 @@ A list of length two, first is metadata, second is the data as a data.frame.
 \description{
 Uses the Global Names Recognition and Discovery service, see
 \url{http://gnrd.globalnames.org/}.
+
+Note: this function somestimes gives data back and sometimes not. The API that this
+function is extremely buggy.
 }
 \details{
-Note: this function somestimes gives data back and sometimes not. The API that this function is
-extremely buggy.
-
 One of url, file, or text must be specified - and only one of them.
 }
 \examples{
@@ -62,20 +63,29 @@ scrapenames(url = 'http://www.plosone.org/article/info\%3Adoi\%2F10.1371\%2Fjour
 scrapenames(url = 'http://ucjeps.berkeley.edu/cgi-bin/get_JM_treatment.pl?CARYOPHYLLACEAE')
 
 # Scrape names from a pdf at a URL
-url = 'http://www.plosone.org/article/fetchObject.action?uri=
+url <- 'http://www.plosone.org/article/fetchObject.action?uri=
 info\%3Adoi\%2F10.1371\%2Fjournal.pone.0058268&representation=PDF'
 scrapenames(url = sub('\\n', '', url))
 
 # With arguments
 scrapenames(url = 'http://www.mapress.com/zootaxa/2012/f/z03372p265f.pdf', unique=TRUE)
-scrapenames(url = 'http://en.wikipedia.org/wiki/Araneae', data_source_ids=c(1,169))
+scrapenames(url = 'http://en.wikipedia.org/wiki/Araneae', data_source_ids=c(1, 169))
 
-# Get data from a file - NOT WORKING YET
-scrapenames(file = '~/github/sac/joshwork/species_for_Scott.txt')
+# Get data from a file
+speciesfile <- system.file("examples", "species.txt", package = "taxize")
+scrapenames(file = speciesfile)
 
-# Get data from text string as an R object
+nms <- paste0(names_list("species"), collapse="\\n")
+file <- tempfile(fileext = ".txt")
+writeLines(nms, file)
+scrapenames(file = file)
+
+# Get data from text string
 scrapenames(text='A spider named Pardosa moesta Banks, 1892')
-scrapenames(text=paste0(names_list("species"), collapse=" "))
+
+# use curl options
+library("httr")
+scrapenames(text='A spider named Pardosa moesta Banks, 1892', config = verbose())
 }
 }
 \author{

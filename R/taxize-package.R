@@ -1,5 +1,6 @@
-#' Taxnomic search and phylogeny retrieval.
+#' @title Taxnomic search and phylogeny retrieval.
 #'
+#' @section About:
 #' We are developing taxize as a package to allow users to search over many
 #' websites for species names (scientific and common) and download up- and
 #' downstream taxonomic hierarchical information - and many other things.
@@ -15,11 +16,12 @@
 #' You need API keys for Encyclopedia of Life (EOL), the Universal Biological
 #' Indexer and Organizer (uBio), Tropicos, and Plantminer.
 #'
-#' Currently supported APIs are:
+#' @section Currently supported APIs:
 #'
 #' \tabular{llc}{
 #' API \tab prefix \tab SOAP? \cr
 #' Encyclopedia of Life (EOL)  \tab eol \tab FALSE \cr
+#' Taxonomic Name Resolution Service \tab tnrs \tab FALSE \cr
 #' Integrated Taxonomic Information Service (ITIS)  \tab itis \tab FALSE \cr
 #' Phylomatic \tab phylomatic \tab FALSE \cr
 #' uBio \tab ubio \tab FALSE \cr
@@ -41,10 +43,26 @@
 #' National Biodiversity Network (UK)	\tab nbn \tab FALSE \cr
 #' }
 #'
-#' If the source above has a \code{TRUE} in the \code{SOAP?} column, it is not available if you
-#' installed this package from CRAN. They are available from a different package called taxizesoap.
-#' See the Github repo for how to install \url{https://github.com/ropensci/taxizesoap}
+#' If the source above has a \code{TRUE} in the \code{SOAP?} column, it is not available
+#' in this package. They are available from a different package called taxizesoap.
+#' See the GitHub repo for how to install \url{https://github.com/ropensci/taxizesoap}
 #'
+#' @importFrom graphics plot
+#' @importFrom methods as is
+#' @importFrom stats as.dist hclust na.omit setNames aggregate
+#' @importFrom utils URLencode citation download.file read.delim write.table
+#' @importFrom ape read.tree as.phylo.hclust plot.phylo
+#' @importFrom jsonlite fromJSON toJSON
+#' @importFrom openssl base64_decode
+#' @importFrom httr GET POST content stop_for_status upload_file warn_for_status
+#' add_headers timeout config
+#' @importFrom data.table rbindlist
+#' @importFrom foreach foreach %do%
+#' @importFrom stringr str_extract str_split str_replace str_replace_all
+#' @importFrom plyr failwith rbind.fill llply ldply ddply laply l_ply summarise colwise .
+#' @importFrom reshape2 melt dcast
+#' @importFrom XML xpathApply xpathSApply getNodeSet htmlParse xmlParse xmlValue
+#' xmlTreeParse xmlGetAttr xmlToList
 #' @name taxize-package
 #' @aliases taxize
 #' @docType package
@@ -174,7 +192,7 @@ NULL
 #'  \item \code{\link{eol_hierarchy}}: See \code{\link{classification}}
 #'  \item \code{\link{tp_classification}}: See \code{\link{classification}}
 #'  \item \code{\link{tpl_search}}: Use the \code{Taxonstand} functions
-#'  \code{\link[Taxonstand]{TPL}} or \code{\link[Taxonstand]{TPLck}} directly.
+#'  \code{TPL} or \code{TPLck} directly.
 #'  \item \code{\link{get_seqs}}: This function changed name to \code{\link{ncbi_getbyname}}.
 #'  \item \code{\link{get_genes}}: This function changed name to \code{\link{ncbi_getbyid}}.
 #'  \item \code{\link{get_genes_avail}}: This function changed name to \code{\link{ncbi_search}}.

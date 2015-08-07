@@ -1,7 +1,6 @@
 #' Get the NameID codes from Tropicos for taxonomic names.
 #'
 #' @export
-#' @import plyr RCurl
 #' @param sciname (character) One or more scientific name's as a vector or list.
 #' @param ask logical; should get_tpsid be run in interactive mode?
 #' If TRUE and more than one ID is found for the species, the user is asked for
@@ -29,6 +28,7 @@
 #' provider, but are used in filtering the data down to a subset that is closer to the
 #' target you want.  For all these parameters,
 #' you can use regex strings since we use \code{\link{grep}} internally to match.
+#' Filtering narrows down to the set that matches your query, and removes the rest.
 #'
 #' @seealso \code{\link[taxize]{get_tsn}}, \code{\link[taxize]{get_tpsid}}
 #'
@@ -142,6 +142,7 @@ get_tpsid <- function(sciname, ask = TRUE, verbose = TRUE, key = NULL, rows = NA
         if (!is.null(family) || !is.null(rank)) {
           df <- filt(df, "family", family)
           df <- filt(df, "rank", rank)
+          if (NROW(df) > 1) rownames(df) <- 1:nrow(df)
           id <- df$tpsid
           if (length(id) == 1) {
             rank_taken <- as.character(df$rank)

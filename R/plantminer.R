@@ -1,6 +1,5 @@
 #' Search for taxonomy data from Plantminer.com
 #'
-#' @import RCurl foreach
 #' @param plants Vector of plant species names.
 #' @param key Your api key for the plantminer.com site.  Go to
 #' 		\url{http://www.plantminer.com/} to get your api key.  Two options for
@@ -36,7 +35,7 @@ plantminer <- function(plants, key = NULL, verbose=TRUE)
       url.pm <- URLencode(paste("http://www.plantminer.com/search/",
           genus, "?key=", key, sep = ""))
     }
-    sp <- getURL(url.pm)
+    sp <- content(GET(url.pm))
     sp <- c(unlist(strsplit(sp, "\\|")))
     sp
   }

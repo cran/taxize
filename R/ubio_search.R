@@ -1,6 +1,5 @@
 #' This function will return NameBankIDs that match given search terms
 #'
-#' @import httr XML RCurl plyr
 #' @export
 #' @param searchName (character) - term to search within name string
 #' @param searchAuth (character) - term to search within name authorship
@@ -31,7 +30,7 @@ ubio_search <- function(searchName = NULL, searchAuth = NULL, searchYear=NULL,
 
 	url = "http://www.ubio.org/webservices/service.php"
 	keyCode <- getkey(keyCode, "ubioApiKey")
-	args <- taxize_compact(list('function' = 'namebank_search', searchName = searchName,
+	args <- tc(list('function' = 'namebank_search', searchName = searchName,
                        searchAuth = searchAuth,
 	                     searchYear = searchYear, order = order,
 	                     sci = sci, vern = vern, keyCode = keyCode))
@@ -44,16 +43,21 @@ ubio_search <- function(searchName = NULL, searchAuth = NULL, searchYear=NULL,
     scitoget <- c("namebankID", "nameString", "fullNameString", "packageID",
                   "packageName", "basionymUnit", "rankID", "rankName")
     temp2 <- lapply(scitoget, function(x) sapply(xpathApply(tt, paste("//scientificNames//", x, sep = "")), xmlValue))
-    temp2[2:3] <- sapply(temp2[2:3], base64Decode)
+    temp2[2:3] <- lapply(temp2[2:3], function(x) {
+      unname(sapply(x, function(z) rawToChar(openssl::base64_decode(z))))
+    })
     sciout <- data.frame(do.call(cbind, temp2), stringsAsFactors = FALSE)
     names(sciout) <- tolower(scitoget)
   }
   if (!vern == 1) {
     vernout <- NULL
   } else {
-    verntoget <- c("namebankID", "nameString", "languageCode", "languageName", "packageID", "packageName", "namebankIDLink", "nameStringLink", "fullNameStringLink")
+    verntoget <- c("namebankID", "nameString", "languageCode", "languageName",
+      "packageID", "packageName", "namebankIDLink", "nameStringLink", "fullNameStringLink")
     temp2 <- lapply(verntoget, function(x) sapply(xpathApply(tt, paste("//vernacularNames//", x, sep = "")), xmlValue))
-    temp2[c(2,8,9)] <- sapply(temp2[c(2,8,9)], base64Decode, USE.NAMES = FALSE)
+    temp2[c(2,8,9)] <- lapply(temp2[c(2,8,9)], function(x) {
+      unname(sapply(x, function(z) rawToChar(openssl::base64_decode(z))))
+    })
     vernout <- data.frame(do.call(cbind, temp2), stringsAsFactors = FALSE)
     names(vernout) <- tolower(verntoget)
   }

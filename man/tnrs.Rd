@@ -2,13 +2,13 @@
 % Please edit documentation in R/tnrs.R
 \name{tnrs}
 \alias{tnrs}
-\title{Search the Phylotastic Taxonomic Name Resolution Service.}
+\title{Phylotastic Taxonomic Name Resolution Service.}
 \usage{
 tnrs(query = NA, source = NULL, code = NULL, getpost = "POST",
-  sleep = 0, splitby = 30, verbose = TRUE, callopts = list())
+  sleep = 0, splitby = 30, verbose = TRUE, ...)
 }
 \arguments{
-\item{query}{Quoted taxonomic names to search in a vector (character).}
+\item{query}{Vector of quoted taxonomic names to search (character).}
 
 \item{source}{Specify the source you want to match names against. Defaults
   to just retrieve data from all sources. Options: NCBI, iPlant_TNRS,
@@ -29,27 +29,26 @@ seconds. Use when doing many calls in a for loop ar lapply type call.}
 
 \item{splitby}{Number by which to split species list for querying the TNRS.}
 
-\item{verbose}{Verbosity or not (default TRUE)}
+\item{verbose}{Verbosity or not (default \code{TRUE})}
 
-\item{callopts}{Curl debugging options to pass in httr::GET or POST}
+\item{...}{Curl options to pass in \code{\link[httr]{GET}} or
+\code{\link[httr]{POST}}}
 }
 \value{
 data.frame of results from TNRS plus the name submitted.
 }
 \description{
-Match taxonomic names using the Taxonomic Name Resolution Service (TNRS).
-Returns score of the matched name, and whether it was accepted or not.
+Match taxonomic names using the Taxonomic Name Resolution
+Service (TNRS). Returns score of the matched name, and whether it was
+accepted or not.
 }
 \details{
 If there is no match in the Taxosaurus database, nothing is
-   returned, so youwill not get anything back for non matches.
+   returned, so you will not get anything back for non-matches.
 }
 \examples{
 \dontrun{
-# Default, uses GET curl method, you can't specify any other
-# parameters when using GET
-# Specifying the source to match against
-mynames <- c("Helianthus annuus", "Poa annua")
+mynames <- c("Helianthus annuus", "Poa annua", "Mimulus bicolor")
 tnrs(query = mynames, source = "iPlant_TNRS")
 
 # Specifying the nomenclatural code to match against
@@ -61,7 +60,6 @@ mynames <- c("Panthera tigris", "Eutamias minimus", "Magnifera indica",
 "Humbert humbert")
 tnrs(query = mynames, source = "NCBI,MSW3")
 
-# Using POST method, especially useful when you have a lot of species
 mynames <- c("Panthera tigris", "Eutamias minimus", "Magnifera indica",
    "Humbert humbert", "Helianthus annuus", "Pinus contorta", "Poa annua",
    "Abies magnifica", "Rosa california", "Festuca arundinace",
@@ -74,6 +72,11 @@ mynames <- names_list(rank="species", size=75)
 tnrs(query=mynames, source = "NCBI")
 ## Or use splitby
 tnrs(mynames, source = "NCBI", splitby=50)
+
+# Pass on curl options
+library("httr")
+mynames <- c("Helianthus annuus", "Poa annua", "Mimulus bicolor")
+tnrs(query = mynames, source = "iPlant_TNRS", config = verbose())
 }
 }
 

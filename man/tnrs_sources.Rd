@@ -2,19 +2,21 @@
 % Please edit documentation in R/tnrs_sources.r
 \name{tnrs_sources}
 \alias{tnrs_sources}
-\title{Get sources for the Phylotastic Taxonomic Name Resolution Service.}
+\title{TNRS sources}
 \usage{
-tnrs_sources(source = NULL)
+tnrs_sources(source = NULL, ...)
 }
 \arguments{
 \item{source}{The source to get information on, one of "iPlant_TNRS",
 "NCBI", or "MSW3".}
+
+\item{...}{Curl options to pass in \code{\link[httr]{GET}}}
 }
 \value{
-Sources for the TNRS API.
+Sources for the TNRS API in a vector or list
 }
 \description{
-Get sources for the Phylotastic Taxonomic Name Resolution Service.
+Get sources for the Phylotastic Taxonomic Name Resolution Service
 }
 \examples{
 \dontrun{

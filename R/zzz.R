@@ -40,7 +40,6 @@ getkey <- function(x = NULL, service) {
 
 #' Replacement function for ldply that should be faster in all cases.
 #'
-#' @import plyr
 #' @param x A list.
 #' @param convertvec Convert a vector to a data.frame before rbind is called.
 #' @export
@@ -60,9 +59,7 @@ taxize_ldfast <- function(x, convertvec=FALSE){
 }
 
 mssg <- function(v, ...) if(v) message(...)
-
-taxize_compact <- function (l) Filter(Negate(is.null), l)
-tc <- taxize_compact
+tc <- function (l) Filter(Negate(is.null), l)
 
 #' Lookup details for specific names in all taxonomies in GBIF.
 #'
@@ -70,7 +67,6 @@ tc <- taxize_compact
 #' This is a taxize version of the same function in the \code{rgbif} package so as to not have to
 #' import rgbif and thus require GDAL binary installation.
 #'
-#' @import httr plyr jsonlite
 #' @export
 #' @param rank (character) Taxonomic rank. Filters by taxonomic rank as one of:
 #'     CLASS, CULTIVAR, CULTIVAR_GROUP, DOMAIN, FAMILY, FORM, GENUS, INFORMAL,
@@ -106,7 +102,7 @@ gbif_name_usage <- function(key=NULL, name=NULL, data='all', language=NULL, data
     stop("Parameters not currently accepted: \n sourceId")
 
 
-  args <- compact(list(language=language, name=name, datasetKey=datasetKey,
+  args <- tc(list(language=language, name=name, datasetKey=datasetKey,
                        rank=rank, offset=start, limit=limit, sourceId=sourceId))
   data <- match.arg(data,
                     choices=c('all', 'verbatim', 'name', 'parents', 'children',
@@ -144,13 +140,12 @@ gbif_name_usage <- function(key=NULL, name=NULL, data='all', language=NULL, data
   }
 
   # Get data
-  if(length(data)==1){ out <- getdata(data) } else
-  { out <- lapply(data, getdata) }
-
-  out
+  if (length(data) == 1) {
+    getdata(data)
+  } else {
+    lapply(data, getdata)
+  }
 }
-
-taxize_compact <- function (l) Filter(Negate(is.null), l)
 
 pluck <- function(x, name, type) {
   if (missing(type)) {
@@ -230,15 +225,19 @@ strtrim <- function(str) {
 
 # function to help filter get_*() functions for a rank name or rank itself --------------
 filt <- function(df, rank, z) {
-  if (!is.null(z)) {
-    mtch <- grep(tolower(z), tolower(df[,rank]))
-    if (length(mtch) != 0) {
-      df[mtch, ]
+  if (NROW(df) == 0) {
+    df
+  } else {
+    if (!is.null(z)) {
+      mtch <- grep(tolower(z), tolower(df[,rank]))
+      if (length(mtch) != 0) {
+        df[mtch, ]
+      } else {
+        data.frame(NULL)
+      }
     } else {
       df
     }
-  } else {
-    df
   }
 }
 
@@ -258,4 +257,12 @@ try_default <- function(expr, default, quiet = FALSE){
 failwith <- function(default = NULL, f, quiet = FALSE){
   f <- match.fun(f)
   function(...) try_default(f(...), default, quiet = quiet)
+}
+
+argsnull <- function(x) {
+  if (length(x) == 0) {
+    NULL
+  } else {
+    x
+  }
 }

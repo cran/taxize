@@ -1,6 +1,6 @@
 #' Search Catalogue of Life for for direct children of a particular taxon.
 #'
-#' @import RCurl XML plyr
+#' @export
 #' @param name The string to search for. Only exact matches found the name given
 #' 		will be returned, unless one or wildcards are included in the search
 #'   	string. An * (asterisk) character denotes a wildcard; a % (percentage)
@@ -46,26 +46,12 @@
 #' library(plyr)
 #' ldply(out) # combine to one data.frame
 #' }
-#' @export
-
-col_children <- function(name = NULL, id = NULL, format = NULL, start = NULL,
-	checklist = NULL, ...)
-{
+col_children <- function(name = NULL, id = NULL, format = NULL, start = NULL, checklist = NULL, ...) {
   url = "http://www.catalogueoflife.org/col/webservice"
 	func <- function(x, y, ...) {
-		if(is.null(checklist)){NULL} else {
-			cc <- match.arg(checklist, choices=c(2012,2011,2010,2009,2008,2007))
-			if(cc %in% c(2012,2011,2010)){
-				url <- gsub("col", paste("annual-checklist/", cc, sep=""), url)
-			} else
-			{
-				url <- "http://webservice.catalogueoflife.org/annual-checklist/year/search.php"
-				url <- gsub("year", cc, url)
-			}
-		}
-
-		args <- compact(list(name=x, id=y, format=format, response="full", start=start))
-		out <- GET(url, query = args, ...)
+	  url <- make_url(checklist)
+		args <- tc(list(name = x, id = y, format = format, response = "full", start = start))
+		out <- GET(url, query = argsnull(args), ...)
 		stop_for_status(out)
 		tt <- xmlParse(content(out, "text"))
 
@@ -75,12 +61,12 @@ col_children <- function(name = NULL, id = NULL, format = NULL, start = NULL,
 		data.frame(childtaxa_id, childtaxa_name, childtaxa_rank, stringsAsFactors = FALSE)
 	}
 	safe_func <- plyr::failwith(NULL, func)
-	if(is.null(id)){
-		temp <- llply(name, safe_func, y=NULL, ...)
+	if (is.null(id)) {
+		temp <- llply(name, safe_func, y = NULL, ...)
 		names(temp) <- name
 		temp
 	} else {
-		temp <- llply(id, safe_func, x=NULL, ...)
+		temp <- llply(id, safe_func, x = NULL, ...)
 		names(temp) <- id
 		temp
 	}

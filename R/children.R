@@ -6,7 +6,7 @@
 #'
 #' @export
 #'
-#' @param x character; taxons to query.
+#' @param x Vector of taxa names (character) or IDs (character or numeric) to query.
 #' @param db character; database to query. One or more of \code{itis}, \code{col}, or \code{ncbi}.
 #' @param rows (numeric) Any number from 1 to inifity. If the default NA, all rows are
 #' considered. Note that this parameter is ignored if you pass in a taxonomic id of any of the
@@ -19,6 +19,13 @@
 #' You get an NA if there was no match in the database.
 #'
 #' @examples \dontrun{
+#' # Plug in taxonomic IDs
+#' children(161994, db = "itis")
+#' children(8028, db = "ncbi")
+#' children("578cbfd2674a9b589f19af71a33b89b6", db = "col")
+#' ## works with numeric if as character as well
+#' children("161994", db = "itis")
+#'
 #' # Plug in taxon names
 #' children("Salmo", db = 'col')
 #' children("Salmo", db = 'itis')
@@ -61,20 +68,18 @@ children <- function(...){
   UseMethod("children")
 }
 
-#' @method children default
 #' @export
 #' @rdname children
-children.default <- function(x, db = NULL, rows = NA, ...)
-{
+children.default <- function(x, db = NULL, rows = NA, ...) {
   nstop(db)
   switch(db,
          itis = {
-           id <- get_tsn(x, rows = rows, ...)
+           id <- process_children_ids(x, db, get_tsn, rows = rows, ...)
            setNames(children(id, ...), x)
          },
 
          col = {
-           id <- get_colid(x, rows = rows, ...)
+           id <- process_children_ids(x, db, get_colid, rows = rows, ...)
            setNames(children(id, ...), x)
          },
 
@@ -85,25 +90,31 @@ children.default <- function(x, db = NULL, rows = NA, ...)
              setNames(children(id, ...), x)
            } else {
              out <- ncbi_children(name = x, ...)
-             structure(out, class='children', db='ncbi', .Names=x)
+             structure(out, class = 'children', db = 'ncbi', .Names = x)
            }
          },
-
 #        ubio = {
 #          id <- get_ubioid(x, ...)
 #          out <- children(id, ...)
 #          names(out) <- x
 #        },
-
          stop("the provided db value was not recognised", call. = FALSE)
   )
 }
 
-#' @method children tsn
+process_children_ids <- function(input, db, fxn, ...){
+  g <- tryCatch(as.numeric(as.character(input)), warning = function(e) e)
+  if (is(g, "numeric") || is.character(input) && grepl("[[:digit:]]", input)) {
+    as_fxn <- switch(db, itis = as.tsn, col = as.colid)
+    as_fxn(input, check = FALSE)
+  } else {
+    eval(fxn)(input, ...)
+  }
+}
+
 #' @export
 #' @rdname children
-children.tsn <- function(x,  db = NULL, ...)
-{
+children.tsn <- function(x,  db = NULL, ...) {
   fun <- function(y){
     # return NA if NA is supplied
     if (is.na(y)) {
@@ -119,13 +130,12 @@ children.tsn <- function(x,  db = NULL, ...)
   return(out)
 }
 
-#' @method children colid
 #' @export
 #' @rdname children
 children.colid <- function(x,  db = NULL, ...) {
   fun <- function(y){
     # return NA if NA is supplied
-    if(is.na(y)){
+    if (is.na(y)) {
       out <- NA
     } else {
       out <- col_children(id = y, ...)
@@ -133,7 +143,9 @@ children.colid <- function(x,  db = NULL, ...) {
     return(out)
   }
   out <- lapply(x, fun)
-  if(length(out)==1){ out=out[[1]] } else { out=out }
+  if (length(out) == 1) {
+    out = out[[1]]
+  }
   class(out) <- 'children'
   attr(out, 'db') <- 'col'
   return(out)
@@ -157,11 +169,9 @@ children.colid <- function(x,  db = NULL, ...) {
 #   return(out)
 # }
 
-#' @method children ids
 #' @export
 #' @rdname children
-children.ids <- function(x, db = NULL, ...)
-{
+children.ids <- function(x, db = NULL, ...) {
   fun <- function(y, ...){
     # return NA if NA is supplied
     if (is.na(y)) {
@@ -176,11 +186,9 @@ children.ids <- function(x, db = NULL, ...)
   return(out)
 }
 
-#' @method children uid
 #' @export
 #' @rdname children
-children.uid <- function(x, db = NULL, ...)
-{
+children.uid <- function(x, db = NULL, ...) {
   out <- ncbi_children(id = x, ...)
   class(out) <- 'children'
   attr(out, 'db') <- 'ncbi'

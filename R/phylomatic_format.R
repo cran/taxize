@@ -2,7 +2,6 @@
 #'    to Phylomatic for use in the function phylomatic_tree.
 #'
 #' @export
-#' @import XML RCurl stringr plyr
 #' @param taxa quoted tsn number (taxonomic serial number)
 #' @param format output format, isubmit (you can paste in to the Phylomatic
 #'     website), or 'rsubmit' to use in fxn phylomatic_tree

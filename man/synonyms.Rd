@@ -31,7 +31,7 @@ synonyms(...)
 \item{...}{Other passed arguments to internal functions \code{get_*()} and functions to
 gather synonyms.}
 
-\item{x}{character; taxons to query.}
+\item{x}{Vector of taxa names (character) or IDs (character or numeric) to query.}
 
 \item{db}{character; database to query. either \code{itis}, \code{tropicos},
 \code{ubio}, \code{col}, or \code{nbn}.}
@@ -60,6 +60,13 @@ only accepted names are used \code{accepted = TRUE}, or if all are used
 }
 \examples{
 \dontrun{
+# Plug in taxon IDs
+synonyms("183327", db="itis")
+synonyms("25509881", db="tropicos")
+synonyms("2529704", db='ubio')
+synonyms("NBNSYS0000004629", db='nbn')
+synonyms("87e986b0873f648711900866fa8abde7", db='col')
+
 # Plug in taxon names directly
 synonyms("Pinus contorta", db="itis")
 synonyms("Puma concolor", db="itis")

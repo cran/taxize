@@ -1,6 +1,5 @@
 #' Get the GBIF backbone taxon ID from taxonomic names.
 #'
-#' @import plyr RCurl
 #' @param sciname character; scientific name.
 #' @param ask logical; should get_colid be run in interactive mode?
 #' If TRUE and more than one ID is found for the species, the user is asked for
@@ -42,6 +41,7 @@
 #' are not used in the search to the data provider, but are used in filtering the data down
 #' to a subset that is closer to the target you want.  For all these parameters,
 #' you can use regex strings since we use \code{\link{grep}} internally to match.
+#' Filtering narrows down to the set that matches your query, and removes the rest.
 #'
 #' @examples \dontrun{
 #' get_gbifid(sciname='Poa annua')
@@ -159,6 +159,7 @@ get_gbifid <- function(sciname, ask = TRUE, verbose = TRUE, rows = NA,
             df <- filt(df, "order", order)
             df <- filt(df, "family", family)
             df <- filt(df, "rank", rank)
+            if (NROW(df) > 1) rownames(df) <- 1:nrow(df)
             id <- df$gbifid
             if (length(id) == 1) {
               rank_taken <- as.character(df$rank)
@@ -207,8 +208,8 @@ gbif_name_suggest <- function(q=NULL, datasetKey=NULL, rank=NULL, fields=NULL, s
                          limit=20, ...) {
 
   url = 'http://api.gbif.org/v1/species/suggest'
-  args <- compact(list(q = q, rank = rank, offset = start, limit = limit))
-  temp <- GET(url, query = args, ...)
+  args <- tc(list(q = q, rank = rank, offset = start, limit = limit))
+  temp <- GET(url, query = argsnull(args), ...)
   stop_for_status(temp)
   tt <- content(temp)
   if (is.null(fields)) {

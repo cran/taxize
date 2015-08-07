@@ -1,6 +1,5 @@
 #' Search the CANADENSYS Vascan API.
 #'
-#' @import httr jsonlite
 #' @export
 #'
 #' @param q (character) Can be a scientific name, a vernacular name or a VASCAN
