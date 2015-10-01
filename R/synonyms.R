@@ -2,13 +2,12 @@
 #'
 #' @param x Vector of taxa names (character) or IDs (character or numeric) to query.
 #' @param db character; database to query. either \code{itis}, \code{tropicos},
-#' \code{ubio}, \code{col}, or \code{nbn}.
+#' \code{col}, or \code{nbn}.
 #' @param id character; identifiers, returned by \code{\link[taxize]{get_tsn}},
-#'    \code{\link[taxize]{get_tpsid}}, \code{\link[taxize]{get_ubioid}}, or
-#'    \code{\link[taxize]{get_nbnid}}
+#'    \code{\link[taxize]{get_tpsid}}, or \code{\link[taxize]{get_nbnid}}
 #' @param rows (numeric) Any number from 1 to inifity. If the default NA, all rows are
 #' considered. Note that this parameter is ignored if you pass in a taxonomic id of any of the
-#' acceptable classes: tsn, tpsid, ubioid, nbnid, ids.
+#' acceptable classes: tsn, tpsid, nbnid, ids.
 #' @param ... Other passed arguments to internal functions \code{get_*()} and functions to
 #' gather synonyms.
 #'
@@ -21,14 +20,13 @@
 #' \code{accepted = FALSE}. The default is \code{accepted = FALSE}.
 #'
 #' @seealso \code{\link[taxize]{get_tsn}}, \code{\link[taxize]{get_tpsid}},
-#' \code{\link[taxize]{get_ubioid}}, \code{\link[taxize]{get_nbnid}}
+#' \code{\link[taxize]{get_nbnid}}
 #'
 #' @export
 #' @examples \dontrun{
 #' # Plug in taxon IDs
 #' synonyms("183327", db="itis")
 #' synonyms("25509881", db="tropicos")
-#' synonyms("2529704", db='ubio')
 #' synonyms("NBNSYS0000004629", db='nbn')
 #' synonyms("87e986b0873f648711900866fa8abde7", db='col')
 #'
@@ -39,8 +37,6 @@
 #' synonyms("Poa annua", db="tropicos")
 #' synonyms("Pinus contorta", db="tropicos")
 #' synonyms(c("Poa annua",'Pinus contorta'), db="tropicos")
-#' synonyms("Salmo friderici", db='ubio')
-#' synonyms(c("Salmo friderici",'Carcharodon carcharias','Puma concolor'), db="ubio")
 #' synonyms("Pinus sylvestris", db='nbn')
 #' synonyms("Puma concolor", db='col')
 #' synonyms("Ursus americanus", db='col')
@@ -55,7 +51,6 @@
 #' # Use get_* methods
 #' synonyms(get_tsn("Poa annua"))
 #' synonyms(get_tpsid("Poa annua"))
-#' synonyms(get_ubioid("Carcharodon carcharias"))
 #' synonyms(get_nbnid("Carcharodon carcharias"))
 #' synonyms(get_colid("Ornithodoros lagophilus"))
 #'
@@ -93,10 +88,6 @@ synonyms.default <- function(x, db = NULL, rows = NA, ...) {
            id <- process_syn_ids(x, db, get_tpsid, rows = rows, ...)
            setNames(synonyms(id, ...), x)
          },
-         ubio = {
-           id <- process_syn_ids(x, db, get_ubioid, searchtype = 'scientific', rows = rows, ...)
-           setNames(synonyms(id, ...), x)
-         },
          nbn = {
            id <- process_syn_ids(x, db, get_nbnid, rows = rows, ...)
            setNames(synonyms(id, ...), x)
@@ -116,7 +107,6 @@ process_syn_ids <- function(input, db, fxn, ...){
     as_fxn <- switch(db,
                      itis = as.tsn,
                      tropicos = as.tpsid,
-                     ubio = as.ubioid,
                      nbn = as.nbnid,
                      col = as.colid)
     as_fxn(input, check = FALSE)
@@ -197,19 +187,6 @@ synonyms.tpsid <- function(id, ...) {
       NA
     } else {
       tp_synonyms(x, ...)$synonyms
-    }
-  }
-  setNames(lapply(id, fun), id)
-}
-
-#' @export
-#' @rdname synonyms
-synonyms.ubioid <- function(id, ...) {
-  fun <- function(x){
-    if (is.na(x)) {
-      NA
-    } else {
-      ubio_id(namebankID = x, ...)[['synonyms']]
     }
   }
   setNames(lapply(id, fun), id)

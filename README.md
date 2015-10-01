@@ -17,7 +17,7 @@ The `taxize` tutorial is can be found at [http://ropensci.org/tutorials/taxize.h
 
 The functions in the package that hit a specific API have a prefix and suffix separated by an underscore. They follow the format of `service_whatitdoes`.  For example, `gnr_resolve` uses the Global Names Resolver API to resolve species names.  General functions in the package that don't hit a specific API don't have two words separated by an underscore, e.g., `classification`.
 
-You need API keys for Encyclopedia of Life (EOL), the Universal Biological Indexer and Organizer (uBio), Tropicos, and Plantminer.
+You need API keys for Encyclopedia of Life (EOL), and Tropicos.
 
 ## SOAP
 
@@ -68,12 +68,6 @@ Note that a few data sources require SOAP web services, which are difficult to s
 	<td style="text-align:left;">none</td>
 </tr>
 <tr>
-	<td style="text-align:left;">uBio</td>
-	<td style="text-align:left;"><code>ubio</code></td>
-	<td style="text-align:left;"><a href="http://www.ubio.org/index.php?pagename=xml_services">link</a></td>
-	<td style="text-align:left;"><a href="http://www.ubio.org/index.php?pagename=form">link</a></td>
-</tr>
-<tr>
 	<td style="text-align:left;">Global Names Resolver</td>
 	<td style="text-align:left;"><code>gnr</code></td>
 	<td style="text-align:left;"><a href="http://resolver.globalnames.org/api">link</a></td>
@@ -98,12 +92,6 @@ Note that a few data sources require SOAP web services, which are difficult to s
 	<td style="text-align:left;"><a href="http://services.tropicos.org/help?requestkey">link</a></td>
 </tr>
 <tr>
-	<td style="text-align:left;">Plantminer</td>
-	<td style="text-align:left;"><code>plantminer</code></td>
-	<td style="text-align:left;"><a href="http://www.plantminer.com/help">link</a></td>
-	<td style="text-align:left;"><a href="http://www.plantminer.com/help">link</a></td>
-</tr>
-<tr>
 	<td style="text-align:left;">Theplantlist dot org</td>
 	<td style="text-align:left;"><code>tpl</code></td>
 	<td style="text-align:left;">**</td>
@@ -113,12 +101,6 @@ Note that a few data sources require SOAP web services, which are difficult to s
 	<td style="text-align:left;">Catalogue of Life</td>
 	<td style="text-align:left;"><code>col</code></td>
 	<td style="text-align:left;"><a href="http://www.catalogueoflife.org/colwebsite/content/web-services">link</a></td>
-	<td style="text-align:left;">none</td>
-</tr>
-<tr>
-	<td style="text-align:left;">Global Invasive Species Database</td>
-	<td style="text-align:left;"><code>gisd</code></td>
-	<td style="text-align:left;">***</td>
 	<td style="text-align:left;">none</td>
 </tr>
 <tr>
@@ -325,42 +307,26 @@ upstream("Pinus contorta", db = 'itis', upto = 'Genus', verbose=FALSE)
 
 
 ```r
-synonyms("Salmo friderici", db='ubio')
-#>    ubioid          target family    rank
-#> 1 2529704 Salmo friderici Pisces species
-#> 2  169693 Salmo friderici Pisces species
-#> $`Salmo friderici`
-#>   namebankid                    namestring
-#> 1     130562 Leporinus friderici friderici
-#> 2     169693               Salmo friderici
-#> 3    2495407 Leporinus friderici friderici
-#>                                fullnamestring
-#> 1 Leporinus friderici friderici (Bloch, 1794)
-#> 2                 Salmo friderici Bloch, 1794
-#> 3               Leporinus friderici friderici
+synonyms("Acer drummondii", db="itis")
+#> $`Acer drummondii`
+#>   sub_tsn                    acc_name acc_tsn       message
+#> 1  183671 Acer rubrum var. drummondii  526853 no syns found
 ```
 
 ### Get taxonomic IDs from many sources
 
 
 ```r
-get_ids(names="Salvelinus fontinalis", db = c('ubio','ncbi'), verbose=FALSE)
-#>    ubioid                target     family      rank
-#> 1 2501330 Salvelinus fontinalis     Pisces   species
-#> 2 6581534 Salvelinus fontinalis Salmonidae   species
-#> 3  137827 Salvelinus fontinalis     Pisces   species
-#> 4 6244425 Salvelinus fontinalis Salmonidae trinomial
-#> 5 7130714 Salvelinus fontinalis Salmonidae trinomial
-#> 6 6653671 Salvelinus fontinalis Salmonidae trinomial
-#> $ubio
+get_ids(names="Salvelinus fontinalis", db = c('itis', 'ncbi'), verbose=FALSE)
+#> $itis
 #> Salvelinus fontinalis 
-#>             "2501330" 
-#> attr(,"class")
-#> [1] "ubioid"
+#>              "162003" 
 #> attr(,"match")
 #> [1] "found"
 #> attr(,"uri")
-#> [1] "http://www.ubio.org/browser/details.php?namebankID=2501330"
+#> [1] "http://www.itis.gov/servlet/SingleRpt/SingleRpt?search_topic=TSN&search_value=162003"
+#> attr(,"class")
+#> [1] "tsn"
 #> 
 #> $ncbi
 #> Salvelinus fontinalis 
@@ -402,13 +368,13 @@ Furthermore, you can just back all ids if that's your jam with the `get_*_()` fu
 get_ids_(c("Chironomus riparius", "Pinus contorta"), db = 'nbn', rows=1:3)
 #> $nbn
 #> $nbn$`Chironomus riparius`
-#>   ptaxonVersionKey    searchMatchTitle    rank  nameStatus
+#>   ptaxonversionkey    searchmatchtitle    rank  namestatus
 #> 1 NBNSYS0000027573 Chironomus riparius Species Recommended
 #> 2 NBNSYS0000023345   Paederus riparius Species Recommended
-#> 3 NHMSYS0001718042   Elaphrus riparius Species Recommended
+#> 3 NHMSYS0001719942    Quedius riparius Species Recommended
 #> 
 #> $nbn$`Pinus contorta`
-#>   ptaxonVersionKey               searchMatchTitle       rank  nameStatus
+#>   ptaxonversionkey               searchmatchtitle       rank  namestatus
 #> 1 NHMSYS0000494848   Pinus contorta var. contorta    Variety Recommended
 #> 2 NBNSYS0000004786                 Pinus contorta    Species Recommended
 #> 3 NHMSYS0000494848 Pinus contorta subsp. contorta Subspecies Recommended
@@ -503,6 +469,7 @@ Check out our [milestones](https://github.com/ropensci/taxize/milestones) to see
 * Please [report any issues or bugs](https://github.com/ropensci/taxize/issues).
 * License: MIT
 * Get citation information for `taxize` in R doing `citation(package = 'taxize')`
+* Please note that this project is released with a [Contributor Code of Conduct](CONDUCT.md). By participating in this project you agree to abide by its terms.
 
 [![ropensci](http://ropensci.org/public_images/github_footer.png)](http://ropensci.org)
 

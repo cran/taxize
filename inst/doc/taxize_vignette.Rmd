@@ -34,7 +34,7 @@ This is a common task in biology. We often have a list of species names and we w
 
 ```r
 temp <- gnr_resolve(names = c("Helianthos annus", "Homo saapiens"))
-head( temp$results )
+head(temp)
 ```
 
 ```
@@ -191,7 +191,7 @@ get_uid(sciname = "Pinus")
 #> 1 active subgenus seed plants          Pinus hard pines 139271      
 #> 2 active    genus seed plants          Pinus              3337      
 #>   species subsp modificationdate
-#> 1               2010/12/13 00:00
+#> 1               2015/09/16 00:00
 #> 2               2004/09/10 00:00
 ```
 
@@ -233,7 +233,6 @@ There are functions for many other sources
 * `get_gbifid()`
 * `get_nbnid()`
 * `get_tpsid()`
-* `get_ubioid()`
 
 Sometimes with these functions you get a lot of data back. In these cases you may want to limit your choices. Soon we will incorporate the ability to filter using `regex` to limit matches, but for now, we have a new parameter, `rows`, which lets you select certain rows. For example, you can select the first row of each given name, which means there is no interactive component:
 
@@ -261,15 +260,15 @@ get_nbnid(c("Zootoca vivipara","Pinus contorta"), rows = 1:3)
 ```
 
 ```
-#>              nbnid                  searchMatchTitle       rank
+#>              nbnid                  searchmatchtitle       rank
 #> 1 NHMSYS0001706186                  Zootoca vivipara    Species
 #> 2 NHMSYS0020784960 Zootoca vivipara subsp. pannonica Subspecies
 #> 3 NHMSYS0001706185                           Zootoca      Genus
-#>    nameStatus
+#>    namestatus
 #> 1 Recommended
 #> 2 Recommended
 #> 3 Recommended
-#>              nbnid               searchMatchTitle       rank  nameStatus
+#>              nbnid               searchmatchtitle       rank  namestatus
 #> 1 NHMSYS0000494848   Pinus contorta var. contorta    Variety Recommended
 #> 2 NBNSYS0000004786                 Pinus contorta    Species Recommended
 #> 3 NHMSYS0000494848 Pinus contorta subsp. contorta Subspecies Recommended
@@ -291,11 +290,11 @@ In addition, in case you don't want to do interactive name selection in the case
 
 ```r
 out <- get_nbnid_("Poa annua")
-NROW(out)
+NROW(out$`Poa annua`)
 ```
 
 ```
-#> [1] 1
+#> [1] 147
 ```
 
 That's a lot of data, so we can get only certain rows back
@@ -307,73 +306,28 @@ get_nbnid_("Poa annua", rows = 1:10)
 
 ```
 #> $`Poa annua`
-#>    ptaxonVersionKey searchMatchTitle    rank   nameStatus
+#>    ptaxonversionkey searchmatchtitle    rank   namestatus
 #> 1  NBNSYS0000002544        Poa annua Species  Recommended
 #> 2  NHMSYS0000461798              Poa   Genus  Recommended
 #> 3  NHMSYS0000461804         Poa laxa Species      Synonym
 #> 4  NHMSYS0021060390           Poales   Order  Recommended
-#> 5  NHMSYS0000458512       Poa pilosa Species      Synonym
-#> 6  NBNSYS0000002547       Poa alpina Species  Recommended
-#> 7  NHMSYS0000461804        Poa minor Species      Synonym
-#> 8  NBNSYS0000002545       Poa exilis Species Undetermined
-#> 9  NBNSYS0000002551       Poa caesia Species      Synonym
-#> 10 NBNSYS0000002551       Poa glauca Species  Recommended
+#> 5  NBNSYS0000002547       Poa alpina Species  Recommended
+#> 6  NBNSYS0000002551       Poa glauca Species  Recommended
+#> 7  NBNSYS0000002551       Poa caesia Species      Synonym
+#> 8  NBNSYS0000160753          Poaceae  Family  Recommended
+#> 9  NHMSYS0000461804        Poa minor Species      Synonym
+#> 10 NBNSYS0000002545       Poa exilis Species Undetermined
 ```
 
 ## Coerce numerics/alphanumerics to taxon IDs
 
-We've also introduced in `v0.5` the ability to coerce numerics and alphanumerics to taxonomic ID classes that are usually only retrieved via `get_*()` functions. 
+We've also introduced in `v0.5` the ability to coerce numerics and alphanumerics to taxonomic ID classes that are usually only retrieved via `get_*()` functions.
 
 For example, adfafd
 
 
 ```r
 as.gbifid(get_gbifid("Poa annua")) # already a uid, returns the same
-```
-
-```
-#>     gbifid        phylum  order  family         canonicalname       rank
-#> 1  2704179 Magnoliophyta Poales Poaceae             Poa annua    SPECIES
-#> 2  5947756 Magnoliophyta Poales Poaceae      Poa annua supina SUBSPECIES
-#> 3  4128771 Magnoliophyta Poales Poaceae   Poa annua notabilis SUBSPECIES
-#> 4  4128735 Magnoliophyta Poales Poaceae  Poa annua raniglumis SUBSPECIES
-#> 5  6313731 Magnoliophyta Poales Poaceae       Poa annua varia SUBSPECIES
-#> 6  6313730 Magnoliophyta Poales Poaceae      Poa annua exilis SUBSPECIES
-#> 7  7262139 Magnoliophyta Poales Poaceae       Poa annua annua SUBSPECIES
-#> 8  6431930 Magnoliophyta Poales Poaceae       Poa annua annua    VARIETY
-#> 9  6431931 Magnoliophyta Poales Poaceae  Poa annua raniglumis    VARIETY
-#> 10 5947510 Magnoliophyta Poales Poaceae     Poa annua stricta    VARIETY
-#> 11 5947556 Magnoliophyta Poales Poaceae Poa annua sikkimensis    VARIETY
-#> 12 5947584 Magnoliophyta Poales Poaceae Poa annua remotiflora    VARIETY
-#> 13 5947583 Magnoliophyta Poales Poaceae   Poa annua maroccana    VARIETY
-#> 14 5947757 Magnoliophyta Poales Poaceae       Poa annua varia    VARIETY
-#> 15 5947582 Magnoliophyta Poales Poaceae      Poa annua exilis    VARIETY
-#> 16 5947585 Magnoliophyta Poales Poaceae  Poa annua tommasinii    VARIETY
-#> 17 5947754 Magnoliophyta Poales Poaceae      Poa annua exigua    VARIETY
-#> 18 5947811 Magnoliophyta Poales Poaceae     Poa annua sericea    VARIETY
-#> 19 6085004 Magnoliophyta Poales Poaceae   Poa annua rivulorum    VARIETY
-#> 20 4128785 Magnoliophyta Poales Poaceae   Poa annua eriolepis    VARIETY
-#>         class
-#> 1  Liliopsida
-#> 2  Liliopsida
-#> 3  Liliopsida
-#> 4  Liliopsida
-#> 5  Liliopsida
-#> 6  Liliopsida
-#> 7  Liliopsida
-#> 8  Liliopsida
-#> 9  Liliopsida
-#> 10 Liliopsida
-#> 11 Liliopsida
-#> 12 Liliopsida
-#> 13 Liliopsida
-#> 14 Liliopsida
-#> 15 Liliopsida
-#> 16 Liliopsida
-#> 17 Liliopsida
-#> 18 Liliopsida
-#> 19 Liliopsida
-#> 20 Liliopsida
 ```
 
 ```
@@ -439,7 +393,7 @@ system.time( replicate(3, as.gbifid(c("2704179","2435099","3171445"), check=TRUE
 
 ```
 #>    user  system elapsed 
-#>   0.116   0.002   1.759
+#>   0.117   0.003   1.753
 ```
 
 ```r
@@ -448,7 +402,7 @@ system.time( replicate(3, as.gbifid(c("2704179","2435099","3171445"), check=FALS
 
 ```
 #>    user  system elapsed 
-#>   0.000   0.000   0.001
+#>   0.001   0.000   0.001
 ```
 
 ## What taxa are downstream of my taxon of interest?

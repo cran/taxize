@@ -10,7 +10,7 @@ ipni_search(family = NULL, infrafamily = NULL, genus = NULL,
   includepublicationauthors = NULL, includebasionymauthors = NULL,
   geounit = NULL, addedsince = NULL, modifiedsince = NULL,
   isapnirecord = NULL, isgcirecord = NULL, isikrecord = NULL,
-  ranktoreturn = NULL, output = "minimal", callopts = list())
+  ranktoreturn = NULL, output = "minimal", ...)
 }
 \arguments{
 \item{family}{Family name to search on (Optional)}
@@ -61,7 +61,7 @@ be greater than or equal to 1993-01-01.)}
 
 \item{output}{One of minimal (default), classic, short, or extended}
 
-\item{callopts}{Curl options passed on to httr::GET
+\item{...}{Curl options passed on to \code{\link[httr]{GET}}
 (Optional). Default: returns all ranks.}
 }
 \value{

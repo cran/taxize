@@ -228,7 +228,7 @@ hr {
 <p>This is a common task in biology. We often have a list of species names and we want to know a) if we have the most up to date names, b) if our names are spelled correctly, and c) the scientific name for a common name. One way to resolve names is via the Global Names Resolver (GNR) service provided by the <a href="http://www.eol.org/">Encyclopedia of Life</a>. Here, we are searching for two misspelled names:</p>
 
 <pre><code class="r">temp &lt;- gnr_resolve(names = c(&quot;Helianthos annus&quot;, &quot;Homo saapiens&quot;))
-head( temp$results )
+head(temp)
 </code></pre>
 
 <pre><code>#&gt;     submitted_name         matched_name data_source_title score
@@ -367,7 +367,7 @@ classification(specieslist, db = &#39;itis&#39;)
 #&gt; 1 active subgenus seed plants          Pinus hard pines 139271      
 #&gt; 2 active    genus seed plants          Pinus              3337      
 #&gt;   species subsp modificationdate
-#&gt; 1               2010/12/13 00:00
+#&gt; 1               2015/09/16 00:00
 #&gt; 2               2004/09/10 00:00
 </code></pre>
 
@@ -406,7 +406,6 @@ get_tsn(searchterm = splist, searchtype = &quot;scientific&quot;)
 <li><code>get_gbifid()</code></li>
 <li><code>get_nbnid()</code></li>
 <li><code>get_tpsid()</code></li>
-<li><code>get_ubioid()</code></li>
 </ul>
 
 <p>Sometimes with these functions you get a lot of data back. In these cases you may want to limit your choices. Soon we will incorporate the ability to filter using <code>regex</code> to limit matches, but for now, we have a new parameter, <code>rows</code>, which lets you select certain rows. For example, you can select the first row of each given name, which means there is no interactive component:</p>
@@ -429,15 +428,15 @@ get_tsn(searchterm = splist, searchtype = &quot;scientific&quot;)
 <pre><code class="r">get_nbnid(c(&quot;Zootoca vivipara&quot;,&quot;Pinus contorta&quot;), rows = 1:3)
 </code></pre>
 
-<pre><code>#&gt;              nbnid                  searchMatchTitle       rank
+<pre><code>#&gt;              nbnid                  searchmatchtitle       rank
 #&gt; 1 NHMSYS0001706186                  Zootoca vivipara    Species
 #&gt; 2 NHMSYS0020784960 Zootoca vivipara subsp. pannonica Subspecies
 #&gt; 3 NHMSYS0001706185                           Zootoca      Genus
-#&gt;    nameStatus
+#&gt;    namestatus
 #&gt; 1 Recommended
 #&gt; 2 Recommended
 #&gt; 3 Recommended
-#&gt;              nbnid               searchMatchTitle       rank  nameStatus
+#&gt;              nbnid               searchmatchtitle       rank  namestatus
 #&gt; 1 NHMSYS0000494848   Pinus contorta var. contorta    Variety Recommended
 #&gt; 2 NBNSYS0000004786                 Pinus contorta    Species Recommended
 #&gt; 3 NHMSYS0000494848 Pinus contorta subsp. contorta Subspecies Recommended
@@ -456,10 +455,10 @@ get_tsn(searchterm = splist, searchtype = &quot;scientific&quot;)
 <p>In addition, in case you don&#39;t want to do interactive name selection in the case where there are a lot of names, you can get all data back with functions of the form, e.g., <code>get_tsn_()</code>, and likewise for other data sources. For example:</p>
 
 <pre><code class="r">out &lt;- get_nbnid_(&quot;Poa annua&quot;)
-NROW(out)
+NROW(out$`Poa annua`)
 </code></pre>
 
-<pre><code>#&gt; [1] 1
+<pre><code>#&gt; [1] 147
 </code></pre>
 
 <p>That&#39;s a lot of data, so we can get only certain rows back</p>
@@ -468,70 +467,26 @@ NROW(out)
 </code></pre>
 
 <pre><code>#&gt; $`Poa annua`
-#&gt;    ptaxonVersionKey searchMatchTitle    rank   nameStatus
+#&gt;    ptaxonversionkey searchmatchtitle    rank   namestatus
 #&gt; 1  NBNSYS0000002544        Poa annua Species  Recommended
 #&gt; 2  NHMSYS0000461798              Poa   Genus  Recommended
 #&gt; 3  NHMSYS0000461804         Poa laxa Species      Synonym
 #&gt; 4  NHMSYS0021060390           Poales   Order  Recommended
-#&gt; 5  NHMSYS0000458512       Poa pilosa Species      Synonym
-#&gt; 6  NBNSYS0000002547       Poa alpina Species  Recommended
-#&gt; 7  NHMSYS0000461804        Poa minor Species      Synonym
-#&gt; 8  NBNSYS0000002545       Poa exilis Species Undetermined
-#&gt; 9  NBNSYS0000002551       Poa caesia Species      Synonym
-#&gt; 10 NBNSYS0000002551       Poa glauca Species  Recommended
+#&gt; 5  NBNSYS0000002547       Poa alpina Species  Recommended
+#&gt; 6  NBNSYS0000002551       Poa glauca Species  Recommended
+#&gt; 7  NBNSYS0000002551       Poa caesia Species      Synonym
+#&gt; 8  NBNSYS0000160753          Poaceae  Family  Recommended
+#&gt; 9  NHMSYS0000461804        Poa minor Species      Synonym
+#&gt; 10 NBNSYS0000002545       Poa exilis Species Undetermined
 </code></pre>
 
 <h2>Coerce numerics/alphanumerics to taxon IDs</h2>
 
-<p>We&#39;ve also introduced in <code>v0.5</code> the ability to coerce numerics and alphanumerics to taxonomic ID classes that are usually only retrieved via <code>get_*()</code> functions. </p>
+<p>We&#39;ve also introduced in <code>v0.5</code> the ability to coerce numerics and alphanumerics to taxonomic ID classes that are usually only retrieved via <code>get_*()</code> functions.</p>
 
 <p>For example, adfafd</p>
 
 <pre><code class="r">as.gbifid(get_gbifid(&quot;Poa annua&quot;)) # already a uid, returns the same
-</code></pre>
-
-<pre><code>#&gt;     gbifid        phylum  order  family         canonicalname       rank
-#&gt; 1  2704179 Magnoliophyta Poales Poaceae             Poa annua    SPECIES
-#&gt; 2  5947756 Magnoliophyta Poales Poaceae      Poa annua supina SUBSPECIES
-#&gt; 3  4128771 Magnoliophyta Poales Poaceae   Poa annua notabilis SUBSPECIES
-#&gt; 4  4128735 Magnoliophyta Poales Poaceae  Poa annua raniglumis SUBSPECIES
-#&gt; 5  6313731 Magnoliophyta Poales Poaceae       Poa annua varia SUBSPECIES
-#&gt; 6  6313730 Magnoliophyta Poales Poaceae      Poa annua exilis SUBSPECIES
-#&gt; 7  7262139 Magnoliophyta Poales Poaceae       Poa annua annua SUBSPECIES
-#&gt; 8  6431930 Magnoliophyta Poales Poaceae       Poa annua annua    VARIETY
-#&gt; 9  6431931 Magnoliophyta Poales Poaceae  Poa annua raniglumis    VARIETY
-#&gt; 10 5947510 Magnoliophyta Poales Poaceae     Poa annua stricta    VARIETY
-#&gt; 11 5947556 Magnoliophyta Poales Poaceae Poa annua sikkimensis    VARIETY
-#&gt; 12 5947584 Magnoliophyta Poales Poaceae Poa annua remotiflora    VARIETY
-#&gt; 13 5947583 Magnoliophyta Poales Poaceae   Poa annua maroccana    VARIETY
-#&gt; 14 5947757 Magnoliophyta Poales Poaceae       Poa annua varia    VARIETY
-#&gt; 15 5947582 Magnoliophyta Poales Poaceae      Poa annua exilis    VARIETY
-#&gt; 16 5947585 Magnoliophyta Poales Poaceae  Poa annua tommasinii    VARIETY
-#&gt; 17 5947754 Magnoliophyta Poales Poaceae      Poa annua exigua    VARIETY
-#&gt; 18 5947811 Magnoliophyta Poales Poaceae     Poa annua sericea    VARIETY
-#&gt; 19 6085004 Magnoliophyta Poales Poaceae   Poa annua rivulorum    VARIETY
-#&gt; 20 4128785 Magnoliophyta Poales Poaceae   Poa annua eriolepis    VARIETY
-#&gt;         class
-#&gt; 1  Liliopsida
-#&gt; 2  Liliopsida
-#&gt; 3  Liliopsida
-#&gt; 4  Liliopsida
-#&gt; 5  Liliopsida
-#&gt; 6  Liliopsida
-#&gt; 7  Liliopsida
-#&gt; 8  Liliopsida
-#&gt; 9  Liliopsida
-#&gt; 10 Liliopsida
-#&gt; 11 Liliopsida
-#&gt; 12 Liliopsida
-#&gt; 13 Liliopsida
-#&gt; 14 Liliopsida
-#&gt; 15 Liliopsida
-#&gt; 16 Liliopsida
-#&gt; 17 Liliopsida
-#&gt; 18 Liliopsida
-#&gt; 19 Liliopsida
-#&gt; 20 Liliopsida
 </code></pre>
 
 <pre><code>#&gt; [1] &quot;2704179&quot;
@@ -587,14 +542,14 @@ NROW(out)
 </code></pre>
 
 <pre><code>#&gt;    user  system elapsed 
-#&gt;   0.116   0.002   1.759
+#&gt;   0.117   0.003   1.753
 </code></pre>
 
 <pre><code class="r">system.time( replicate(3, as.gbifid(c(&quot;2704179&quot;,&quot;2435099&quot;,&quot;3171445&quot;), check=FALSE)) )
 </code></pre>
 
 <pre><code>#&gt;    user  system elapsed 
-#&gt;   0.000   0.000   0.001
+#&gt;   0.001   0.000   0.001
 </code></pre>
 
 <h2>What taxa are downstream of my taxon of interest?</h2>

@@ -8,7 +8,6 @@
 \alias{synonyms.nbnid}
 \alias{synonyms.tpsid}
 \alias{synonyms.tsn}
-\alias{synonyms.ubioid}
 \title{Retrieve synonyms from various sources given input taxonomic names or identifiers.}
 \usage{
 synonyms(...)
@@ -21,8 +20,6 @@ synonyms(...)
 
 \method{synonyms}{tpsid}(id, ...)
 
-\method{synonyms}{ubioid}(id, ...)
-
 \method{synonyms}{nbnid}(id, ...)
 
 \method{synonyms}{ids}(id, ...)
@@ -34,15 +31,14 @@ gather synonyms.}
 \item{x}{Vector of taxa names (character) or IDs (character or numeric) to query.}
 
 \item{db}{character; database to query. either \code{itis}, \code{tropicos},
-\code{ubio}, \code{col}, or \code{nbn}.}
+\code{col}, or \code{nbn}.}
 
 \item{rows}{(numeric) Any number from 1 to inifity. If the default NA, all rows are
 considered. Note that this parameter is ignored if you pass in a taxonomic id of any of the
-acceptable classes: tsn, tpsid, ubioid, nbnid, ids.}
+acceptable classes: tsn, tpsid, nbnid, ids.}
 
 \item{id}{character; identifiers, returned by \code{\link[taxize]{get_tsn}},
-\code{\link[taxize]{get_tpsid}}, \code{\link[taxize]{get_ubioid}}, or
-\code{\link[taxize]{get_nbnid}}}
+\code{\link[taxize]{get_tpsid}}, or \code{\link[taxize]{get_nbnid}}}
 }
 \value{
 A named list of data.frames with the synonyms of every supplied taxa.
@@ -63,7 +59,6 @@ only accepted names are used \code{accepted = TRUE}, or if all are used
 # Plug in taxon IDs
 synonyms("183327", db="itis")
 synonyms("25509881", db="tropicos")
-synonyms("2529704", db='ubio')
 synonyms("NBNSYS0000004629", db='nbn')
 synonyms("87e986b0873f648711900866fa8abde7", db='col')
 
@@ -74,8 +69,6 @@ synonyms(c("Poa annua",'Pinus contorta','Puma concolor'), db="itis")
 synonyms("Poa annua", db="tropicos")
 synonyms("Pinus contorta", db="tropicos")
 synonyms(c("Poa annua",'Pinus contorta'), db="tropicos")
-synonyms("Salmo friderici", db='ubio')
-synonyms(c("Salmo friderici",'Carcharodon carcharias','Puma concolor'), db="ubio")
 synonyms("Pinus sylvestris", db='nbn')
 synonyms("Puma concolor", db='col')
 synonyms("Ursus americanus", db='col')
@@ -90,7 +83,6 @@ synonyms("Spinus pinus", db="itis")
 # Use get_* methods
 synonyms(get_tsn("Poa annua"))
 synonyms(get_tpsid("Poa annua"))
-synonyms(get_ubioid("Carcharodon carcharias"))
 synonyms(get_nbnid("Carcharodon carcharias"))
 synonyms(get_colid("Ornithodoros lagophilus"))
 
@@ -113,6 +105,6 @@ synonyms("Poa annua", db='col', rows=1, config=verbose())
 }
 \seealso{
 \code{\link[taxize]{get_tsn}}, \code{\link[taxize]{get_tpsid}},
-\code{\link[taxize]{get_ubioid}}, \code{\link[taxize]{get_nbnid}}
+\code{\link[taxize]{get_nbnid}}
 }
 

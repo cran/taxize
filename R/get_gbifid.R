@@ -147,7 +147,7 @@ get_gbifid <- function(sciname, ask = TRUE, verbose = TRUE, rows = NA,
     # more than one found -> user input
     if (length(id) > 1) {
       # check for exact match
-      matchtmp <- df[df$canonicalName %in% sciname, "gbifid"]
+      matchtmp <- df[as.character(df$canonicalname) %in% sciname, "gbifid"]
       if (length(matchtmp) == 1) {
         id <- as.character(matchtmp)
       } else {
@@ -160,10 +160,15 @@ get_gbifid <- function(sciname, ask = TRUE, verbose = TRUE, rows = NA,
             df <- filt(df, "family", family)
             df <- filt(df, "rank", rank)
             if (NROW(df) > 1) rownames(df) <- 1:nrow(df)
-            id <- df$gbifid
-            if (length(id) == 1) {
-              rank_taken <- as.character(df$rank)
-              att <- "found"
+            if (NROW(df) == 0) {
+              id <- NA
+              att <- "not found"
+            } else {
+              id <- df$gbifid
+              if (length(id) == 1) {
+                rank_taken <- as.character(df$rank)
+                att <- "found"
+              }
             }
           }
 
@@ -256,7 +261,7 @@ as.gbifid.numeric <- function(x, check=TRUE) as.gbifid(as.character(x), check)
 
 #' @export
 #' @rdname get_gbifid
-as.gbifid.data.frame <- function(x, check=TRUE) structure(x$ids, class="gbifid", match=x$match, uri=x$uri)
+as.gbifid.data.frame <- function(x, check = TRUE) structure(x$ids, class = "gbifid", match = x$match, uri = x$uri)
 
 #' @export
 #' @rdname get_gbifid
@@ -272,12 +277,12 @@ make_gbifid <- function(x, check=TRUE) make_generic(x, 'http://www.gbif.org/spec
 
 toid <- function(x, url, class){
   uri <- sprintf(url, x)
-  structure(x, class=class, match="found", uri=uri)
+  structure(x, class = class, match = "found", uri = uri)
 }
 
 check_gbifid <- function(x){
   tryid <- tryCatch(gbif_name_usage(key = x), error = function(e) e)
-  if( "error" %in% class(tryid) && is.null(tryid$key) ) FALSE else TRUE
+  if ( "error" %in% class(tryid) && is.null(tryid$key) ) FALSE else TRUE
 }
 
 #' @export
@@ -288,6 +293,7 @@ get_gbifid_ <- function(sciname, verbose = TRUE, rows = NA){
 
 get_gbifd_help <- function(sciname, verbose, rows){
   mssg(verbose, "\nRetrieving data for taxon '", sciname, "'\n")
-  df <- gbif_name_suggest(q=sciname, fields = c("key","canonicalName","rank"))
+  df <- gbif_name_suggest(q = sciname, fields = c("key","canonicalName","rank"))
+  if (!is.null(df)) df <- nmslwr(df)
   sub_rows(df, rows)
 }

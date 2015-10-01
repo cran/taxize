@@ -179,39 +179,14 @@ hr {
 </tr>
 </thead><tbody>
 <tr>
+<td>children</td>
+<td>Get direct children</td>
+<td>COL, NCBI, ITIS</td>
+</tr>
+<tr>
 <td>classification</td>
 <td>Upstream classification</td>
-<td>Various</td>
-</tr>
-<tr>
-<td>col_children</td>
-<td>Direct children</td>
-<td>Catalogue of Life</td>
-</tr>
-<tr>
-<td>col_downstream</td>
-<td>Downstream taxa to specified rank</td>
-<td>Catalogue of Life</td>
-</tr>
-<tr>
-<td>eol_hierarchy</td>
-<td>Upstream classification</td>
-<td>Encyclopedia of Life</td>
-</tr>
-<tr>
-<td>eol_search</td>
-<td>Search EOL taxon information</td>
-<td>Encyclopedia of Life</td>
-</tr>
-<tr>
-<td>ncbi_search</td>
-<td>Get NCBI sequences</td>
-<td>National Center for Biotechnology Information</td>
-</tr>
-<tr>
-<td>get_ids</td>
-<td>Get taxonomic identifiers</td>
-<td>Five sources</td>
+<td>COL, NCBI, ITIS, Tropicos, EOL, GBIF, NBN</td>
 </tr>
 <tr>
 <td>comm2sci</td>
@@ -219,81 +194,50 @@ hr {
 <td>EOL, NCBI, ITIS, Tropicos</td>
 </tr>
 <tr>
+<td>downstream</td>
+<td>Downstream taxa to specified rank</td>
+<td>COL, ITIS</td>
+</tr>
+<tr>
+<td>get_ids</td>
+<td>Get taxonomic identifiers</td>
+<td>COL, NCBI, ITIS, Tropicos, EOL, GBIF, NBN</td>
+</tr>
+<tr>
+<td>resolve</td>
+<td>Resolve names using any resolver</td>
+<td>GNR, TNRS, iPlant</td>
+</tr>
+<tr>
 <td>sci2comm</td>
 <td>Get common from scientific names</td>
 <td>EOL, NCBI, ITIS</td>
 </tr>
 <tr>
-<td>gisd_isinvasive</td>
-<td>Invasiveness status</td>
-<td>Global Invasive Species Database</td>
+<td>synonyms</td>
+<td>Retrieve synonyms given input names/identifiers</td>
+<td>COL, NCBI, ITIS, Tropicos</td>
 </tr>
 <tr>
-<td>gni_parse</td>
-<td>Parse scientific names into components</td>
-<td>Global Names Index</td>
-</tr>
-<tr>
-<td>gni_search</td>
-<td>Search EOL&#39;s global names index</td>
-<td>Global Names Index</td>
-</tr>
-<tr>
-<td>gnr_resolve</td>
-<td>Resolve names using EOL&#39;s global names index</td>
-<td>Global Names Resolver</td>
-</tr>
-<tr>
-<td>itis_downstream</td>
-<td>Downstream taxa to specified rank</td>
-<td>Integrated Taxonomic Information System</td>
-</tr>
-<tr>
-<td>iucn_summary</td>
-<td>Get IUCN status for a species</td>
-<td>IUCN Red List</td>
-</tr>
-<tr>
-<td>phylomatic_tree</td>
-<td>Get a plant Phylogeny</td>
-<td>Phylomatic</td>
-</tr>
-<tr>
-<td>plantminer</td>
-<td>Search Plantminer</td>
-<td>Plantminer</td>
-</tr>
-<tr>
-<td>tax_name</td>
-<td>Get taxonomic name for specific rank</td>
-<td>Various</td>
-</tr>
-<tr>
-<td>tax_rank</td>
-<td>Get rank of a taxonomic name</td>
-<td>Various</td>
-</tr>
-<tr>
-<td>tnrs</td>
-<td>Resolve names using Taxosaurus/iPlant</td>
-<td>Taxosaurus Taxonomic Name Resolution Service</td>
-</tr>
-<tr>
-<td>tp_accnames</td>
-<td>Check for accepted names using Tropicos</td>
-<td>Tropicos</td>
-</tr>
-<tr>
-<td>ubio_namebank</td>
-<td>Search uBio</td>
-<td>uBio</td>
-</tr>
-<tr>
-<td>ipni_search</td>
-<td>Search the International Plant Names Index</td>
-<td>IPNI</td>
+<td>upstream</td>
+<td>Retrieve upstream taxa given names/identifiers</td>
+<td>COL, ITIS</td>
 </tr>
 </tbody></table>
+
+<h3>Acronyms</h3>
+
+<ul>
+<li>COL: Catalogue of Life</li>
+<li>NCBI: National Center for Biotechnology Information</li>
+<li>ITIS: Integrated Taxonomic Information Service</li>
+<li>EOL: Encylopedia of Life</li>
+<li>GBIF: Global Biodiversity Information Facility</li>
+<li>NBN: National Biodiversity Network (UK)</li>
+<li>iPlant: iPlant Name Resolution Service</li>
+<li>GNR: Global Names Resolver</li>
+<li>TNRS: Taxonomic Name Resolution Service</li>
+</ul>
 
 </body>
 

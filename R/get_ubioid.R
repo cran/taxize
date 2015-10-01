@@ -1,8 +1,8 @@
-#' Get the uBio id for a search term.
+#' Get the uBio id for a search term
 #'
-#' Retrieve the uBio id of a taxon. This function uses \code{\link[taxize]{ubio_search}} internally
-#' to search for names.
+#' THIS FUNCTION IS DEFUNCT.
 #'
+#' @rdname get_ubioid-defunct
 #' @export
 #' @param searchterm character; A vector of common or scientific names.
 #' @param searchtype character; One of 'scientific' or 'common', or any unique abbreviation
@@ -36,80 +36,10 @@
 #' Filtering narrows down to the set that matches your query, and removes the rest.
 #'
 #' @seealso \code{\link[taxize]{get_uid}}, \code{\link[taxize]{ubio_search}}
-#'
-#' @examples \dontrun{
-#' get_ubioid("Astragalus aduncus")
-#' get_ubioid(c("Salvelinus fontinalis","Pomacentrus brachialis"))
-#' splist <- c("Salvelinus fontinalis", 'Pomacentrus brachialis', "Leptocottus armatus",
-#' 		"Clinocottus recalvus", "Trachurus trachurus", "Harengula clupeola")
-#' get_ubioid(splist, verbose=FALSE)
-#'
-#' # specify rows to limit choices available
-#' get_ubioid('Astragalus aduncus')
-#' get_ubioid('Astragalus aduncus', rows=1)
-#' get_ubioid('Astragalus aduncus', rows=8)
-#' get_ubioid('Astragalus aduncus', rows=1:2)
-#'
-#' # When not found
-#' get_ubioid(searchterm="howdy")
-#' get_ubioid(c("Salvelinus fontinalis", "howdy"))
-#'
-#' # Narrow down results to a division or rank, or both
-#' ## Satyrium example
-#' ### Results w/o narrowing
-#' get_ubioid("Satyrium")
-#' ### w/ rank
-#' get_ubioid("Satyrium", rank = "var")
-#' get_ubioid("Satyrium", family = "Lycaenidae", rank = "species")
-#'
-#' ## w/ family
-#' get_ubioid("Zootoca vivipara")
-#' get_ubioid("Zootoca vivipara", family = "Reptilia")
-#' get_ubioid("Zootoca vivipara", family = "Reptilia", rank = "species")
-#' get_ubioid("Zootoca vivipara", family = "Lacertidae", rank = "species")
-#'
-#' # Fuzzy filter on any filtering fields
-#' ## uses grep on the inside
-#' get_ubioid("Satyrium", family = "*idae")
-#' get_ubioid("Satyrium", family = "*tera")
-#'
-#' # Using common names
-#' get_ubioid(searchterm="great white shark", searchtype="common")
-#' get_ubioid(searchterm=c("bull shark", "whale shark"), searchtype="common")
-#'
-#' # Convert a ubioid without class information to a ubioid class
-#' as.ubioid(get_ubioid("Astragalus aduncus")) # already a ubioid, returns the same
-#' as.ubioid(get_ubioid(c("Chironomus riparius","Pinus contorta"))) # same
-#' as.ubioid(2843601) # numeric
-#' as.ubioid(c(2843601,3339,9696)) # numeric vector, length > 1
-#' as.ubioid("2843601") # character
-#' as.ubioid(c("2843601","3339","9696")) # character vector, length > 1
-#' as.ubioid(list("2843601","3339","9696")) # list, either numeric or character
-#' ## dont check, much faster
-#' as.ubioid("2843601", check=FALSE)
-#' as.ubioid(2843601, check=FALSE)
-#' as.ubioid(c("2843601","3339","9696"), check=FALSE)
-#' as.ubioid(list("2843601","3339","9696"), check=FALSE)
-#'
-#' (out <- as.ubioid(c(2843601,3339,9696)))
-#' data.frame(out)
-#' as.ubioid( data.frame(out) )
-#'
-#' # Get all data back
-#' get_ubioid_("Zootoca vivipara")
-#' get_ubioid_("Zootoca vivipara", rows=2)
-#' get_ubioid_("Zootoca vivipara", rows=1:2)
-#' get_ubioid_(c("asdfadfasd","Zootoca vivipara"), rows=1:5)
-#'
-#' # use curl options
-#' library("httr")
-#' get_ubioid("Quercus douglasii", config=verbose())
-#' bb <- get_ubioid("Quercus douglasii", config=progress())
-#' }
-
 get_ubioid <- function(searchterm, searchtype = "scientific", ask = TRUE, verbose = TRUE,
-                       rows = NA, family = NULL, rank = NULL, ...)
-{
+                       rows = NA, family = NULL, rank = NULL, ...) {
+  .Defunct(msg = "the uBio API is down, for good as far as we know")
+
   fun <- function(x, searchtype, ask, verbose, rows, ...) {
     mssg(verbose, "\nRetrieving data for taxon '", x, "'\n")
 
@@ -231,32 +161,48 @@ get_ubioid <- function(searchterm, searchtype = "scientific", ask = TRUE, verbos
 
 
 #' @export
-#' @rdname get_ubioid
+#' @rdname get_ubioid-defunct
 as.ubioid <- function(x, check=TRUE) UseMethod("as.ubioid")
 
 #' @export
-#' @rdname get_ubioid
-as.ubioid.ubioid <- function(x, check=TRUE) x
+#' @rdname get_ubioid-defunct
+as.ubioid.ubioid <- function(x, check=TRUE) {
+  .Defunct(msg = "the uBio API is down, for good as far as we know")
+  x
+}
 
 #' @export
-#' @rdname get_ubioid
-as.ubioid.character <- function(x, check=TRUE) if(length(x) == 1) make_ubioid(x, check) else collapse(x, make_ubioid, "ubioid", check=check)
+#' @rdname get_ubioid-defunct
+as.ubioid.character <- function(x, check=TRUE) {
+  .Defunct(msg = "the uBio API is down, for good as far as we know")
+  if(length(x) == 1) make_ubioid(x, check) else collapse(x, make_ubioid, "ubioid", check=check)
+}
 
 #' @export
-#' @rdname get_ubioid
-as.ubioid.list <- function(x, check=TRUE) if(length(x) == 1) make_ubioid(x, check) else collapse(x, make_ubioid, "ubioid", check=check)
+#' @rdname get_ubioid-defunct
+as.ubioid.list <- function(x, check=TRUE) {
+  .Defunct(msg = "the uBio API is down, for good as far as we know")
+  if(length(x) == 1) make_ubioid(x, check) else collapse(x, make_ubioid, "ubioid", check=check)
+}
 
 #' @export
-#' @rdname get_ubioid
-as.ubioid.numeric <- function(x, check=TRUE) as.ubioid(as.character(x), check)
+#' @rdname get_ubioid-defunct
+as.ubioid.numeric <- function(x, check=TRUE) {
+  .Defunct(msg = "the uBio API is down, for good as far as we know")
+  as.ubioid(as.character(x), check)
+}
 
 #' @export
-#' @rdname get_ubioid
-as.ubioid.data.frame <- function(x, check=TRUE) structure(x$ids, class="ubioid", match=x$match, uri=x$uri)
+#' @rdname get_ubioid-defunct
+as.ubioid.data.frame <- function(x, check=TRUE) {
+  .Defunct(msg = "the uBio API is down, for good as far as we know")
+  structure(x$ids, class="ubioid", match=x$match, uri=x$uri)
+}
 
 #' @export
-#' @rdname get_ubioid
+#' @rdname get_ubioid-defunct
 as.data.frame.ubioid <- function(x, ...){
+  .Defunct(msg = "the uBio API is down, for good as far as we know")
   data.frame(ids = as.character(unclass(x)),
              class = "ubioid",
              match = attr(x, "match"),
@@ -272,8 +218,9 @@ check_ubioid <- function(x){
 }
 
 #' @export
-#' @rdname get_ubioid
+#' @rdname get_ubioid-defunct
 get_ubioid_ <- function(searchterm, verbose = TRUE, searchtype = "scientific", rows = NA){
+  .Defunct(msg = "the uBio API is down, for good as far as we know")
   setNames(lapply(searchterm, get_ubioid_help, verbose = verbose, searchtype=searchtype, rows=rows), searchterm)
 }
 

@@ -35,8 +35,7 @@
 #' comm2sci(commnames='annual blue grass', db="tropicos", config=verbose())
 #' }
 
-comm2sci <- function(commnames, db='eol', itisby='search', simplify=TRUE, ...)
-{
+comm2sci <- function(commnames, db='eol', itisby='search', simplify=TRUE, ...) {
   foo <- function(x, by='search', simplify, ...){
     tmp <- switch(by,
                   search = searchbycommonname(x, ...),
@@ -44,11 +43,11 @@ comm2sci <- function(commnames, db='eol', itisby='search', simplify=TRUE, ...)
                   end = searchbycommonnameendswith(x, ...))
     # remove empty tsn slots
     tsns <- as.character(tmp$tsn)
-    tsns <- tsns[!sapply(tsns, nchar) == 0]
+    tsns <- tsns[!sapply(tsns, nchar, keepNA = FALSE) == 0]
     # get scientific names
     tmp <- do.call(rbind, lapply(tsns, getscientificnamefromtsn))
     if (simplify) {
-      as.character(tmp$combinedName)
+      as.character(tmp$combinedname)
     } else{
       tmp
     }
