@@ -84,8 +84,7 @@ tc <- function (l) Filter(Negate(is.null), l)
 #' @param language (character) Language, default is english
 #' @param sourceId (numeric) Filters by the source identifier. Not used right now.
 #' @param shortname (character) A short name..need more info on this?
-#' @param callopts Pass on options to httr::GET for more refined control of
-#'    http calls, and error handling
+#' @param ... Curl options passed on to \code{\link[httr]{GET}}
 #' @param limit Number of records to return
 #' @param start Record number to start at
 #' @references \url{http://www.gbif.org/developer/summary}
@@ -93,7 +92,7 @@ tc <- function (l) Filter(Negate(is.null), l)
 #' either a data.frame (verbose=FALSE, default) or a list (verbose=TRUE)
 
 gbif_name_usage <- function(key=NULL, name=NULL, data='all', language=NULL, datasetKey=NULL, uuid=NULL,
-                       sourceId=NULL, rank=NULL, shortname=NULL, start=NULL, limit=20, callopts=list())
+                       sourceId=NULL, rank=NULL, shortname=NULL, start=NULL, limit=20, ...)
 {
   calls <- names(sapply(match.call(), deparse))[-1]
   calls_vec <- c("sourceId") %in% calls
@@ -131,7 +130,7 @@ gbif_name_usage <- function(key=NULL, name=NULL, data='all', language=NULL, data
             url <- sprintf('http://api.gbif.org/v1/species/root/%s/%s', uuid, shortname)
           }
     }
-    tt <- GET(url, query=args, callopts)
+    tt <- GET(url, query=args, ...)
     stop_for_status(tt)
     stopifnot(tt$headers$`content-type`=='application/json')
     res <- content(tt, as = 'text', encoding = "UTF-8")
@@ -263,5 +262,23 @@ argsnull <- function(x) {
     NULL
   } else {
     x
+  }
+}
+
+as_l <- function(z) {
+  if (is.logical(z) || tolower(z) == "true" || tolower(z) == "false") {
+    if (z) {
+      return('true')
+    } else {
+      return('false')
+    }
+  } else {
+    return(z)
+  }
+}
+
+should_be <- function(arg_name, x, class) {
+  if (!is(x, class)) {
+    stop(sprintf("'%s' should be of class '%s'", arg_name, class), call. = FALSE)
   }
 }

@@ -1,9 +1,13 @@
-#' @title Taxnomic search and phylogeny retrieval.
+#' @title Taxonomic Information from Around the Web
+#'
+#' @description This package interacts with a suite of web 'APIs'
+#' for taxonomic tasks, such as verifying species names, getting
+#' taxonomic hierarchies, and verifying name spelling.
 #'
 #' @section About:
-#' We are developing taxize as a package to allow users to search over many
-#' websites for species names (scientific and common) and download up- and
-#' downstream taxonomic hierarchical information - and many other things.
+#' Allows users to search over many websites for species names (scientific and
+#' common) and download up- and downstream taxonomic hierarchical information -
+#' and many other things.
 #'
 #' The functions in the package that hit a specific API have a prefix and suffix
 #' separated by an underscore. They follow the format of \code{service_whatitdoes}.
@@ -22,7 +26,6 @@
 #' Encyclopedia of Life (EOL)  \tab eol \tab FALSE \cr
 #' Taxonomic Name Resolution Service \tab tnrs \tab FALSE \cr
 #' Integrated Taxonomic Information Service (ITIS)  \tab itis \tab FALSE \cr
-#' Phylomatic \tab phylomatic \tab FALSE \cr
 #' Global Names Resolver (from EOL/GBIF) \tab gnr \tab FALSE \cr
 #' Global Names Index (from EOL/GBIF) \tab gni \tab FALSE \cr
 #' IUCN Red List \tab iucn \tab FALSE \cr
@@ -37,6 +40,9 @@
 #' Pan-European Species directories Infrastructure (PESI) \tab pesi \tab TRUE \cr
 #' Mycobank \tab myco \tab TRUE \cr
 #' National Biodiversity Network (UK)	\tab nbn \tab FALSE \cr
+#' Index Fungorum \tab fg \tab FALSE \cr
+#' EU BON \tab eubon \tab FALSE \cr
+#' Index of Names (ION) \tab ion \tab FALSE \cr
 #' }
 #'
 #' If the source above has a \code{TRUE} in the \code{SOAP?} column, it is not available
@@ -61,7 +67,6 @@
 #' @name taxize-package
 #' @aliases taxize
 #' @docType package
-#' @title Taxonomic information from around the web.
 #' @author Scott Chamberlain \email{myrmecocystus@@gmail.com}
 #' @author Eduard Szoecs \email{eduardszoecs@@gmail.com}
 #' @author Zachary Foster \email{zacharyfoster1989@@gmail.com}
@@ -82,10 +87,9 @@ NULL
 #' Lookup-table for family, genus, and species names for ThePlantList
 #'
 #' These names are from \url{http://www.theplantlist.org/}, and are from
-#' version 1.1 of their data. This data is used in the functions
-#' \code{\link{phylomatic_format}} and \code{\link{names_list}}. This
-#' is a randomly selected subset of the ~350K accepted species names
-#' in Theplantlist.
+#' version 1.1 of their data. This data is used in the function
+#' \code{\link{names_list}}. This is a randomly selected subset of the ~350K
+#' accepted species names in Theplantlist.
 #'
 #' @format A data frame with 10,000 rows and 3 variables:
 #' \describe{
@@ -165,19 +169,6 @@ NULL
 #' @keywords data
 NULL
 
-#' Deprecated functions in taxize
-#'
-#' The following functions are now deprecated:
-#'
-#' \itemize{
-#'  \item \code{\link{phylomatic_tree}}: This function is deprecated and will be removed
-#'  in a future version of this package. Use this same function in another package called
-#'  \code{branching} (see \url{https://github.com/ropensci/branching}).
-#' }
-#'
-#' @name taxize-deprecated
-NULL
-
 #' Defunct functions in taxize
 #'
 #' The following functions are now defunct (no longer available):
@@ -203,6 +194,10 @@ NULL
 #'  \item \code{\link{ubio_search}}: The uBio web services are apparently down indefinitely.
 #'  \item \code{\link{ubio_synonyms}}: The uBio web services are apparently down indefinitely.
 #'  \item \code{\link{get_ubioid}}: The uBio web services are apparently down indefinitely.
+#'  \item \code{\link{phylomatic_tree}}: This function is defunct. See
+#'  \code{phylomatic} in the package \code{brranching}
+#'  \item \code{\link{phylomatic_format}}: This function is defunct. See
+#'  \code{phylomatic_names} in the package \code{brranching}
 #' }
 #'
 #' @name taxize-defunct

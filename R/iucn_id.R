@@ -3,9 +3,14 @@
 #' @export
 #' @param sciname character; Scientific name. Should be cleand and in the
 #' format \emph{<Genus> <Species>}. One or more.
-#' @return A vector of one or more numeric IDs. Warnings are thrown
-#' when the taxon is not found
+#' @return A named list (names are input taxa names) of one or more IUCN IDs.
+#' Taxa that aren't found are silently dropped.
 #' @author Scott Chamberlain, \email{myrmecocystus@@gmail.com}
+#' @details Beware: IUCN functions can give back incorrect data. This isn't our fault.
+#' We do our best to get you the correct data quickly, but sometimes IUCN gives
+#' back the wrong data, and sometimes Global Names gives back the wrong data.
+#' We will fix these as soon as possible. In the meantime, just make sure that
+#' the data you get back is correct.
 #' @examples \dontrun{
 #' iucn_id("Branta canadensis")
 #' iucn_id("Branta bernicla")
@@ -41,3 +46,9 @@ get_iucn_id <- function(z) {
     as.numeric(gsub(".*/", "", id))
   }
 }
+
+## usage based on using gnr_resolve, maybe bring back when correct IUCN IDs given
+# iucn_id <- function(sciname) {
+#   res <- gnr_resolve(sciname, data_source_ids = 163, fields = "all")
+#   as.list(setNames(res$local_id, res$submitted_name))
+# }

@@ -472,12 +472,12 @@ NROW(out$`Poa annua`)
 #&gt; 2  NHMSYS0000461798              Poa   Genus  Recommended
 #&gt; 3  NHMSYS0000461804         Poa laxa Species      Synonym
 #&gt; 4  NHMSYS0021060390           Poales   Order  Recommended
-#&gt; 5  NBNSYS0000002547       Poa alpina Species  Recommended
+#&gt; 5  NBNSYS0000160753          Poaceae  Family  Recommended
 #&gt; 6  NBNSYS0000002551       Poa glauca Species  Recommended
-#&gt; 7  NBNSYS0000002551       Poa caesia Species      Synonym
-#&gt; 8  NBNSYS0000160753          Poaceae  Family  Recommended
-#&gt; 9  NHMSYS0000461804        Poa minor Species      Synonym
-#&gt; 10 NBNSYS0000002545       Poa exilis Species Undetermined
+#&gt; 7  NBNSYS0000002547       Poa alpina Species  Recommended
+#&gt; 8  NHMSYS0000461804        Poa minor Species      Synonym
+#&gt; 9  NBNSYS0000002545       Poa exilis Species Undetermined
+#&gt; 10 NBNSYS0000002551       Poa caesia Species      Synonym
 </code></pre>
 
 <h2>Coerce numerics/alphanumerics to taxon IDs</h2>
@@ -542,14 +542,14 @@ NROW(out$`Poa annua`)
 </code></pre>
 
 <pre><code>#&gt;    user  system elapsed 
-#&gt;   0.117   0.003   1.753
+#&gt;   0.122   0.004   1.776
 </code></pre>
 
 <pre><code class="r">system.time( replicate(3, as.gbifid(c(&quot;2704179&quot;,&quot;2435099&quot;,&quot;3171445&quot;), check=FALSE)) )
 </code></pre>
 
 <pre><code>#&gt;    user  system elapsed 
-#&gt;   0.001   0.000   0.001
+#&gt;   0.000   0.000   0.001
 </code></pre>
 
 <h2>What taxa are downstream of my taxon of interest?</h2>

@@ -13,11 +13,10 @@ test_that("iucn_id returns the correct class", {
 test_that("iucn_id returns the correct value", {
   expect_equal(aa, 22679935)
   expect_equal(bb, 22732)
-  expect_equal(cc, 12519)
+  expect_equal(cc, 68986842)
 })
 
 test_that("iucn_id fails well", {
   expect_error(iucn_id(), "argument \"sciname\" is missing")
-  expect_warning(iucn_id("foo bar"), "foo bar - not found")
   expect_equal(suppressWarnings(iucn_id("foo bar")), NA)
 })
