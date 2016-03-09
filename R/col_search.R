@@ -53,7 +53,7 @@ col_search <- function(name=NULL, id=NULL, start=NULL, checklist=NULL, response=
     args <- tc(list(name = x, id = y, start = start, response = response, format = "json"))
     temp <- GET(url, query = argsnull(args), ...)
     stop_for_status(temp)
-    tt <- jsonlite::fromJSON(content(temp, as = "text"), FALSE)
+    tt <- jsonlite::fromJSON(con_utf8(temp), FALSE)
     switch(response,
            terse = parse_terse(tt),
            full = parse_full(tt))
@@ -70,13 +70,8 @@ make_url <- function(checklist) {
   if (is.null(checklist)) {
     col_base()
   } else {
-    cc <- match.arg(as.character(checklist), choices = c(2012, 2011, 2010, 2009, 2008, 2007))
-    if (cc %in% c(2012, 2011, 2010)) {
-      gsub("col", paste("annual-checklist/", cc, sep = ""), col_base())
-    } else {
-      url <- "http://webservice.catalogueoflife.org/annual-checklist/year/search.php"
-      gsub("year", cc, url)
-    }
+    cc <- match.arg(as.character(checklist), choices = 2015:2007)
+    sprintf("http://catalogueoflife.org/annual-checklist/%s/webservice", cc)
   }
 }
 
@@ -97,12 +92,14 @@ parsecoldata <- function(x){
   names(vals) <- c('id', 'name', 'rank', 'name_status', 'source_database')
   bb <- data.frame(vals, stringsAsFactors = FALSE)
   names(bb)[4:5] <- c('status', 'source')
+  bb$rank <- tolower(bb$rank)
   acc <- x$accepted_name
   if (is.null(acc)) {
     accdf <- data.frame(acc_id=NA, acc_name=NA, acc_rank=NA, acc_status=NA, acc_source=NA, stringsAsFactors = FALSE)
   } else {
     accdf <- data.frame(acc[c('id','name','rank','name_status','source_database')], stringsAsFactors=FALSE)
     names(accdf) <- c('acc_id','acc_name','acc_rank','acc_status','acc_source')
+    accdf$acc_rank <- tolower(accdf$acc_rank)
   }
   cbind(bb, accdf)
 }
@@ -166,6 +163,15 @@ parse_full <- function(x) {
                name_status <- z$accepted_name$name_status
                h <- cbind(h, setNames(data.frame(id, name, rank, name_status, stringsAsFactors = FALSE),
                                       c('acc_id','acc_name','acc_rank','acc_status')))
+             },
+             `misapplied name` = {
+               h <- parse_one(z)
+               name <- z$accepted_name$name
+               rank <- z$accepted_name$rank
+               id <- z$accepted_name$id
+               name_status <- z$accepted_name$name_status
+               h <- cbind(h, setNames(data.frame(id, name, rank, name_status, stringsAsFactors = FALSE),
+                                      c('acc_id','acc_name','acc_rank','acc_status')))
              }
       )
       target <- setNames(rbind.data.frame(
@@ -174,6 +180,7 @@ parse_full <- function(x) {
           id,
           z$name_status)),
         c("name", "rank", "id", "name_status"))
+      target$rank <- tolower(target$rank)
       tempdf <- cbind(target, h)
       tempdf[] <- lapply(tempdf, as.character)
       tempdf

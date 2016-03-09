@@ -210,23 +210,26 @@ get_gbifid <- function(sciname, ask = TRUE, verbose = TRUE, rows = NA,
 }
 
 gbif_name_suggest <- function(q=NULL, datasetKey=NULL, rank=NULL, fields=NULL, start=NULL,
-                         limit=20, ...) {
+                         limit=50, ...) {
 
   url = 'http://api.gbif.org/v1/species/suggest'
   args <- tc(list(q = q, rank = rank, offset = start, limit = limit))
   temp <- GET(url, query = argsnull(args), ...)
   stop_for_status(temp)
-  tt <- content(temp)
+  tt <- jsonlite::fromJSON(con_utf8(temp), FALSE)
   if (is.null(fields)) {
     toget <- c("key", "scientificName", "rank")
   } else {
     toget <- fields
   }
   matched <- sapply(toget, function(x) x %in% gbif_suggestfields())
-  if (!any(matched))
+  if (!any(matched)) {
     stop(sprintf("the fields %s are not valid", paste0(names(matched[matched == FALSE]), collapse = ",")))
+  }
   out <- lapply(tt, function(x) x[names(x) %in% toget])
-  do.call(rbind.fill, lapply(out, data.frame))
+  df <- do.call(rbind.fill, lapply(out, data.frame))
+  if (!is.null(df)) df$rank <- tolower(df$rank)
+  df
 }
 
 gbif_suggestfields <- function() {
@@ -274,11 +277,6 @@ as.data.frame.gbifid <- function(x, ...){
 }
 
 make_gbifid <- function(x, check=TRUE) make_generic(x, 'http://www.gbif.org/species/%s', "gbifid", check)
-
-toid <- function(x, url, class){
-  uri <- sprintf(url, x)
-  structure(x, class = class, match = "found", uri = uri)
-}
 
 check_gbifid <- function(x){
   tryid <- tryCatch(gbif_name_usage(key = x), error = function(e) e)

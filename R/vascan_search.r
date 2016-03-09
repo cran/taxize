@@ -5,7 +5,7 @@
 #'    taxon identifier (e.g. 861)
 #' @param format (character) One of json (default) or xml.
 #' @param raw (logical) If TRUE, raw json or xml returned, if FALSE, parsed data returned.
-#' @param ... (list) Further args passed on to htt::GET.
+#' @param ... (list) Further args passed on to \code{\link[httr]{GET}}
 #' @author Scott Chamberlain {myrmecocystus@@gmail.com}
 #' @return json, xml or a list.
 #' @references API docs http://data.canadensys.net/vascan/api
@@ -25,8 +25,8 @@
 #'
 #' ## xml
 #' d <- vascan_search(q = "Helianthus annuus", format="xml", raw=TRUE)
-#' library("XML")
-#' xmlParse(d)
+#' library("xml2")
+#' xml2::read_xml(d)
 #'
 #' # lots of names, in this case 50
 #' splist <- names_list(rank='species', size=50)
@@ -42,12 +42,12 @@ vascan_search <- function(q, format='json', raw=FALSE, ...) {
   if (!length(q) > 1) {
     tt <- GET(url, query = list(q = q), ...)
     stop_for_status(tt)
-    out <- content(tt, as = "text")
+    out <- con_utf8(tt)
   } else {
     args <- paste(q, collapse = '\n')
     tt <- POST(url, body = list(q = args), encode = 'form', ...)
     stop_for_status(tt)
-    out <- content(tt, as = "text")
+    out <- con_utf8(tt)
   }
   if (raw) {
     return( out )

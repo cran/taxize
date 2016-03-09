@@ -27,7 +27,7 @@ apgOrders <- function(...) {
   acc <- acc[nchar(acc) != 0]
   accorig <- accorig[nchar(accorig) != 0]
   accdf <- data.frame(order = acc, synonym = NA,
-                      comment = NA, accepted = TRUE,
+                      accepted = TRUE,
                       original = accorig, stringsAsFactors = FALSE)
 
   synorig <- syn <- grep("[Aa]ccepted", tmp5, invert = TRUE, value = TRUE)
@@ -92,7 +92,7 @@ apgFamilies <- function(...) {
 apg_GET <- function(x, ...) {
   res <- GET(paste0(apg_base(), sprintf("top/synonymy%s.html", x)), ...)
   stop_for_status(res)
-  content(res, "text")
+  con_utf8(res)
 }
 
 apg_base <- function() "http://www.mobot.org/MOBOT/research/APweb/"

@@ -9,18 +9,18 @@ test_that("gbif_downstream works", {
 	expect_is(aa$rank, "character")
 	expect_is(aa$key, "integer")
 
-	expect_equal(unique(aa$rank), "Genus")
+	expect_equal(unique(aa$rank), "genus")
 })
 
 test_that("gbif_downstream works, more egs", {
-  bb <- gbif_downstream(key = 110610447, "Family")
+  bb <- gbif_downstream(key = 1878, "Family")
 
   expect_is(bb, "data.frame")
   expect_is(bb$canonicalname, "character")
   expect_is(bb$rank, "character")
   expect_is(bb$key, "integer")
 
-  expect_equal(unique(bb$rank), "Family")
+  expect_equal(unique(bb$rank), "family")
 })
 
 test_that("gbif_downstream intermediate param works", {
@@ -34,7 +34,7 @@ test_that("gbif_downstream intermediate param works", {
   expect_is(cc$target$rank, "character")
   expect_is(cc$target$key, "integer")
 
-  expect_equal(unique(cc$target$rank), "Species")
+  expect_equal(unique(cc$target$rank), "species")
 })
 
 test_that("gbif_downstream fails well", {

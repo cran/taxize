@@ -208,11 +208,13 @@ classification.tsn <- function(id, callopts = list(), return_id = TRUE, ...) {
       out <- NA
     } else {
       out <- getfullhierarchyfromtsn(x, callopts, ...)
+      if (NROW(out) < 1) return(NA)
       # remove overhang
       out <- out[1:which(out$tsn == x), c('taxonname', 'rankname', 'tsn')]
       names(out) <- c('name', 'rank', 'id')
       # Optionally return tsn of lineage
       if (!return_id) out <- out[, c('name', 'rank')]
+      out$rank <- tolower(out$rank)
       return(out)
     }
   }
@@ -232,17 +234,21 @@ classification.uid <- function(id, callopts = list(), return_id = TRUE, ...) {
       baseurl <- "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=taxonomy"
       ID <- paste("ID=", x, sep = "")
       searchurl <- paste(baseurl, ID, sep = "&")
-      tt <- GET(searchurl, callopts)
-      ttp <- xmlTreeParse(tt, useInternalNodes = TRUE)
-      out <- data.frame(name = xpathSApply(ttp, "//TaxaSet/Taxon/LineageEx/Taxon/ScientificName", xmlValue),
-                        rank = xpathSApply(ttp, "//TaxaSet/Taxon/LineageEx/Taxon/Rank", xmlValue),
-                        id = xpathSApply(ttp, "//TaxaSet/Taxon/LineageEx/Taxon/TaxId", xmlValue),
+      res <- GET(searchurl, callopts)
+      stop_for_status(res)
+      tt <- con_utf8(res)
+      ttp <- xml2::read_xml(tt)
+      out <- data.frame(name = xml2::xml_text(xml2::xml_find_all(ttp, "//TaxaSet/Taxon/LineageEx/Taxon/ScientificName")),
+                        rank = xml2::xml_text(xml2::xml_find_all(ttp, "//TaxaSet/Taxon/LineageEx/Taxon/Rank")),
+                        id = xml2::xml_text(xml2::xml_find_all(ttp, "//TaxaSet/Taxon/LineageEx/Taxon/TaxId")),
                         stringsAsFactors = FALSE)
-      out <- rbind(out, c(xpathSApply(ttp, "//TaxaSet/Taxon/ScientificName", xmlValue),
-                          xpathSApply(ttp, "//TaxaSet/Taxon/Rank", xmlValue),
-                          xpathSApply(ttp, "//TaxaSet/Taxon/TaxId", xmlValue)))
+      out <- rbind(out, c(xml2::xml_text(xml2::xml_find_all(ttp, "//TaxaSet/Taxon/ScientificName")),
+                          xml2::xml_text(xml2::xml_find_all(ttp, "//TaxaSet/Taxon/Rank")),
+                          xml2::xml_text(xml2::xml_find_all(ttp, "//TaxaSet/Taxon/TaxId")))
+      )
       # Optionally return tsn of lineage
       if (!return_id) out <- out[, c('name', 'rank')]
+      out$rank <- tolower(out$rank)
       return(out)
     }
     # NCBI limits requests to three per second
@@ -268,7 +274,7 @@ classification.eolid <- function(id, key = NULL, callopts = list(), return_id = 
       args <- tc(list(common_names = common_names, synonyms = synonyms))
       tt <- GET(urlget, query = args, callopts)
       stop_for_status(tt)
-      res <- content(tt)
+      res <- jsonlite::fromJSON(con_utf8(tt), FALSE)
       if (length(res$ancestors) == 0) {
         return(sprintf("No hierarchy information for %s", x))
       } else {
@@ -279,6 +285,7 @@ classification.eolid <- function(id, key = NULL, callopts = list(), return_id = 
         names(out) <- c('name', 'rank', 'id')
         # Optionally return id of lineage
         if (!return_id) out <- out[, c('name', 'rank')]
+        out$rank <- tolower(out$rank)
         return(out)
       }
     }
@@ -290,45 +297,44 @@ classification.eolid <- function(id, key = NULL, callopts = list(), return_id = 
 
 #' @export
 #' @rdname classification
-classification.colid <- function(id, start = NULL, checklist = NULL, callopts = list(), return_id = TRUE, ...) {
-  fun <- function(x, callopts){
+classification.colid <- function(id, start = NULL, checklist = NULL,
+                                 callopts = list(), return_id = TRUE, ...) {
+  fun <- function(x, checklist, start, callopts){
     # return NA if NA is supplied
     if (is.na(x)) {
       out <- NA
     } else {
-      url <- "http://www.catalogueoflife.org/col/webservice"
-      if (!is.null(checklist)) {
-        cc <- match.arg(checklist, choices = c(2012, 2011, 2010, 2009, 2008, 2007))
-        if (cc %in% c(2012, 2011, 2010)) {
-          url <- gsub("col", paste("annual-checklist/", cc, sep = ""), url)
-        } else {
-          url <- "http://webservice.catalogueoflife.org/annual-checklist/year/search.php"
-          url <- gsub("year", cc, url)
-        }
-      }
-
+      url <- make_url(checklist)
       args <- tc(list(id = x, response = "full", start = start))
       out <- GET(url, query = args, callopts)
       stop_for_status(out)
-      tt <- xmlParse(content(out, "text"))
-
-      out <- data.frame(name = xpathSApply(tt, "//classification//name", xmlValue),
-                        rank = xpathSApply(tt, "//classification//rank", xmlValue),
-                        id  = xpathSApply(tt, "//classification//id", xmlValue),
-                        stringsAsFactors = FALSE)
-      # add querried taxon
-      out <- rbind(out, c(xpathSApply(tt, "//result/name", xmlValue),
-                          xpathSApply(tt, "//result/rank", xmlValue),
-                          xpathSApply(tt, "//result/id", xmlValue)))
+      tt <- xml2::read_xml(con_utf8(out))
+      out <- search_col_classification_df(tt)
+      # add query-ied taxon
+      out <- rbind(out, c(xml2::xml_text(xml2::xml_find_one(tt, "//result/name")),
+                          xml2::xml_text(xml2::xml_find_one(tt, "//result/rank")),
+                          xml2::xml_text(xml2::xml_find_one(tt, "//result/id"))))
       # Optionally return id of lineage
       if (!return_id) out <- out[, c('name', 'rank')]
+      out$rank <- tolower(out$rank)
     }
     return(out)
   }
-  out <- lapply(id, fun, callopts = callopts)
+  out <- lapply(id, fun, checklist = checklist, start = start, callopts = callopts)
   names(out) <- id
   structure(out, class = 'classification', db = 'col')
 }
+
+search_col_classification_df <- function(x) {
+  name <- xml2::xml_text(xml2::xml_find_all(x, "//classification//name"))
+  rank <- xml2::xml_text(xml2::xml_find_all(x, "//classification//rank"))
+  id <- xml2::xml_text(xml2::xml_find_all(x, "//classification//id"))
+  if (any(grepl("species", rank, ignore.case = TRUE))) {
+    name[which(rank %in% "Species")] <- paste(name[which(rank %in% "Genus")], name[which(rank %in% "Species")], collapse = " ")
+  }
+  data.frame(name, rank, id, stringsAsFactors = FALSE)
+}
+
 
 #' @export
 #' @rdname classification
@@ -342,7 +348,7 @@ classification.tpsid <- function(id, key = NULL, callopts = list(), return_id = 
       args <- tc(list(format = 'json', apikey = key))
       tt <- GET(url, query = args, callopts)
       stop_for_status(tt)
-      out <- content(tt)
+      out <- jsonlite::fromJSON(con_utf8(tt), FALSE)
       if (names(out[[1]])[[1]] == "Error") {
         out <- data.frame(ScientificName = NA, Rank = NA)
       } else {
@@ -351,6 +357,7 @@ classification.tpsid <- function(id, key = NULL, callopts = list(), return_id = 
       names(out) <- c('name', 'rank', 'id')
       # Optionally return id of lineage
       if (!return_id) out <- out[, c('name', 'rank')]
+      out$rank <- tolower(out$rank)
     }
     return(out)
   }
@@ -372,8 +379,8 @@ classification.gbifid <- function(id, callopts = list(), return_id = TRUE, ...) 
       } else {
         nms <- ldply(out[c('kingdom','phylum','class','order','family','genus','species')])
         keys <- unname(unlist(out[paste0(c('kingdom','phylum','class','order','family','genus','species'), "Key")]))
-        df <- data.frame(name = nms$V1, rank = nms$.id, id = keys)
-
+        df <- data.frame(name = nms$V1, rank = nms$.id, id = keys, stringsAsFactors = FALSE)
+        df$rank <- tolower(df$rank)
         # Optionally return id of lineage
         if (!return_id) df[, c('name', 'rank')] else df
       }
@@ -399,6 +406,7 @@ classification.nbnid <- function(id, callopts = list(), return_id = TRUE, ...) {
         names(out) <- c('name', 'rank', 'id')
         # Optionally return id of lineage
         if (!return_id) out <- out[, c('name', 'rank')]
+        out$rank <- tolower(out$rank)
         return(out)
       }
     }
@@ -490,8 +498,8 @@ cbind.classification_ids <- function(...) {
   move_col(tt = dat, y = c('query','db'))
 }
 
-move_col <- function(tt, y){
-  tt[ c(names(tt)[ -sapply(y, function(m) grep(m, names(tt))) ], y) ]
+foo <- function(...) {
+  c(...)
 }
 
 #' @export
@@ -520,5 +528,5 @@ rbind.classification_ids <- function(...) {
   }
 
   tt <- if (length(get) == 1) get[[1]] else do.call(rbind.fill, get)
-  move_col(tt, c('query','db'))
+  move_col(tt, c('query', 'db'))
 }

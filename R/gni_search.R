@@ -51,7 +51,7 @@ gni_search <- function(search_term = NULL, per_page = NULL, page = NULL,
 	query <- tc(list(search_term = search_term, per_page = per_page, page = page))
 	tt <- GET(paste0(gni_base(), "name_strings.json"), query = argsnull(query), ...)
 	stop_for_status(tt)
-	out <- content(tt, "parsed")
+	out <- jsonlite::fromJSON(con_utf8(tt), FALSE)
 
 	if (justtotal) {
 	  out$name_strings_total
@@ -60,6 +60,7 @@ gni_search <- function(search_term = NULL, per_page = NULL, page = NULL,
 	    t(data.frame(c( checknull(x[["name"]]), checknull(x[["id"]]),
 	                    checknull(x[["lsid"]]), checknull(x[["uuid_hex"]]),
 	                    checknull(x[["resource_url"]]) ))))
+	  df <- colClasses(df, "character")
 	  if (NROW(df) != 0) {
 	    names(df) <- c("name","id","lsid","uuid_hex","resource_url")
 	  }

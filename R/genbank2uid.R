@@ -32,7 +32,9 @@ genbank2uid <- function(id, ...){
     id <- gsub(pattern = "\\.[0-9]+$", "", id) #removes version number of accession ids
     url2 <- "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/elink.fcgi?dbfrom=nucleotide&db=taxonomy&id="
     query <- paste0(url2, paste(id, collapse = "&id="))
-    result <- xpathSApply(content(GET(query, ...)), "//LinkSetDb//Link[position()=1]//Id", xmlValue)
+    res <- GET(query, ...)
+    stop_for_status(res)
+    result <- xml_text(xml_find_all(read_xml(con_utf8(res)), "//LinkSetDb//Link[position()=1]//Id"))
     if (length(result) != length(id)) {
       result <- rep(as.character(NA), length(id))
       warning("An error occured looking up taxon ID(s).")
@@ -47,13 +49,6 @@ genbank2uid <- function(id, ...){
   matched[is.na(result)] <- "not found"
   attr(result, "match") <- matched
   return(result)
-}
-
-acc_GET <- function(id, ...){
-  url <- "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi"
-  bb <- GET(url, query=list(db='nuccore', retmode="text", rettype="fasta", id=paste(id, collapse = ",")), ...)
-  res <- content(bb, "text")
-  str_extract(res, "[0-9]+")
 }
 
 is_acc <- function(x){

@@ -23,7 +23,7 @@
 #'    found NA. If more than one TSN is found the function asks for user input
 #'    (if ask = TRUE), otherwise returns NA.
 #'    Comes with an attribute \emph{match} to investigate the reason for NA (either 'not found',
-#'      'found' or if ask = FALSE 'multi match')
+#'      'found' or if ask = FALSE 'NA due to ask=FALSE')
 #'
 #' @seealso \code{\link[taxize]{classification}}
 #'
@@ -89,14 +89,13 @@ get_tsn <- function(searchterm, searchtype = "scientific", accepted = FALSE, ask
     tsn_df <- itis_terms(x, what = searchtype, ...)
     tsn_df <- sub_rows(tsn_df, rows)
 
-    if(!class(tsn_df) == "data.frame"){
+    if (!class(tsn_df) == "data.frame" || NROW(tsn_df) == 0){
       tsn <- NA
       att <- "not found"
     } else {
-
       tsn_df <- tsn_df[,c("tsn","scientificname","commonnames","nameusage")]
 
-      if(accepted){
+      if (accepted) {
         tsn_df <- tsn_df[ tsn_df$nameusage %in% c('valid','accepted'), ]
       }
 
@@ -233,12 +232,12 @@ get_tsn_ <- function(searchterm, verbose = TRUE, searchtype = "scientific", acce
 get_tsn_help <- function(searchterm, verbose, searchtype, accepted, rows){
   mssg(verbose, "\nRetrieving data for taxon '", searchterm, "'\n")
   searchtype <- match.arg(searchtype, c("scientific","common"))
-  df <- itis_terms(searchterm, what = searchtype, verbose=verbose)
-  if(!is(df, "data.frame")){
+  df <- itis_terms(searchterm, what = searchtype, verbose = verbose)
+  if (!is(df, "data.frame") || NROW(df) == 0) {
     NULL
   } else {
     df <- df[,c("tsn","scientificname","commonnames","nameusage")]
-    if(accepted) df <- df[ df$nameusage %in% c('valid','accepted'), ]
+    if (accepted) df <- df[ df$nameusage %in% c('valid','accepted'), ]
     sub_rows(df, rows)
   }
 }

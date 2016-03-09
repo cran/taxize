@@ -44,9 +44,12 @@ nbn_search <- function(q, prefered = FALSE, order = 'asc', sort = NULL, start = 
 nbn_GET <- function(url, args, ...){
   res <- GET(url, query = argsnull(args), ...)
   stop_for_status(res)
-  tt <- content(res, as = "text")
+  tt <- con_utf8(res)
   json <- jsonlite::fromJSON(tt, FALSE)
   dat <- do.call(rbind.fill, lapply(json$results, data.frame, stringsAsFactors = FALSE))
-  if (!is.null(dat)) dat <- nmslwr(dat)
+  if (!is.null(dat)) {
+    dat <- nmslwr(dat)
+    dat$rank <- tolower(dat$rank)
+  }
   list(meta = data.frame(json$header, stringsAsFactors = FALSE), data = dat)
 }

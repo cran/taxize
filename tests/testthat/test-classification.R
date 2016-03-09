@@ -126,7 +126,7 @@ test_that("rbind and cbind work correctly", {
   # cbind
   clc <- cbind(cl)
   expect_is(clc, "data.frame")
-  expect_more_than(length(names(clc)), 50)
+  expect_gt(length(names(clc)), 50)
 })
 
 df <- theplantlist[sample(1:nrow(theplantlist), 50), ]
@@ -135,4 +135,30 @@ nn <- apply(df, 1, function(x) paste(x["genus"], x["sp"], collapse = " "))
 test_that("works on a variety of names", {
 	expect_that(classification(nn[1], db = "ncbi", verbose=FALSE), is_a("classification"))
 	expect_that(classification(nn[2], db = "ncbi", verbose=FALSE), is_a("classification"))
+})
+
+test_that("queries with no results fail well", {
+  aa <- classification(x = "Saurauia", db = "itis", verbose = FALSE)
+  bb <- classification(get_tsn("Saurauia", verbose = FALSE), verbose = FALSE)
+
+  expect_true(is.na(unclass(aa)[[1]]))
+  expect_identical(unname(aa), unname(bb))
+})
+
+test_that("all rank character strings are lower case (all letters)", {
+  aa <- classification(9606, db = 'ncbi', verbose = FALSE)
+  bb <- classification(129313, db = 'itis', verbose = FALSE)
+  cc <- classification(57361017, db = 'eol', verbose = FALSE)
+  dd <- classification(2441176, db = 'gbif', verbose = FALSE)
+  ee <- classification(25509881, db = 'tropicos', verbose = FALSE)
+  ff <- classification("NBNSYS0000004786", db = 'nbn', verbose = FALSE)
+  gg <- classification("Chironomus riparius", db = 'col', verbose = FALSE)
+
+  expect_false(all(grepl("[A-Z]", aa[[1]]$rank)))
+  expect_false(all(grepl("[A-Z]", bb[[1]]$rank)))
+  expect_false(all(grepl("[A-Z]", cc[[1]]$rank)))
+  expect_false(all(grepl("[A-Z]", dd[[1]]$rank)))
+  expect_false(all(grepl("[A-Z]", ee[[1]]$rank)))
+  expect_false(all(grepl("[A-Z]", ff[[1]]$rank)))
+  expect_false(all(grepl("[A-Z]", gg[[1]]$rank)))
 })

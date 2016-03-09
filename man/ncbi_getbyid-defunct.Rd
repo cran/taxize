@@ -4,32 +4,13 @@
 \alias{ncbi_getbyid}
 \title{Retrieve gene sequences from NCBI by accession number.}
 \usage{
-ncbi_getbyid(ids, format = "fasta", verbose = TRUE)
-}
-\arguments{
-\item{ids}{(character) GenBank ids to search for.}
-
-\item{format}{(character) Return type, e.g., \code{"fasta"}}
-
-\item{verbose}{(logical) If \code{TRUE} (default), informative messages printed.}
-}
-\value{
-Data.frame of results.
+ncbi_getbyid(...)
 }
 \description{
 THIS FUNCTION IS DEFUNCT.
 }
-\details{
-Removes predicted sequences so you don't have to remove them.
-  	Predicted sequences are those with accession numbers that have "XM_" or
-		"XR_" prefixes. This function retrieves one sequences for each species,
-  	picking the longest available for the given gene.
-}
 \author{
 Scott Chamberlain \email{myrmecocystus@gmail.com}
-}
-\seealso{
-\code{\link[taxize]{ncbi_search}}, \code{\link[taxize]{ncbi_getbyname}}
 }
 \keyword{internal}
 

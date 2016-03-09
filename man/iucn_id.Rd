@@ -4,11 +4,13 @@
 \alias{iucn_id}
 \title{Get an ID for a IUCN listed taxon}
 \usage{
-iucn_id(sciname)
+iucn_id(sciname, ...)
 }
 \arguments{
 \item{sciname}{character; Scientific name. Should be cleand and in the
 format \emph{<Genus> <Species>}. One or more.}
+
+\item{...}{Curl options passed on to \code{\link[httr]{GET}}}
 }
 \value{
 A named list (names are input taxa names) of one or more IUCN IDs.
@@ -16,13 +18,6 @@ Taxa that aren't found are silently dropped.
 }
 \description{
 Get an ID for a IUCN listed taxon
-}
-\details{
-Beware: IUCN functions can give back incorrect data. This isn't our fault.
-We do our best to get you the correct data quickly, but sometimes IUCN gives
-back the wrong data, and sometimes Global Names gives back the wrong data.
-We will fix these as soon as possible. In the meantime, just make sure that
-the data you get back is correct.
 }
 \examples{
 \dontrun{
@@ -39,6 +34,10 @@ iucn_id(c("Panthera uncia", "Lynx lynx", "foo bar", "hello world"))
 
 # a name not found
 iucn_id("Foo bar")
+
+# curl options
+library("httr")
+iucn_id("Branta canadensis", config = verbose())
 }
 }
 \author{

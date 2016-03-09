@@ -231,13 +231,20 @@ hr {
 head(temp)
 </code></pre>
 
-<pre><code>#&gt;     submitted_name         matched_name data_source_title score
-#&gt; 1 Helianthos annus     Helianthus annus               EOL  0.75
-#&gt; 2 Helianthos annus  Helianthus annus L.               EOL  0.75
-#&gt; 3 Helianthos annus     Helianthus annus     uBio NameBank  0.75
-#&gt; 4 Helianthos annus Helianthus annuus L. Catalogue of Life  0.75
-#&gt; 5 Helianthos annus Helianthus annuus L.              ITIS  0.75
-#&gt; 6 Helianthos annus    Helianthus annuus              NCBI  0.75
+<pre><code>#&gt;   user_supplied_name   submitted_name         matched_name
+#&gt; 1   Helianthos annus Helianthos annus     Helianthus annus
+#&gt; 2   Helianthos annus Helianthos annus  Helianthus annus L.
+#&gt; 3   Helianthos annus Helianthos annus     Helianthus annus
+#&gt; 4   Helianthos annus Helianthos annus Helianthus annuus L.
+#&gt; 5   Helianthos annus Helianthos annus Helianthus annuus L.
+#&gt; 6   Helianthos annus Helianthos annus    Helianthus annuus
+#&gt;   data_source_title score
+#&gt; 1               EOL  0.75
+#&gt; 2               EOL  0.75
+#&gt; 3     uBio NameBank  0.75
+#&gt; 4 Catalogue of Life  0.75
+#&gt; 5              ITIS  0.75
+#&gt; 6              NCBI  0.75
 </code></pre>
 
 <p>The correct spellings are <em>Helianthus annuus</em> and <em>Homo sapiens</em>. Another approach uses the Taxonomic Name Resolution Service via the Taxosaurus API developed by iPLant and the Phylotastic organization. In this example, we provide a list of species names, some of which are misspelled, and we&#39;ll call the API with the <em>tnrs</em> function.</p>
@@ -307,33 +314,33 @@ classification(specieslist, db = &#39;itis&#39;)
 
 <pre><code>#&gt; $`Abies procera`
 #&gt;               name          rank     id
-#&gt; 1          Plantae       Kingdom 202422
-#&gt; 2    Viridiplantae    Subkingdom 954898
-#&gt; 3     Streptophyta  Infrakingdom 846494
-#&gt; 4      Embryophyta Superdivision 954900
-#&gt; 5     Tracheophyta      Division 846496
-#&gt; 6  Spermatophytina   Subdivision 846504
-#&gt; 7        Pinopsida         Class 500009
-#&gt; 8          Pinidae      Subclass 954916
-#&gt; 9          Pinales         Order 500028
-#&gt; 10        Pinaceae        Family  18030
-#&gt; 11           Abies         Genus  18031
-#&gt; 12   Abies procera       Species 181835
+#&gt; 1          Plantae       kingdom 202422
+#&gt; 2    Viridiplantae    subkingdom 954898
+#&gt; 3     Streptophyta  infrakingdom 846494
+#&gt; 4      Embryophyta superdivision 954900
+#&gt; 5     Tracheophyta      division 846496
+#&gt; 6  Spermatophytina   subdivision 846504
+#&gt; 7        Pinopsida         class 500009
+#&gt; 8          Pinidae      subclass 954916
+#&gt; 9          Pinales         order 500028
+#&gt; 10        Pinaceae        family  18030
+#&gt; 11           Abies         genus  18031
+#&gt; 12   Abies procera       species 181835
 #&gt; 
 #&gt; $`Pinus contorta`
 #&gt;               name          rank     id
-#&gt; 1          Plantae       Kingdom 202422
-#&gt; 2    Viridiplantae    Subkingdom 954898
-#&gt; 3     Streptophyta  Infrakingdom 846494
-#&gt; 4      Embryophyta Superdivision 954900
-#&gt; 5     Tracheophyta      Division 846496
-#&gt; 6  Spermatophytina   Subdivision 846504
-#&gt; 7        Pinopsida         Class 500009
-#&gt; 8          Pinidae      Subclass 954916
-#&gt; 9          Pinales         Order 500028
-#&gt; 10        Pinaceae        Family  18030
-#&gt; 11           Pinus         Genus  18035
-#&gt; 12  Pinus contorta       Species 183327
+#&gt; 1          Plantae       kingdom 202422
+#&gt; 2    Viridiplantae    subkingdom 954898
+#&gt; 3     Streptophyta  infrakingdom 846494
+#&gt; 4      Embryophyta superdivision 954900
+#&gt; 5     Tracheophyta      division 846496
+#&gt; 6  Spermatophytina   subdivision 846504
+#&gt; 7        Pinopsida         class 500009
+#&gt; 8          Pinidae      subclass 954916
+#&gt; 9          Pinales         order 500028
+#&gt; 10        Pinaceae        family  18030
+#&gt; 11           Pinus         genus  18035
+#&gt; 12  Pinus contorta       species 183327
 #&gt; 
 #&gt; attr(,&quot;class&quot;)
 #&gt; [1] &quot;classification&quot;
@@ -472,11 +479,11 @@ NROW(out$`Poa annua`)
 #&gt; 2  NHMSYS0000461798              Poa   Genus  Recommended
 #&gt; 3  NHMSYS0000461804         Poa laxa Species      Synonym
 #&gt; 4  NHMSYS0021060390           Poales   Order  Recommended
-#&gt; 5  NBNSYS0000160753          Poaceae  Family  Recommended
-#&gt; 6  NBNSYS0000002551       Poa glauca Species  Recommended
-#&gt; 7  NBNSYS0000002547       Poa alpina Species  Recommended
-#&gt; 8  NHMSYS0000461804        Poa minor Species      Synonym
-#&gt; 9  NBNSYS0000002545       Poa exilis Species Undetermined
+#&gt; 5  NHMSYS0000458512       Poa pilosa Species      Synonym
+#&gt; 6  NBNSYS0000002547       Poa alpina Species  Recommended
+#&gt; 7  NHMSYS0000461804        Poa minor Species      Synonym
+#&gt; 8  NBNSYS0000002545       Poa exilis Species Undetermined
+#&gt; 9  NHMSYS0000456981       Poa rigida Species      Synonym
 #&gt; 10 NBNSYS0000002551       Poa caesia Species      Synonym
 </code></pre>
 
@@ -542,14 +549,14 @@ NROW(out$`Poa annua`)
 </code></pre>
 
 <pre><code>#&gt;    user  system elapsed 
-#&gt;   0.122   0.004   1.776
+#&gt;   0.088   0.008   3.697
 </code></pre>
 
 <pre><code class="r">system.time( replicate(3, as.gbifid(c(&quot;2704179&quot;,&quot;2435099&quot;,&quot;3171445&quot;), check=FALSE)) )
 </code></pre>
 
 <pre><code>#&gt;    user  system elapsed 
-#&gt;   0.000   0.000   0.001
+#&gt;       0       0       0
 </code></pre>
 
 <h2>What taxa are downstream of my taxon of interest?</h2>
@@ -559,108 +566,108 @@ NROW(out$`Poa annua`)
 <pre><code class="r">downstream(&quot;Apis&quot;, downto = &quot;Species&quot;, db = &quot;col&quot;)
 </code></pre>
 
-<pre><code>#&gt;                      name    rank                            colid
-#&gt; 1                    Apis   Genus 015be25f6b061ba517f495394b80f108
-#&gt; 2       Actinomadura apis Species 1182a102a18b40aa19385bf5f1f53367
-#&gt; 3     Anisocentropus apis Species 8891d18874dde14e44df52e931c44206
-#&gt; 4      Apis andreniformis Species 7a4a38c5095963949d6d6ec917d471de
-#&gt; 5             Apis cerana Species 39610a4ceff7e5244e334a3fbc5e47e5
-#&gt; 6            Apis dorsata Species e1d4cbf3872c6c310b7a1c17ddd00ebc
-#&gt; 7             Apis florea Species 92dca82a063fedd1da94b3f3972d7b22
-#&gt; 8      Apis koschevnikovi Species 4bbc06b9dfbde0b72c619810b564c6e6
-#&gt; 9          Apis mellifera Species 67cbbcf92cd60748759e58e802d98518
-#&gt; 10       Apis nigrocincta Species 213668a26ba6d2aad9575218f10d422f
-#&gt; 11       Ascosphaera apis Species 882fea77837a2b58c00af07013e367d9
-#&gt; 12           Candida apis Species e945f80aab1243c12db6121c30c80143
-#&gt; 13         Eristalis apis Species 16d7c8023308d38f6bb831ed5fa82002
-#&gt; 14            Hister apis Species d2d7483acf488b5ed932f49b0aa51d19
-#&gt; 15       Kirkaldykra apis Species 70a68f13454abd937aabf56746f4a6ad
-#&gt; 16           Mallota apis Species 10c3c3921d2ea9f9425ef9fd41914520
-#&gt; 17          Microdon apis Species 9be92242562eb923e711dc24b7bbab9a
-#&gt; 18            Nosema apis Species 5b2838dfd0ec15844fc6f659f7580322
-#&gt; 19        Scutirodes apis Species 164ab3ac910547bc945cdbb994be1ee5
-#&gt; 20       Spiroplasma apis Species 789f91571ce55de4df9821f2d05efab0
-#&gt; 21    Trichomonascus apis Species 2c5a43a4a562fa66af5a2def7efa8e8c
-#&gt; 22        Torulopsis apis Species e1226d7f21402357eaa419e2024021df
-#&gt; 23          Apis aestuans Species a517bc572c3c2697fe3bbfabc46a1493
-#&gt; 24            Apis alpina Species f2781627115e4212ddab5979cdd425d2
-#&gt; 25          Apis bicornis Species e67e82d00faae69da173bb31f9914056
-#&gt; 26         Apis canescens Species d6b8850db971d65d6079e3a22f35e10e
-#&gt; 27          Apis clypeata Species 706060924801130f6c3abf454087c100
-#&gt; 28       Apis cunicularia Species ebc3c5166ce2cabf419c4c6dc332cf3b
-#&gt; 29           Apis etrusca Species 6d27fd39a1d8b10050ba4e331987f3c9
-#&gt; 30           Apis globosa Species 254c8e847ca4ff128bba57fe94deb98d
-#&gt; 31         Apis hispanica Species e8d2057a3efeb2cfdaebe27ea8191cd5
-#&gt; 32          Apis hypnorum Species dfb743f54f50b9b9dbee378473542821
-#&gt; 33       Apis ichneumonea Species 13c35287e20ab9373fa445dbc44981ea
-#&gt; 34         Apis lapidaria Species f8da5667af3562ebc0f6a83e1ec408f0
-#&gt; 35          Apis muscorum Species 5bbfe59da5ce7fe59eb9ca3a7a45916c
-#&gt; 36          Apis mystacea Species fba8e4752a7fa5939a7eae293ba633ec
-#&gt; 37          Apis obsoleta Species da42bcb6cc0267903fb175f8a215aecb
-#&gt; 38          Apis rostrata Species e155a4277b66d1114182cafd875afbe3
-#&gt; 39          Apis rostrata Species e155a4277b66d1114182cafd875afbe3
-#&gt; 40              Apis rufa Species e67e82d00faae69da173bb31f9914056
-#&gt; 41           Apis signata Species 551f101ad3b9bc17b24575585b2500c1
-#&gt; 42        Apis smaragdula Species 4bc5c886b061e17e9aecb537a04c616d
-#&gt; 43         Apis spinulosa Species 56e7e9f854c9ed31ea6d0a06567607d0
-#&gt; 44       Apis subterranea Species 3d2adff364a87bf7dd30524aa8071807
-#&gt; 45      Apis surinamensis Species 8869080881d1a248e1da1c8030c55482
-#&gt; 46        Apis terrestris Species 953110adc1a0df6865cfa737c8a95cf3
-#&gt; 47        Apis trispinosa Species 59bece9b990fa522c6369c39efa60652
-#&gt; 48       Apis vespiformis Species 551f101ad3b9bc17b24575585b2500c1
-#&gt; 49  Ascosphaera apis apis Species 882fea77837a2b58c00af07013e367d9
-#&gt; 50 Ascosphaera apis major Species 928c50c78e4750d260a1a18b5db0ca1b
-#&gt;                    name_status  kingdom              family
-#&gt; 1                accepted name Animalia              Apidae
-#&gt; 2                accepted name Bacteria Thermomonosporaceae
-#&gt; 3                accepted name Animalia     Calamoceratidae
-#&gt; 4                accepted name Animalia              Apidae
-#&gt; 5                accepted name Animalia              Apidae
-#&gt; 6                accepted name Animalia              Apidae
-#&gt; 7                accepted name Animalia              Apidae
-#&gt; 8                accepted name Animalia              Apidae
-#&gt; 9                accepted name Animalia              Apidae
-#&gt; 10               accepted name Animalia              Apidae
-#&gt; 11               accepted name    Fungi     Ascosphaeraceae
-#&gt; 12               accepted name    Fungi        Not assigned
-#&gt; 13               accepted name Animalia           Syrphidae
-#&gt; 14               accepted name Animalia          Histeridae
-#&gt; 15               accepted name Animalia        Cicadellidae
-#&gt; 16               accepted name Animalia           Syrphidae
-#&gt; 17               accepted name Animalia           Syrphidae
-#&gt; 18               accepted name Protozoa         Nosematidae
-#&gt; 19               accepted name Animalia           Noctuidae
-#&gt; 20               accepted name Bacteria   Spiroplasmataceae
-#&gt; 21               accepted name    Fungi   Trichomonascaceae
-#&gt; 22 provisionally accepted name    Fungi        Not assigned
-#&gt; 23                     synonym     &lt;NA&gt;                &lt;NA&gt;
-#&gt; 24                     synonym     &lt;NA&gt;                &lt;NA&gt;
-#&gt; 25                     synonym     &lt;NA&gt;                &lt;NA&gt;
-#&gt; 26                     synonym     &lt;NA&gt;                &lt;NA&gt;
-#&gt; 27                     synonym     &lt;NA&gt;                &lt;NA&gt;
-#&gt; 28                     synonym     &lt;NA&gt;                &lt;NA&gt;
-#&gt; 29                     synonym     &lt;NA&gt;                &lt;NA&gt;
-#&gt; 30                     synonym     &lt;NA&gt;                &lt;NA&gt;
-#&gt; 31                     synonym     &lt;NA&gt;                &lt;NA&gt;
-#&gt; 32                     synonym     &lt;NA&gt;                &lt;NA&gt;
-#&gt; 33                     synonym     &lt;NA&gt;                &lt;NA&gt;
-#&gt; 34                     synonym     &lt;NA&gt;                &lt;NA&gt;
-#&gt; 35                     synonym     &lt;NA&gt;                &lt;NA&gt;
-#&gt; 36                     synonym     &lt;NA&gt;                &lt;NA&gt;
-#&gt; 37                     synonym     &lt;NA&gt;                &lt;NA&gt;
-#&gt; 38                     synonym     &lt;NA&gt;                &lt;NA&gt;
-#&gt; 39                     synonym     &lt;NA&gt;                &lt;NA&gt;
-#&gt; 40                     synonym     &lt;NA&gt;                &lt;NA&gt;
-#&gt; 41                     synonym     &lt;NA&gt;                &lt;NA&gt;
-#&gt; 42                     synonym     &lt;NA&gt;                &lt;NA&gt;
-#&gt; 43                     synonym     &lt;NA&gt;                &lt;NA&gt;
-#&gt; 44                     synonym     &lt;NA&gt;                &lt;NA&gt;
-#&gt; 45                     synonym     &lt;NA&gt;                &lt;NA&gt;
-#&gt; 46                     synonym     &lt;NA&gt;                &lt;NA&gt;
-#&gt; 47                     synonym     &lt;NA&gt;                &lt;NA&gt;
-#&gt; 48                     synonym     &lt;NA&gt;                &lt;NA&gt;
-#&gt; 49                     synonym     &lt;NA&gt;                &lt;NA&gt;
-#&gt; 50                     synonym     &lt;NA&gt;                &lt;NA&gt;
+<pre><code>#&gt;                     name    rank                            colid
+#&gt; 1                   Apis   Genus 015be25f6b061ba517f495394b80f108
+#&gt; 2      Actinomadura apis Species 1182a102a18b40aa19385bf5f1f53367
+#&gt; 3    Anisocentropus apis Species 8891d18874dde14e44df52e931c44206
+#&gt; 4     Apis andreniformis Species 7a4a38c5095963949d6d6ec917d471de
+#&gt; 5            Apis cerana Species 39610a4ceff7e5244e334a3fbc5e47e5
+#&gt; 6           Apis dorsata Species e1d4cbf3872c6c310b7a1c17ddd00ebc
+#&gt; 7            Apis florea Species 92dca82a063fedd1da94b3f3972d7b22
+#&gt; 8     Apis koschevnikovi Species 4bbc06b9dfbde0b72c619810b564c6e6
+#&gt; 9         Apis mellifera Species 67cbbcf92cd60748759e58e802d98518
+#&gt; 10      Apis nigrocincta Species 213668a26ba6d2aad9575218f10d422f
+#&gt; 11      Ascosphaera apis Species 088549f2fb602367e84d5ffdb8c1d4fc
+#&gt; 12          Candida apis Species 3219a9635d3438e8b76a645cecf87287
+#&gt; 13        Eristalis apis Species 16d7c8023308d38f6bb831ed5fa82002
+#&gt; 14           Hister apis Species d2d7483acf488b5ed932f49b0aa51d19
+#&gt; 15        Ifephylus apis Species 9b4d00e009b58bbfc003b51bd3d0c6f0
+#&gt; 16  Impatiens nidus-apis Species 6aecf448e6aa0cb46387066db94426d1
+#&gt; 17      Kirkaldykra apis Species 70a68f13454abd937aabf56746f4a6ad
+#&gt; 18          Mallota apis Species 10c3c3921d2ea9f9425ef9fd41914520
+#&gt; 19 Melanosella mors-apis Species 4ac238f1597847dbc7998d97b8d45a0e
+#&gt; 20         Microdon apis Species 9be92242562eb923e711dc24b7bbab9a
+#&gt; 21           Nosema apis Species 5b2838dfd0ec15844fc6f659f7580322
+#&gt; 22       Scutirodes apis Species 164ab3ac910547bc945cdbb994be1ee5
+#&gt; 23      Spiroplasma apis Species 789f91571ce55de4df9821f2d05efab0
+#&gt; 24   Trichomonascus apis Species 17dc4d840323e2c5b87e67a952f6dff3
+#&gt; 25       Pericystis apis Species 088549f2fb602367e84d5ffdb8c1d4fc
+#&gt; 26       Pericystis apis Species 088549f2fb602367e84d5ffdb8c1d4fc
+#&gt; 27       Torulopsis apis Species 3219a9635d3438e8b76a645cecf87287
+#&gt; 28       Torulopsis apis Species 3219a9635d3438e8b76a645cecf87287
+#&gt; 29         Apis aestuans Species a517bc572c3c2697fe3bbfabc46a1493
+#&gt; 30           Apis alpina Species f2781627115e4212ddab5979cdd425d2
+#&gt; 31         Apis bicornis Species e67e82d00faae69da173bb31f9914056
+#&gt; 32        Apis canescens Species d6b8850db971d65d6079e3a22f35e10e
+#&gt; 33         Apis clypeata Species 706060924801130f6c3abf454087c100
+#&gt; 34      Apis cunicularia Species ebc3c5166ce2cabf419c4c6dc332cf3b
+#&gt; 35          Apis etrusca Species 6d27fd39a1d8b10050ba4e331987f3c9
+#&gt; 36          Apis globosa Species 254c8e847ca4ff128bba57fe94deb98d
+#&gt; 37        Apis hispanica Species e8d2057a3efeb2cfdaebe27ea8191cd5
+#&gt; 38         Apis hypnorum Species dfb743f54f50b9b9dbee378473542821
+#&gt; 39      Apis ichneumonea Species 13c35287e20ab9373fa445dbc44981ea
+#&gt; 40        Apis lapidaria Species f8da5667af3562ebc0f6a83e1ec408f0
+#&gt; 41         Apis muscorum Species 5bbfe59da5ce7fe59eb9ca3a7a45916c
+#&gt; 42         Apis mystacea Species fba8e4752a7fa5939a7eae293ba633ec
+#&gt; 43         Apis obsoleta Species da42bcb6cc0267903fb175f8a215aecb
+#&gt; 44         Apis rostrata Species e155a4277b66d1114182cafd875afbe3
+#&gt; 45         Apis rostrata Species e155a4277b66d1114182cafd875afbe3
+#&gt; 46             Apis rufa Species e67e82d00faae69da173bb31f9914056
+#&gt; 47          Apis signata Species 551f101ad3b9bc17b24575585b2500c1
+#&gt; 48       Apis smaragdula Species 4bc5c886b061e17e9aecb537a04c616d
+#&gt; 49        Apis spinulosa Species 56e7e9f854c9ed31ea6d0a06567607d0
+#&gt; 50      Apis subterranea Species 3d2adff364a87bf7dd30524aa8071807
+#&gt;          name_status  kingdom              family              acc_name
+#&gt; 1      accepted name Animalia              Apidae                  &lt;NA&gt;
+#&gt; 2      accepted name Bacteria Thermomonosporaceae                  &lt;NA&gt;
+#&gt; 3      accepted name Animalia     Calamoceratidae                  &lt;NA&gt;
+#&gt; 4      accepted name Animalia              Apidae                  &lt;NA&gt;
+#&gt; 5      accepted name Animalia              Apidae                  &lt;NA&gt;
+#&gt; 6      accepted name Animalia              Apidae                  &lt;NA&gt;
+#&gt; 7      accepted name Animalia              Apidae                  &lt;NA&gt;
+#&gt; 8      accepted name Animalia              Apidae                  &lt;NA&gt;
+#&gt; 9      accepted name Animalia              Apidae                  &lt;NA&gt;
+#&gt; 10     accepted name Animalia              Apidae                  &lt;NA&gt;
+#&gt; 11     accepted name    Fungi     Ascosphaeraceae                  &lt;NA&gt;
+#&gt; 12     accepted name    Fungi        Not assigned                  &lt;NA&gt;
+#&gt; 13     accepted name Animalia           Syrphidae                  &lt;NA&gt;
+#&gt; 14     accepted name Animalia          Histeridae                  &lt;NA&gt;
+#&gt; 15     accepted name Animalia             Miridae                  &lt;NA&gt;
+#&gt; 16     accepted name  Plantae       Balsaminaceae                  &lt;NA&gt;
+#&gt; 17     accepted name Animalia        Cicadellidae                  &lt;NA&gt;
+#&gt; 18     accepted name Animalia           Syrphidae                  &lt;NA&gt;
+#&gt; 19     accepted name    Fungi        Not assigned                  &lt;NA&gt;
+#&gt; 20     accepted name Animalia           Syrphidae                  &lt;NA&gt;
+#&gt; 21     accepted name Protozoa         Nosematidae                  &lt;NA&gt;
+#&gt; 22     accepted name Animalia           Noctuidae                  &lt;NA&gt;
+#&gt; 23     accepted name Bacteria   Spiroplasmataceae                  &lt;NA&gt;
+#&gt; 24     accepted name    Fungi   Trichomonascaceae                  &lt;NA&gt;
+#&gt; 25 ambiguous synonym     &lt;NA&gt;                &lt;NA&gt;      Ascosphaera apis
+#&gt; 26 ambiguous synonym     &lt;NA&gt;                &lt;NA&gt;      Ascosphaera apis
+#&gt; 27 ambiguous synonym     &lt;NA&gt;                &lt;NA&gt;          Candida apis
+#&gt; 28 ambiguous synonym     &lt;NA&gt;                &lt;NA&gt;          Candida apis
+#&gt; 29           synonym     &lt;NA&gt;                &lt;NA&gt;     Xylocopa aestuans
+#&gt; 30           synonym     &lt;NA&gt;                &lt;NA&gt;        Bombus alpinus
+#&gt; 31           synonym     &lt;NA&gt;                &lt;NA&gt;            Osmia rufa
+#&gt; 32           synonym     &lt;NA&gt;                &lt;NA&gt;      Bembix canescens
+#&gt; 33           synonym     &lt;NA&gt;                &lt;NA&gt;      Lestica clypeata
+#&gt; 34           synonym     &lt;NA&gt;                &lt;NA&gt; Colletes cunicularius
+#&gt; 35           synonym     &lt;NA&gt;                &lt;NA&gt;     Tachytes etruscus
+#&gt; 36           synonym     &lt;NA&gt;                &lt;NA&gt;   Exomalopsis similis
+#&gt; 37           synonym     &lt;NA&gt;                &lt;NA&gt; Tachytes freygessneri
+#&gt; 38           synonym     &lt;NA&gt;                &lt;NA&gt;       Bombus hypnorum
+#&gt; 39           synonym     &lt;NA&gt;                &lt;NA&gt;    Sphex ichneumoneus
+#&gt; 40           synonym     &lt;NA&gt;                &lt;NA&gt;     Bombus lapidarius
+#&gt; 41           synonym     &lt;NA&gt;                &lt;NA&gt;       Bombus muscorum
+#&gt; 42           synonym     &lt;NA&gt;                &lt;NA&gt; Argogorytes mystaceus
+#&gt; 43           synonym     &lt;NA&gt;                &lt;NA&gt;    Tachytes obsoletus
+#&gt; 44           synonym     &lt;NA&gt;                &lt;NA&gt;       Bembix rostrata
+#&gt; 45           synonym     &lt;NA&gt;                &lt;NA&gt;       Bembix rostrata
+#&gt; 46           synonym     &lt;NA&gt;                &lt;NA&gt;            Osmia rufa
+#&gt; 47           synonym     &lt;NA&gt;                &lt;NA&gt;       Stictia signata
+#&gt; 48           synonym     &lt;NA&gt;                &lt;NA&gt;   Ceratina smaragdula
+#&gt; 49           synonym     &lt;NA&gt;                &lt;NA&gt;   Hoplosmia spinulosa
+#&gt; 50           synonym     &lt;NA&gt;                &lt;NA&gt;   Bombus subterraneus
 </code></pre>
 
 <pre><code>#&gt; $Apis
@@ -707,108 +714,108 @@ NROW(out$`Poa annua`)
 <pre><code class="r">children(get_colid(&quot;Apis&quot;))
 </code></pre>
 
-<pre><code>#&gt;                      name    rank                            colid
-#&gt; 1                    Apis   Genus 015be25f6b061ba517f495394b80f108
-#&gt; 2       Actinomadura apis Species 1182a102a18b40aa19385bf5f1f53367
-#&gt; 3     Anisocentropus apis Species 8891d18874dde14e44df52e931c44206
-#&gt; 4      Apis andreniformis Species 7a4a38c5095963949d6d6ec917d471de
-#&gt; 5             Apis cerana Species 39610a4ceff7e5244e334a3fbc5e47e5
-#&gt; 6            Apis dorsata Species e1d4cbf3872c6c310b7a1c17ddd00ebc
-#&gt; 7             Apis florea Species 92dca82a063fedd1da94b3f3972d7b22
-#&gt; 8      Apis koschevnikovi Species 4bbc06b9dfbde0b72c619810b564c6e6
-#&gt; 9          Apis mellifera Species 67cbbcf92cd60748759e58e802d98518
-#&gt; 10       Apis nigrocincta Species 213668a26ba6d2aad9575218f10d422f
-#&gt; 11       Ascosphaera apis Species 882fea77837a2b58c00af07013e367d9
-#&gt; 12           Candida apis Species e945f80aab1243c12db6121c30c80143
-#&gt; 13         Eristalis apis Species 16d7c8023308d38f6bb831ed5fa82002
-#&gt; 14            Hister apis Species d2d7483acf488b5ed932f49b0aa51d19
-#&gt; 15       Kirkaldykra apis Species 70a68f13454abd937aabf56746f4a6ad
-#&gt; 16           Mallota apis Species 10c3c3921d2ea9f9425ef9fd41914520
-#&gt; 17          Microdon apis Species 9be92242562eb923e711dc24b7bbab9a
-#&gt; 18            Nosema apis Species 5b2838dfd0ec15844fc6f659f7580322
-#&gt; 19        Scutirodes apis Species 164ab3ac910547bc945cdbb994be1ee5
-#&gt; 20       Spiroplasma apis Species 789f91571ce55de4df9821f2d05efab0
-#&gt; 21    Trichomonascus apis Species 2c5a43a4a562fa66af5a2def7efa8e8c
-#&gt; 22        Torulopsis apis Species e1226d7f21402357eaa419e2024021df
-#&gt; 23          Apis aestuans Species a517bc572c3c2697fe3bbfabc46a1493
-#&gt; 24            Apis alpina Species f2781627115e4212ddab5979cdd425d2
-#&gt; 25          Apis bicornis Species e67e82d00faae69da173bb31f9914056
-#&gt; 26         Apis canescens Species d6b8850db971d65d6079e3a22f35e10e
-#&gt; 27          Apis clypeata Species 706060924801130f6c3abf454087c100
-#&gt; 28       Apis cunicularia Species ebc3c5166ce2cabf419c4c6dc332cf3b
-#&gt; 29           Apis etrusca Species 6d27fd39a1d8b10050ba4e331987f3c9
-#&gt; 30           Apis globosa Species 254c8e847ca4ff128bba57fe94deb98d
-#&gt; 31         Apis hispanica Species e8d2057a3efeb2cfdaebe27ea8191cd5
-#&gt; 32          Apis hypnorum Species dfb743f54f50b9b9dbee378473542821
-#&gt; 33       Apis ichneumonea Species 13c35287e20ab9373fa445dbc44981ea
-#&gt; 34         Apis lapidaria Species f8da5667af3562ebc0f6a83e1ec408f0
-#&gt; 35          Apis muscorum Species 5bbfe59da5ce7fe59eb9ca3a7a45916c
-#&gt; 36          Apis mystacea Species fba8e4752a7fa5939a7eae293ba633ec
-#&gt; 37          Apis obsoleta Species da42bcb6cc0267903fb175f8a215aecb
-#&gt; 38          Apis rostrata Species e155a4277b66d1114182cafd875afbe3
-#&gt; 39          Apis rostrata Species e155a4277b66d1114182cafd875afbe3
-#&gt; 40              Apis rufa Species e67e82d00faae69da173bb31f9914056
-#&gt; 41           Apis signata Species 551f101ad3b9bc17b24575585b2500c1
-#&gt; 42        Apis smaragdula Species 4bc5c886b061e17e9aecb537a04c616d
-#&gt; 43         Apis spinulosa Species 56e7e9f854c9ed31ea6d0a06567607d0
-#&gt; 44       Apis subterranea Species 3d2adff364a87bf7dd30524aa8071807
-#&gt; 45      Apis surinamensis Species 8869080881d1a248e1da1c8030c55482
-#&gt; 46        Apis terrestris Species 953110adc1a0df6865cfa737c8a95cf3
-#&gt; 47        Apis trispinosa Species 59bece9b990fa522c6369c39efa60652
-#&gt; 48       Apis vespiformis Species 551f101ad3b9bc17b24575585b2500c1
-#&gt; 49  Ascosphaera apis apis Species 882fea77837a2b58c00af07013e367d9
-#&gt; 50 Ascosphaera apis major Species 928c50c78e4750d260a1a18b5db0ca1b
-#&gt;                    name_status  kingdom              family
-#&gt; 1                accepted name Animalia              Apidae
-#&gt; 2                accepted name Bacteria Thermomonosporaceae
-#&gt; 3                accepted name Animalia     Calamoceratidae
-#&gt; 4                accepted name Animalia              Apidae
-#&gt; 5                accepted name Animalia              Apidae
-#&gt; 6                accepted name Animalia              Apidae
-#&gt; 7                accepted name Animalia              Apidae
-#&gt; 8                accepted name Animalia              Apidae
-#&gt; 9                accepted name Animalia              Apidae
-#&gt; 10               accepted name Animalia              Apidae
-#&gt; 11               accepted name    Fungi     Ascosphaeraceae
-#&gt; 12               accepted name    Fungi        Not assigned
-#&gt; 13               accepted name Animalia           Syrphidae
-#&gt; 14               accepted name Animalia          Histeridae
-#&gt; 15               accepted name Animalia        Cicadellidae
-#&gt; 16               accepted name Animalia           Syrphidae
-#&gt; 17               accepted name Animalia           Syrphidae
-#&gt; 18               accepted name Protozoa         Nosematidae
-#&gt; 19               accepted name Animalia           Noctuidae
-#&gt; 20               accepted name Bacteria   Spiroplasmataceae
-#&gt; 21               accepted name    Fungi   Trichomonascaceae
-#&gt; 22 provisionally accepted name    Fungi        Not assigned
-#&gt; 23                     synonym     &lt;NA&gt;                &lt;NA&gt;
-#&gt; 24                     synonym     &lt;NA&gt;                &lt;NA&gt;
-#&gt; 25                     synonym     &lt;NA&gt;                &lt;NA&gt;
-#&gt; 26                     synonym     &lt;NA&gt;                &lt;NA&gt;
-#&gt; 27                     synonym     &lt;NA&gt;                &lt;NA&gt;
-#&gt; 28                     synonym     &lt;NA&gt;                &lt;NA&gt;
-#&gt; 29                     synonym     &lt;NA&gt;                &lt;NA&gt;
-#&gt; 30                     synonym     &lt;NA&gt;                &lt;NA&gt;
-#&gt; 31                     synonym     &lt;NA&gt;                &lt;NA&gt;
-#&gt; 32                     synonym     &lt;NA&gt;                &lt;NA&gt;
-#&gt; 33                     synonym     &lt;NA&gt;                &lt;NA&gt;
-#&gt; 34                     synonym     &lt;NA&gt;                &lt;NA&gt;
-#&gt; 35                     synonym     &lt;NA&gt;                &lt;NA&gt;
-#&gt; 36                     synonym     &lt;NA&gt;                &lt;NA&gt;
-#&gt; 37                     synonym     &lt;NA&gt;                &lt;NA&gt;
-#&gt; 38                     synonym     &lt;NA&gt;                &lt;NA&gt;
-#&gt; 39                     synonym     &lt;NA&gt;                &lt;NA&gt;
-#&gt; 40                     synonym     &lt;NA&gt;                &lt;NA&gt;
-#&gt; 41                     synonym     &lt;NA&gt;                &lt;NA&gt;
-#&gt; 42                     synonym     &lt;NA&gt;                &lt;NA&gt;
-#&gt; 43                     synonym     &lt;NA&gt;                &lt;NA&gt;
-#&gt; 44                     synonym     &lt;NA&gt;                &lt;NA&gt;
-#&gt; 45                     synonym     &lt;NA&gt;                &lt;NA&gt;
-#&gt; 46                     synonym     &lt;NA&gt;                &lt;NA&gt;
-#&gt; 47                     synonym     &lt;NA&gt;                &lt;NA&gt;
-#&gt; 48                     synonym     &lt;NA&gt;                &lt;NA&gt;
-#&gt; 49                     synonym     &lt;NA&gt;                &lt;NA&gt;
-#&gt; 50                     synonym     &lt;NA&gt;                &lt;NA&gt;
+<pre><code>#&gt;                     name    rank                            colid
+#&gt; 1                   Apis   Genus 015be25f6b061ba517f495394b80f108
+#&gt; 2      Actinomadura apis Species 1182a102a18b40aa19385bf5f1f53367
+#&gt; 3    Anisocentropus apis Species 8891d18874dde14e44df52e931c44206
+#&gt; 4     Apis andreniformis Species 7a4a38c5095963949d6d6ec917d471de
+#&gt; 5            Apis cerana Species 39610a4ceff7e5244e334a3fbc5e47e5
+#&gt; 6           Apis dorsata Species e1d4cbf3872c6c310b7a1c17ddd00ebc
+#&gt; 7            Apis florea Species 92dca82a063fedd1da94b3f3972d7b22
+#&gt; 8     Apis koschevnikovi Species 4bbc06b9dfbde0b72c619810b564c6e6
+#&gt; 9         Apis mellifera Species 67cbbcf92cd60748759e58e802d98518
+#&gt; 10      Apis nigrocincta Species 213668a26ba6d2aad9575218f10d422f
+#&gt; 11      Ascosphaera apis Species 088549f2fb602367e84d5ffdb8c1d4fc
+#&gt; 12          Candida apis Species 3219a9635d3438e8b76a645cecf87287
+#&gt; 13        Eristalis apis Species 16d7c8023308d38f6bb831ed5fa82002
+#&gt; 14           Hister apis Species d2d7483acf488b5ed932f49b0aa51d19
+#&gt; 15        Ifephylus apis Species 9b4d00e009b58bbfc003b51bd3d0c6f0
+#&gt; 16  Impatiens nidus-apis Species 6aecf448e6aa0cb46387066db94426d1
+#&gt; 17      Kirkaldykra apis Species 70a68f13454abd937aabf56746f4a6ad
+#&gt; 18          Mallota apis Species 10c3c3921d2ea9f9425ef9fd41914520
+#&gt; 19 Melanosella mors-apis Species 4ac238f1597847dbc7998d97b8d45a0e
+#&gt; 20         Microdon apis Species 9be92242562eb923e711dc24b7bbab9a
+#&gt; 21           Nosema apis Species 5b2838dfd0ec15844fc6f659f7580322
+#&gt; 22       Scutirodes apis Species 164ab3ac910547bc945cdbb994be1ee5
+#&gt; 23      Spiroplasma apis Species 789f91571ce55de4df9821f2d05efab0
+#&gt; 24   Trichomonascus apis Species 17dc4d840323e2c5b87e67a952f6dff3
+#&gt; 25       Pericystis apis Species 088549f2fb602367e84d5ffdb8c1d4fc
+#&gt; 26       Pericystis apis Species 088549f2fb602367e84d5ffdb8c1d4fc
+#&gt; 27       Torulopsis apis Species 3219a9635d3438e8b76a645cecf87287
+#&gt; 28       Torulopsis apis Species 3219a9635d3438e8b76a645cecf87287
+#&gt; 29         Apis aestuans Species a517bc572c3c2697fe3bbfabc46a1493
+#&gt; 30           Apis alpina Species f2781627115e4212ddab5979cdd425d2
+#&gt; 31         Apis bicornis Species e67e82d00faae69da173bb31f9914056
+#&gt; 32        Apis canescens Species d6b8850db971d65d6079e3a22f35e10e
+#&gt; 33         Apis clypeata Species 706060924801130f6c3abf454087c100
+#&gt; 34      Apis cunicularia Species ebc3c5166ce2cabf419c4c6dc332cf3b
+#&gt; 35          Apis etrusca Species 6d27fd39a1d8b10050ba4e331987f3c9
+#&gt; 36          Apis globosa Species 254c8e847ca4ff128bba57fe94deb98d
+#&gt; 37        Apis hispanica Species e8d2057a3efeb2cfdaebe27ea8191cd5
+#&gt; 38         Apis hypnorum Species dfb743f54f50b9b9dbee378473542821
+#&gt; 39      Apis ichneumonea Species 13c35287e20ab9373fa445dbc44981ea
+#&gt; 40        Apis lapidaria Species f8da5667af3562ebc0f6a83e1ec408f0
+#&gt; 41         Apis muscorum Species 5bbfe59da5ce7fe59eb9ca3a7a45916c
+#&gt; 42         Apis mystacea Species fba8e4752a7fa5939a7eae293ba633ec
+#&gt; 43         Apis obsoleta Species da42bcb6cc0267903fb175f8a215aecb
+#&gt; 44         Apis rostrata Species e155a4277b66d1114182cafd875afbe3
+#&gt; 45         Apis rostrata Species e155a4277b66d1114182cafd875afbe3
+#&gt; 46             Apis rufa Species e67e82d00faae69da173bb31f9914056
+#&gt; 47          Apis signata Species 551f101ad3b9bc17b24575585b2500c1
+#&gt; 48       Apis smaragdula Species 4bc5c886b061e17e9aecb537a04c616d
+#&gt; 49        Apis spinulosa Species 56e7e9f854c9ed31ea6d0a06567607d0
+#&gt; 50      Apis subterranea Species 3d2adff364a87bf7dd30524aa8071807
+#&gt;          name_status  kingdom              family              acc_name
+#&gt; 1      accepted name Animalia              Apidae                  &lt;NA&gt;
+#&gt; 2      accepted name Bacteria Thermomonosporaceae                  &lt;NA&gt;
+#&gt; 3      accepted name Animalia     Calamoceratidae                  &lt;NA&gt;
+#&gt; 4      accepted name Animalia              Apidae                  &lt;NA&gt;
+#&gt; 5      accepted name Animalia              Apidae                  &lt;NA&gt;
+#&gt; 6      accepted name Animalia              Apidae                  &lt;NA&gt;
+#&gt; 7      accepted name Animalia              Apidae                  &lt;NA&gt;
+#&gt; 8      accepted name Animalia              Apidae                  &lt;NA&gt;
+#&gt; 9      accepted name Animalia              Apidae                  &lt;NA&gt;
+#&gt; 10     accepted name Animalia              Apidae                  &lt;NA&gt;
+#&gt; 11     accepted name    Fungi     Ascosphaeraceae                  &lt;NA&gt;
+#&gt; 12     accepted name    Fungi        Not assigned                  &lt;NA&gt;
+#&gt; 13     accepted name Animalia           Syrphidae                  &lt;NA&gt;
+#&gt; 14     accepted name Animalia          Histeridae                  &lt;NA&gt;
+#&gt; 15     accepted name Animalia             Miridae                  &lt;NA&gt;
+#&gt; 16     accepted name  Plantae       Balsaminaceae                  &lt;NA&gt;
+#&gt; 17     accepted name Animalia        Cicadellidae                  &lt;NA&gt;
+#&gt; 18     accepted name Animalia           Syrphidae                  &lt;NA&gt;
+#&gt; 19     accepted name    Fungi        Not assigned                  &lt;NA&gt;
+#&gt; 20     accepted name Animalia           Syrphidae                  &lt;NA&gt;
+#&gt; 21     accepted name Protozoa         Nosematidae                  &lt;NA&gt;
+#&gt; 22     accepted name Animalia           Noctuidae                  &lt;NA&gt;
+#&gt; 23     accepted name Bacteria   Spiroplasmataceae                  &lt;NA&gt;
+#&gt; 24     accepted name    Fungi   Trichomonascaceae                  &lt;NA&gt;
+#&gt; 25 ambiguous synonym     &lt;NA&gt;                &lt;NA&gt;      Ascosphaera apis
+#&gt; 26 ambiguous synonym     &lt;NA&gt;                &lt;NA&gt;      Ascosphaera apis
+#&gt; 27 ambiguous synonym     &lt;NA&gt;                &lt;NA&gt;          Candida apis
+#&gt; 28 ambiguous synonym     &lt;NA&gt;                &lt;NA&gt;          Candida apis
+#&gt; 29           synonym     &lt;NA&gt;                &lt;NA&gt;     Xylocopa aestuans
+#&gt; 30           synonym     &lt;NA&gt;                &lt;NA&gt;        Bombus alpinus
+#&gt; 31           synonym     &lt;NA&gt;                &lt;NA&gt;            Osmia rufa
+#&gt; 32           synonym     &lt;NA&gt;                &lt;NA&gt;      Bembix canescens
+#&gt; 33           synonym     &lt;NA&gt;                &lt;NA&gt;      Lestica clypeata
+#&gt; 34           synonym     &lt;NA&gt;                &lt;NA&gt; Colletes cunicularius
+#&gt; 35           synonym     &lt;NA&gt;                &lt;NA&gt;     Tachytes etruscus
+#&gt; 36           synonym     &lt;NA&gt;                &lt;NA&gt;   Exomalopsis similis
+#&gt; 37           synonym     &lt;NA&gt;                &lt;NA&gt; Tachytes freygessneri
+#&gt; 38           synonym     &lt;NA&gt;                &lt;NA&gt;       Bombus hypnorum
+#&gt; 39           synonym     &lt;NA&gt;                &lt;NA&gt;    Sphex ichneumoneus
+#&gt; 40           synonym     &lt;NA&gt;                &lt;NA&gt;     Bombus lapidarius
+#&gt; 41           synonym     &lt;NA&gt;                &lt;NA&gt;       Bombus muscorum
+#&gt; 42           synonym     &lt;NA&gt;                &lt;NA&gt; Argogorytes mystaceus
+#&gt; 43           synonym     &lt;NA&gt;                &lt;NA&gt;    Tachytes obsoletus
+#&gt; 44           synonym     &lt;NA&gt;                &lt;NA&gt;       Bembix rostrata
+#&gt; 45           synonym     &lt;NA&gt;                &lt;NA&gt;       Bembix rostrata
+#&gt; 46           synonym     &lt;NA&gt;                &lt;NA&gt;            Osmia rufa
+#&gt; 47           synonym     &lt;NA&gt;                &lt;NA&gt;       Stictia signata
+#&gt; 48           synonym     &lt;NA&gt;                &lt;NA&gt;   Ceratina smaragdula
+#&gt; 49           synonym     &lt;NA&gt;                &lt;NA&gt;   Hoplosmia spinulosa
+#&gt; 50           synonym     &lt;NA&gt;                &lt;NA&gt;   Bombus subterraneus
 </code></pre>
 
 <pre><code>#&gt; $`015be25f6b061ba517f495394b80f108`
