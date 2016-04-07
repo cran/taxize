@@ -37,7 +37,7 @@
 #' @param fields (character) One of mimimal (default) or all. Minimal gives back just four
 #' fields, whereas all gives all fields back.
 #'
-#' @author Scott Chamberlain {myrmecocystus@@gmail.com}
+#' @author Scott Chamberlain \email{myrmecocystus@@gmail.com}
 #' @return A data.frame with one attribute \code{not_known}: a character vector of
 #' taxa unknown to the Global Names Index. Acccess like \code{attr(output, "not_known")},
 #' or \code{attributes(output)$not_known}
@@ -153,6 +153,7 @@ gnr_resolve <- function(names, data_source_ids = NULL, resolve_once = FALSE,
 
   # check for empty data object
   drill <- tryCatch(data_[[1]], error = function(e) e)
+  to_rename <- c("original_name", "supplied_name_string", "name_string", "canonical_form")
   if (inherits(drill, "simpleError")) {
     out <- data.frame(NULL)
   } else {
@@ -162,7 +163,7 @@ gnr_resolve <- function(names, data_source_ids = NULL, resolve_once = FALSE,
       } else {
         x[[2]]
       }), stringsAsFactors = FALSE))
-      names(data_2)[c(1,2,3,6)] <- c("user_supplied_name", "submitted_name", "matched_name", "matched_name2")
+      names(data_2)[names(data_2) %in% to_rename] <- c("user_supplied_name", "submitted_name", "matched_name", "matched_name2")
       data_2$matched_name <- as.character(data_2$matched_name)
       data_2$data_source_title <- as.character(data_2$data_source_title)
       data_2$matched_name2 <- as.character(data_2$matched_name2)
@@ -193,7 +194,7 @@ gnr_resolve <- function(names, data_source_ids = NULL, resolve_once = FALSE,
       } else {
         x[[2]]
       }), stringsAsFactors = FALSE))
-      names(data_2_preferred)[c(1,2,3,6)] <- c("user_supplied_name", "submitted_name", "matched_name", "matched_name2")
+      names(data_2_preferred)[names(data_2_preferred) %in% to_rename] <- c("user_supplied_name", "submitted_name", "matched_name", "matched_name2")
       data_2_preferred$matched_name <- as.character(data_2_preferred$matched_name)
       data_2_preferred$data_source_title <- as.character(data_2_preferred$data_source_title)
       data_2_preferred$matched_name2 <- as.character(data_2_preferred$matched_name2)
