@@ -191,6 +191,7 @@ Alot of `taxize` revolves around taxonomic identifiers. Because, as you know, na
 
 ```r
 uids <- get_uid(c("Chironomus riparius", "Chaetopteryx"))
+#> Error in value[[3L]](cond): Server returned nothing (no headers, no data)
 ```
 
 ## Retrieve classifications
@@ -200,24 +201,9 @@ Classifications - think of a species, then all the taxonomic ranks up from that 
 
 ```r
 out <- classification(uids)
+#> Error in classification(uids): object 'uids' not found
 lapply(out, head)
-#> $`315576`
-#>                 name         rank     id
-#> 1 cellular organisms      no rank 131567
-#> 2          Eukaryota superkingdom   2759
-#> 3       Opisthokonta      no rank  33154
-#> 4            Metazoa      kingdom  33208
-#> 5          Eumetazoa      no rank   6072
-#> 6          Bilateria      no rank  33213
-#> 
-#> $`492549`
-#>                 name         rank     id
-#> 1 cellular organisms      no rank 131567
-#> 2          Eukaryota superkingdom   2759
-#> 3       Opisthokonta      no rank  33154
-#> 4            Metazoa      kingdom  33208
-#> 5          Eumetazoa      no rank   6072
-#> 6          Bilateria      no rank  33213
+#> Error in lapply(out, head): object 'out' not found
 ```
 
 ## Immediate children
@@ -358,13 +344,13 @@ You can limit to certain rows when getting ids in any `get_*()` functions
 get_ids(names="Poa annua", db = "gbif", rows=1)
 #> $gbif
 #> Poa annua 
-#> "2704179" 
+#> "7576620" 
 #> attr(,"class")
 #> [1] "gbifid"
 #> attr(,"match")
 #> [1] "found"
 #> attr(,"uri")
-#> [1] "http://www.gbif.org/species/2704179"
+#> [1] "http://www.gbif.org/species/7576620"
 #> 
 #> attr(,"class")
 #> [1] "ids"
@@ -380,7 +366,7 @@ get_ids_(c("Chironomus riparius", "Pinus contorta"), db = 'nbn', rows=1:3)
 #>   ptaxonversionkey    searchmatchtitle    rank  namestatus
 #> 1 NBNSYS0000027573 Chironomus riparius species Recommended
 #> 2 NBNSYS0000023345   Paederus riparius species Recommended
-#> 3 NHMSYS0001718042   Elaphrus riparius species Recommended
+#> 3 NHMSYS0000864966    Damaeus riparius species Recommended
 #> 
 #> $nbn$`Pinus contorta`
 #>   ptaxonversionkey               searchmatchtitle       rank  namestatus
@@ -409,10 +395,10 @@ sci2comm('Helianthus annuus', db = 'itis')
 ```r
 comm2sci("black bear", db = "itis")
 #> $`black bear`
-#> [1] "Ursus americanus luteolus"   "Ursus americanus"           
-#> [3] "Ursus americanus"            "Ursus americanus americanus"
-#> [5] "Ursus thibetanus"            "Ursus thibetanus"           
-#> [7] "Chiropotes satanas"
+#> [1] "Chiropotes satanas"          "Ursus thibetanus"           
+#> [3] "Ursus thibetanus"            "Ursus americanus luteolus"  
+#> [5] "Ursus americanus americanus" "Ursus americanus"           
+#> [7] "Ursus americanus"
 ```
 
 ## Lowest common rank among taxa

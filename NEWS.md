@@ -1,3 +1,29 @@
+taxize 0.7.6
+============
+
+## MINOR IMPROVEMENTS
+
+* Changed defunct messages in `eol_invasive()` and `gisd_invasive()`
+to point to new location in the [originr](https://github.com/ropenscilabs/originr)
+package. Also, cleaned out code in those functions as not avail.
+anymore (#494)
+* Access to IUCN taxonomy information is now provided through the newish
+[rredlist](https://github.com/ropenscilabs/rredlist) package. (Two issues
+dealing with IUCN problems (#475) (#492))
+
+## BUG FIXES
+
+* Fix to `get_gbifid()` to use new internal code to provide two
+ways to search GBIF taxonomy API, either via `/species/match` or via
+`/species/search`, instead of `/species/suggest`, which we used previously.
+The suggest route was too coarse. `get_gbifid()` also gains a parameter
+`method` to toggle whether you search for names using `/species/match` or
+`/species/search`.  (#528)
+* Fix for `col_search()` to handle when COL can return a value of
+`missapplied name`, which a `switch()` statement didn't handle yet (#511)
+thanks @JoStaerk !
+* Fixes for `get_colid()` and `col_search()` (#523) thanks @zachary-foster !
+
 taxize 0.7.5
 ============
 
