@@ -2,7 +2,7 @@ Package: taxize
 Title: Taxonomic Information from Around the Web
 Description: Interacts with a suite of web 'APIs' for taxonomic tasks,
     such as verifying species names, and getting taxonomic 'hierarchies'.
-Version: 0.7.8
+Version: 0.7.9
 License: MIT + file LICENSE
 URL: https://github.com/ropensci/taxize
 BugReports: https://github.com/ropensci/taxize/issues
@@ -20,13 +20,13 @@ LazyLoad: yes
 LazyData: yes
 VignetteBuilder: knitr
 Depends: R(>= 3.2.1)
-Imports: graphics, methods, stats, utils, httr (>= 1.1.0), xml2 (>=
-        0.1.2), jsonlite, reshape2, stringr, plyr, foreach, ape, bold
-        (>= 0.3.5), data.table, rredlist (>= 0.1.0), rotl (>= 0.5.0)
+Imports: graphics, methods, stats, utils, httr (>= 1.2.1), xml2 (>=
+        1.0.0), jsonlite, reshape2, stringr, plyr, foreach, ape, bold
+        (>= 0.3.5), data.table, rredlist (>= 0.1.0), rotl (>= 3.0.0)
 Suggests: testthat, knitr, vegan, covr
 RoxygenNote: 5.0.1
 NeedsCompilation: no
-Packaged: 2016-06-16 21:14:33 UTC; sacmac
+Packaged: 2016-07-23 15:30:55 UTC; sacmac
 Author: Scott Chamberlain [aut, cre],
   Eduard Szoecs [aut],
   Zachary Foster [aut],
@@ -37,4 +37,4 @@ Author: Scott Chamberlain [aut, cre],
   James O'Donnell [aut]
 Maintainer: Scott Chamberlain <myrmecocystus@gmail.com>
 Repository: CRAN
-Date/Publication: 2016-06-17 08:57:14
+Date/Publication: 2016-07-24 00:03:34

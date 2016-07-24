@@ -2,12 +2,13 @@
 #'
 #' Retrieve the Unique Identifier (UID) of a taxon from NCBI taxonomy browser.
 #'
+#' @export
 #' @param sciname character; scientific name.
 #' @param ask logical; should get_uid be run in interactive mode?
 #' If TRUE and more than one TSN is found for the species, the user is asked for
 #' input. If FALSE NA is returned for multiple matches.
 #' @param verbose logical; If TRUE the actual taxon queried is printed on the console.
-#' @param rows numeric; Any number from 1 to inifity. If the default NA, all rows are considered.
+#' @param rows numeric; Any number from 1 to infinity. If the default NA, all rows are considered.
 #' Note that this function still only gives back a uid class object with one to many identifiers.
 #' See \code{\link[taxize]{get_uid_}} to get back all, or a subset, of the raw data that you are
 #' presented during the ask process.
@@ -29,14 +30,7 @@
 #' @param ... Ignored
 #' @param check logical; Check if ID matches any existing on the DB, only used in
 #' \code{\link{as.uid}}
-#'
-#' @return A vector of unique identifiers (UID). If a taxon is not found NA.
-#' If more than one UID is found the function asks for user input (if ask = TRUE),
-#' otherwise returns \code{NA}. Comes with an attribute \emph{match} to investigate the
-#' reason for NA (either 'not found', 'found' or if \code{ask = FALSE} 'NA due to ask=FALSE').
-#' If \code{ask=FALSE} and \code{rows} does not equal \code{NA}, then a data.frame is
-#' given back, but not of the uid class, which you can't pass on to other functions
-#' as you normally can.
+#' @template getreturn
 #'
 #' @section Querying:
 #' The parameter \code{rank_query} is used in the search sent to NCBI, whereas
@@ -59,9 +53,11 @@
 #' expecting. The lesson: clean your names before using this function. Other data
 #' sources are better about fuzzy matching.
 #'
-#' @seealso \code{\link[taxize]{get_tsn}}, \code{\link[taxize]{classification}}
+#' @seealso \code{\link[taxize]{get_tsn}}, \code{\link[taxize]{get_tsn}},
+#' \code{\link[taxize]{get_gbifid}}, \code{\link[taxize]{get_tpsid}},
+#' \code{\link[taxize]{get_eolid}}, \code{\link[taxize]{get_colid}},
+#' \code{\link[taxize]{get_ids}}, \code{\link[taxize]{classification}}
 #'
-#' @export
 #' @author Eduard Szoecs, \email{eduardszoecs@@gmail.com}
 #'
 #' @examples \dontrun{
@@ -151,6 +147,7 @@ get_uid <- function(sciname, ask = TRUE, verbose = TRUE, rows = NA, modifier = N
                     rank_query = NULL, division_filter = NULL, rank_filter = NULL, ...) {
 
   fun <- function(sciname, ask, verbose, rows, ...) {
+    direct <- FALSE
     mssg(verbose, "\nRetrieving data for taxon '", sciname, "'\n")
     sciname <- gsub(" ", "+", sciname)
     if (!is.null(modifier)) sciname <- paste0(sciname, sprintf("[%s]", modifier))
@@ -164,16 +161,18 @@ get_uid <- function(sciname, ask = TRUE, verbose = TRUE, rows = NA, modifier = N
     # NCBI limits requests to three per second
     Sys.sleep(0.33)
     uid <- xml2::xml_text(xml2::xml_find_all(xml_result, "//IdList/Id"))
+    mm <- length(uid) > 1
+
     if (length(uid) == 0) { # if taxon name is not found
-      uid <- NA
+      uid <- NA_character_
     } else {
-      uid <- sub_vector(uid, rows)
+      #uid <- sub_vector(uid, rows)
       att <- 'found'
     }
     # not found on ncbi
     if (length(uid) == 0 || is.na(uid)) {
       mssg(verbose, "Not found. Consider checking the spelling or alternate classification")
-      uid <- NA
+      uid <- NA_character_
       att <- 'not found'
     }
     # more than one found on ncbi -> user input
@@ -191,18 +190,21 @@ get_uid <- function(sciname, ask = TRUE, verbose = TRUE, rows = NA, modifier = N
         if (!is.null(division_filter) || !is.null(rank_filter)) {
           df <- filt(df, "division", division_filter)
           df <- filt(df, "rank", rank_filter)
-          uid <- df$uid
-          if (NROW(df) > 1) rownames(df) <- 1:nrow(df)
-          if (length(uid) == 1) {
-            att <- "found"
-          }
-          if (length(uid) == 0) {
-            uid <- NA
-          }
+        }
+
+        df <- sub_rows(df, rows)
+        uid <- df$uid
+        if (length(uid) == 1) {
+          direct <- TRUE
+          att <- "found"
+        }
+        if (length(uid) == 0) {
+          uid <- NA_character_
         }
 
         if (length(uid) > 1) {
           # prompt
+          rownames(df) <- 1:nrow(df)
           message("\n\n")
           message("\nMore than one UID found for taxon '", sciname, "'!\n
             Enter rownumber of taxon (other inputs will return 'NA'):\n")
@@ -219,21 +221,24 @@ get_uid <- function(sciname, ask = TRUE, verbose = TRUE, rows = NA, modifier = N
             uid <- as.character(df$uid[take])
             att <- 'found'
           } else {
-            uid <- NA
+            uid <- NA_character_
             att <- 'not found'
             mssg(verbose, "\nReturned 'NA'!\n\n")
           }
         }
       } else {
-        uid <- NA
+        uid <- NA_character_
         att <- 'NA due to ask=FALSE'
       }
     }
-    return(data.frame(uid, att, stringsAsFactors = FALSE))
+    return(data.frame(uid, att, multiple = mm, direct = direct, stringsAsFactors = FALSE))
   }
   sciname <- as.character(sciname)
   outd <- ldply(sciname, fun, ask, verbose, rows, ...)
-  out <- structure(outd$uid, class = "uid", match = outd$att)
+  out <- structure(outd$uid, class = "uid",
+                   match = outd$att,
+                   multiple_matches = outd$multiple,
+                   pattern_match = outd$direct)
   add_uri(out, 'http://www.ncbi.nlm.nih.gov/taxonomy/%s')
 }
 
@@ -276,7 +281,11 @@ as.uid.numeric <- function(x, check=TRUE) as.uid(as.character(x), check)
 
 #' @export
 #' @rdname get_uid
-as.uid.data.frame <- function(x, check=TRUE) structure(x$ids, class="uid", match=x$match, uri=x$uri)
+as.uid.data.frame <- function(x, check=TRUE) {
+  structure(x$ids, class="uid", match=x$match,
+            multiple_matches = x$multiple_matches,
+            pattern_match = x$pattern_match, uri=x$uri)
+}
 
 #' @export
 #' @rdname get_uid
@@ -284,6 +293,8 @@ as.data.frame.uid <- function(x, ...){
   data.frame(ids = as.character(unclass(x)),
              class = "uid",
              match = attr(x, "match"),
+             multiple_matches = attr(x, "multiple_matches"),
+             pattern_match = attr(x, "pattern_match"),
              uri = attr(x, "uri"),
              stringsAsFactors = FALSE)
 }

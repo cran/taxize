@@ -26,7 +26,7 @@
 #' @param key Your API key; loads from .Rprofile.
 #' @param return_id (logical) If TRUE (default), return the taxon id as well as the name
 #' and rank of taxa in the lineage returned.
-#' @param rows (numeric) Any number from 1 to inifity. If the default NA, all rows are
+#' @param rows (numeric) Any number from 1 to infinity. If the default NA, all rows are
 #' considered. Note that this parameter is ignored if you pass in a taxonomic id instead
 #' of a name of class character.
 #'
@@ -315,9 +315,9 @@ classification.colid <- function(id, start = NULL, checklist = NULL,
       tt <- xml2::read_xml(con_utf8(out))
       out <- search_col_classification_df(tt)
       # add query-ied taxon
-      out <- rbind(out, c(xml2::xml_text(xml2::xml_find_one(tt, "//result/name")),
-                          xml2::xml_text(xml2::xml_find_one(tt, "//result/rank")),
-                          xml2::xml_text(xml2::xml_find_one(tt, "//result/id"))))
+      out <- rbind(out, c(xml2::xml_text(xml2::xml_find_first(tt, "//result/name")),
+                          xml2::xml_text(xml2::xml_find_first(tt, "//result/rank")),
+                          xml2::xml_text(xml2::xml_find_first(tt, "//result/id"))))
       # Optionally return id of lineage
       if (!return_id) out <- out[, c('name', 'rank')]
       out$rank <- tolower(out$rank)

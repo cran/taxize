@@ -12,7 +12,7 @@
 #' taxa with 'recommended' name status.
 #' @param rank (character) If given, we attempt to limit the results to those taxa with the
 #' matching rank.
-#' @param rows numeric; Any number from 1 to inifity. If the default NA, all rows are considered.
+#' @param rows numeric; Any number from 1 to infinity. If the default NA, all rows are considered.
 #' Note that this function still only gives back a nbnid class object with one to many identifiers.
 #' See \code{\link[taxize]{get_nbnid_}} to get back all, or a subset, of the raw data that you are
 #' presented during the ask process.
@@ -20,12 +20,12 @@
 #' @param x Input to \code{\link{as.nbnid}}
 #' @param check logical; Check if ID matches any existing on the DB, only used in
 #' \code{\link{as.nbnid}}
-#'
-#' @return A vector of unique identifiers. If a taxon is not found NA.
-#' If more than one ID is found the function asks for user input.
+#' @template getreturn
 #'
 #' @seealso \code{\link[taxize]{get_tsn}}, \code{\link[taxize]{get_uid}},
-#' \code{\link[taxize]{get_tpsid}}, \code{\link[taxize]{get_eolid}}
+#' \code{\link[taxize]{get_tpsid}}, \code{\link[taxize]{get_eolid}},
+#' \code{\link[taxize]{get_colid}}, \code{\link[taxize]{get_ids}},
+#' \code{\link[taxize]{classification}}
 #'
 #' @author Scott Chamberlain, \email{myrmecocystus@@gmail.com}
 #'
@@ -78,19 +78,22 @@
 
 get_nbnid <- function(name, ask = TRUE, verbose = TRUE, rec_only = FALSE, rank = NULL, rows = NA, ...){
   fun <- function(name, ask, verbose, rows) {
+    direct <- FALSE
     mssg(verbose, "\nRetrieving data for taxon '", name, "'\n")
     df <- nbn_search(q = name, all = TRUE, ...)$data
     if (is.null(df)) df <- data.frame(NULL)
-    df <- sub_rows(df, rows)
+    mm <- NROW(df) > 1
+    # df <- sub_rows(df, rows)
 
     rank_taken <- NA
     if (nrow(df) == 0) {
       mssg(verbose, "Not found. Consider checking the spelling or alternate classification")
-      id <- NA
+      id <- NA_character_
       att <- 'not found'
     } else {
       if (rec_only) df <- df[ df$namestatus == 'Recommended', ]
-      if (!is.null(rank)) df <- df[ df$rank == rank, ]
+      if (!is.null(rank)) df <- df[ tolower(df$rank) == tolower(rank), ]
+      df <- sub_rows(df, rows)
       df <- df[,c('ptaxonversionkey','searchmatchtitle','rank','namestatus')]
       names(df)[1] <- 'nbnid'
       id <- df$nbnid
@@ -101,7 +104,7 @@ get_nbnid <- function(name, ask = TRUE, verbose = TRUE, rec_only = FALSE, rank =
     # not found on NBN
     if (length(id) == 0) {
       mssg(verbose, "Not found. Consider checking the spelling or alternate classification")
-      id <- NA
+      id <- NA_character_
       att <- 'not found'
     }
     # more than one found -> user input
@@ -119,29 +122,31 @@ get_nbnid <- function(name, ask = TRUE, verbose = TRUE, rec_only = FALSE, rank =
           take <- 'notake'
           att <- 'nothing chosen'
         }
-        if(take %in% seq_len(nrow(df))){
+        if (take %in% seq_len(nrow(df))) {
           take <- as.numeric(take)
           message("Input accepted, took nbnid '", as.character(df$nbnid[take]), "'.\n")
           id <- as.character(df$nbnid[take])
           rank_taken <- as.character(df$rank[take])
           att <- 'found'
         } else {
-          id <- NA
+          id <- NA_character_
           att <- 'not found'
           mssg(verbose, "\nReturned 'NA'!\n\n")
         }
       } else{
-        id <- NA
+        id <- NA_character_
         att <- 'NA due to ask=FALSE'
       }
     }
-    return( c(id=id, rank=rank_taken, att=att) )
+    list(id = id, rank = rank_taken, att = att, multiple = mm, direct = direct)
   }
   name <- as.character(name)
   out <- lapply(name, fun, ask = ask, verbose = verbose, rows = rows)
-  ids <- sapply(out, "[[", "id")
-  atts <- sapply(out, "[[", "att")
-  ids <- structure(ids, class = "nbnid", match = atts)
+  ids <- pluck(out, "id", "")
+  atts <- pluck(out, "att", "")
+  ids <- structure(ids, class = "nbnid", match = atts,
+                   multiple_matches = pluck(out, "multiple", logical(1)),
+                   pattern_match = pluck(out, "direct", logical(1)))
   if ( !all(is.na(ids)) ) {
     urls <- sapply(out, function(z){
       if (!is.na(z[['id']]))
@@ -172,7 +177,11 @@ as.nbnid.list <- function(x, check=TRUE) if(length(x) == 1) make_nbnid(x, check)
 
 #' @export
 #' @rdname get_nbnid
-as.nbnid.data.frame <- function(x, check=TRUE) structure(x$ids, class="nbnid", match=x$match, uri=x$uri)
+as.nbnid.data.frame <- function(x, check=TRUE) {
+  structure(x$ids, class="nbnid", match=x$match,
+            multiple_matches = x$multiple_matches,
+            pattern_match = x$pattern_match, uri=x$uri)
+}
 
 #' @export
 #' @rdname get_nbnid
@@ -180,6 +189,8 @@ as.data.frame.nbnid <- function(x, ...){
   data.frame(ids = as.character(unclass(x)),
              class = "nbnid",
              match = attr(x, "match"),
+             multiple_matches = attr(x, "multiple_matches"),
+             pattern_match = attr(x, "pattern_match"),
              uri = attr(x, "uri"),
              stringsAsFactors = FALSE)
 }

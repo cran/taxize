@@ -46,7 +46,7 @@
 #' }
 #'
 #' If the source above has a \code{TRUE} in the \code{SOAP?} column, it is not available
-#' in this package. They are available from a different package called taxizesoap.
+#' in this package. They are available from a different package called \strong{taxizesoap}.
 #' See the GitHub repo for how to install \url{https://github.com/ropensci/taxizesoap}
 #'
 #' @importFrom graphics plot
@@ -62,7 +62,7 @@
 #' @importFrom stringr str_extract str_split str_replace str_replace_all
 #' @importFrom plyr failwith rbind.fill llply ldply ddply l_ply summarise colwise .
 #' @importFrom reshape2 melt dcast
-#' @importFrom xml2 xml_text xml_find_one xml_find_all xml_children read_xml
+#' @importFrom xml2 xml_text xml_find_first xml_find_all xml_children read_xml
 #' xml_name xml_ns as_list
 #' @importFrom rredlist rl_search
 #' @importFrom rotl tnrs_match_names
@@ -76,6 +76,7 @@
 #' @author Karthik Ram \email{karthik@@ropensci.org}
 #' @author Ignasi Bartomeus \email{nacho.bartomeus@@gmail.com}
 #' @author John Baumgartner \email{johnbb@@student.unimelb.edu.au}
+#' @author James O'Donnell \email{jodonnellbio@@gmail.com}
 #' @keywords package
 NULL
 
@@ -88,7 +89,7 @@ NULL
 
 #' Lookup-table for family, genus, and species names for ThePlantList
 #'
-#' These names are from \url{http://www.theplantlist.org/}, and are from
+#' These names are from http://www.theplantlist.org, and are from
 #' version 1.1 of their data. This data is used in the function
 #' \code{\link{names_list}}. This is a randomly selected subset of the ~350K
 #' accepted species names in Theplantlist.
@@ -99,7 +100,7 @@ NULL
 #'   \item{genus}{genus name}
 #'   \item{species}{specific epithet name}
 #' }
-#' @source \url{http://www.theplantlist.org/}
+#' @source http://www.theplantlist.org
 #' @name theplantlist
 #' @docType data
 #' @keywords data
@@ -146,13 +147,13 @@ NULL
 
 #' Vector of plant species (genus - specific epithet) names from ThePlantList
 #'
-#' These names are from \url{http://www.theplantlist.org/}, and are a
+#' These names are from http://www.theplantlist.org, and are a
 #' randomly chosen subset of names of the form genus/specific epithet
 #' for the purpose of having some names to play with for examples in
 #' this package.
 #'
 #' @format A vector of length 1182
-#' @source \url{http://www.theplantlist.org/}
+#' @source http://www.theplantlist.org
 #' @name plantNames
 #' @docType data
 #' @keywords data
@@ -160,12 +161,12 @@ NULL
 
 #' Vector of plant genus names from ThePlantList
 #'
-#' These names are from \url{http://www.theplantlist.org/}, and are a
+#' These names are from http://www.theplantlist.org, and are a
 #' randomly chosen subset of genera names for the purpose of having some
 #' names to play with for examples in this package.
 #'
 #' @format A vector of length 793
-#' @source \url{http://www.theplantlist.org/}
+#' @source http://www.theplantlist.org
 #' @name plantGenusNames
 #' @docType data
 #' @keywords data
