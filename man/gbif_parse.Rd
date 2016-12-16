@@ -4,10 +4,12 @@
 \alias{gbif_parse}
 \title{Parse taxon names using the GBIF name parser.}
 \usage{
-gbif_parse(scientificname)
+gbif_parse(scientificname, ...)
 }
 \arguments{
-\item{scientificname}{A character vector of scientific names.}
+\item{scientificname}{(character) scientific names}
+
+\item{...}{Further args passed on to \code{\link[httr]{POST}}}
 }
 \value{
 A \code{data.frame} containing fields extracted from parsed
@@ -29,7 +31,6 @@ gbif_parse(c('Arrhenatherum elatius var. elatius',
 John Baumgartner (johnbb@student.unimelb.edu.au)
 }
 \references{
-\url{http://dev.gbif.org/wiki/display/POR/Webservice+API},
 \url{http://tools.gbif.org/nameparser/api.do}
 }
 \seealso{
