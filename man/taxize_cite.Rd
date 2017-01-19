@@ -7,8 +7,8 @@
 taxize_cite(fxn = "itis", what = "citation")
 }
 \arguments{
-\item{fxn}{Function to search on. A special case is the package name 'taxize' that will give the
-citations for the package.}
+\item{fxn}{Function to search on. A special case is the package name
+'taxize' that will give the citations for the package.}
 
 \item{what}{One of citation (default), license, or both.}
 }
@@ -21,6 +21,10 @@ taxize_cite(fxn='itis_hierarchy')
 taxize_cite(fxn='tp_classification')
 taxize_cite(fxn='gbif_ping')
 taxize_cite(fxn='plantminer')
+taxize_cite(fxn='get_natservid_')
+taxize_cite(fxn='as.natservid')
+taxize_cite(fxn='get_wormsid')
+taxize_cite(fxn='as.wormsid')
 
 # Functions that use many data sources
 taxize_cite(fxn='synonyms')

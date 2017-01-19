@@ -1,48 +1,55 @@
 #' Retrieve the taxonomic hierarchy for a given taxon ID.
 #'
 #' @export
-#' @param x Vector of taxa names (character) or IDs (character or numeric) to query.
+#' @param x Vector of taxa names (character) or IDs (character or numeric)
+#' to query.
 #' @param db character; database to query. either \code{ncbi}, \code{itis},
-#'    \code{eol}, \code{col}, \code{tropicos}, \code{gbif}, or \code{nbn}. Note
-#'    that each taxonomic data source has their own identifiers, so that if you
-#'    provide the wrong \code{db} value for the identifier you could get a result,
-#'    but it will likely be wrong (not what you were expecting).
+#' \code{eol}, \code{col}, \code{tropicos}, \code{gbif}, \code{nbn},
+#' \code{worms}, or \code{natserv}. Note that each taxonomic data source has
+#' their own identifiers, so that if you provide the wrong \code{db} value
+#' for the identifier you could get a result, but it will likely be wrong (not
+#' what you were expecting).
 #' @param id character; identifiers, returned by \code{\link[taxize]{get_tsn}},
-#'    \code{\link[taxize]{get_uid}}, \code{\link[taxize]{get_eolid}},
-#'    \code{\link[taxize]{get_colid}}, \code{\link[taxize]{get_tpsid}},
-#'    \code{\link[taxize]{get_gbifid}}, \code{\link[taxize]{get_tolid}}
+#' \code{\link[taxize]{get_uid}}, \code{\link[taxize]{get_eolid}},
+#' \code{\link[taxize]{get_colid}}, \code{\link[taxize]{get_tpsid}},
+#' \code{\link[taxize]{get_gbifid}}, \code{\link[taxize]{get_tolid}},
+#' \code{\link[taxize]{get_wormsid}}, \code{\link[taxize]{get_natservid}}
 #' @param callopts Curl options passed on to \code{\link[httr]{GET}}
 #' @param ... Other arguments passed to \code{\link[taxize]{get_tsn}},
-#'    \code{\link[taxize]{get_uid}}, \code{\link[taxize]{get_eolid}},
-#'    \code{\link[taxize]{get_colid}}, \code{\link[taxize]{get_tpsid}},
-#'    \code{\link[taxize]{get_gbifid}}.
+#' \code{\link[taxize]{get_uid}}, \code{\link[taxize]{get_eolid}},
+#' \code{\link[taxize]{get_colid}}, \code{\link[taxize]{get_tpsid}},
+#' \code{\link[taxize]{get_gbifid}}, \code{\link[taxize]{get_wormsid}},
+#' or \code{\link[taxize]{get_natservid}}
 #' @param start The first record to return. If omitted, the results are returned
 #' 		from the first record (start=0). This is useful if the total number of
 #' 		results is larger than the maximum number of results returned by a single
 #' 		Web service query (currently the maximum number of results returned by a
 #' 		single query is 500 for terse queries and 50 for full queries).
-#' @param checklist character; The year of the checklist to query, if you want a specific
-#' 		year's checklist instead of the lastest as default (numeric).
+#' @param checklist character; The year of the checklist to query, if you want
+#' a specific year's checklist instead of the lastest as default (numeric).
 #' @param key Your API key; loads from .Rprofile.
-#' @param return_id (logical) If TRUE (default), return the taxon id as well as the name
-#' and rank of taxa in the lineage returned.
-#' @param rows (numeric) Any number from 1 to infinity. If the default NA, all rows are
-#' considered. Note that this parameter is ignored if you pass in a taxonomic id instead
-#' of a name of class character.
+#' @param return_id (logical) If \code{TRUE} (default), return the taxon id
+#' as well as the name and rank of taxa in the lineage returned.
+#' Ignored for natserv as they don't return IDs in their taxonomic
+#' classification data.
+#' @param rows (numeric) Any number from 1 to infinity. If the default NA,
+#' all rows are considered. Note that this parameter is ignored if you pass
+#' in a taxonomic id instead of a name of class character.
 #'
 #' @return A named list of data.frames with the taxonomic classification of
 #'    every supplied taxa.
-#' @details If IDs are supplied directly (not from the \code{get_*} functions) you
-#' must specify the type of ID. There is a timeout of 1/3 seconds between
+#' @details If IDs are supplied directly (not from the \code{get_*} functions)
+#' you must specify the type of ID. There is a timeout of 1/3 seconds between
 #' querries to NCBI.
 #'
-#' BEWARE: Right now, NBN doesn't return the queried taxon in the classification. But you can
-#' attach it yourself quite easily of course. This behavior is different from the other data
-#' sources.
+#' BEWARE: Right now, NBN doesn't return the queried taxon in the
+#' classification. But you can attach it yourself quite easily of course.
+#' This behavior is different from the other data sources.
 #'
-#' @seealso \code{\link[taxize]{get_tsn}}, \code{\link[taxize]{get_uid}},
-#'    \code{\link[taxize]{get_eolid}}, \code{\link[taxize]{get_colid}},
-#'    \code{\link[taxize]{get_tpsid}}, \code{\link[taxize]{get_gbifid}}
+#' @seealso \code{\link{get_tsn}}, \code{\link{get_uid}},
+#'    \code{\link{get_eolid}}, \code{\link{get_colid}},
+#'    \code{\link{get_tpsid}}, \code{\link{get_gbifid}}
+#'    \code{\link{get_wormsid}}, \code{\link{get_natservid}}
 #'
 #' @examples \dontrun{
 #' # Plug in taxon IDs
@@ -50,6 +57,8 @@
 #' classification(c(9606, 55062), db = 'ncbi')
 #' classification(129313, db = 'itis')
 #' classification(57361017, db = 'eol')
+#' classification(126436, db = 'worms')
+#' classification("ELEMENT_GLOBAL.2.134717", db = 'natserv')
 #' classification(c(2704179, 2441176), db = 'gbif')
 #' classification(25509881, db = 'tropicos')
 #' classification("NBNSYS0000004786", db = 'nbn')
@@ -60,13 +69,21 @@
 #' # Plug in taxon names
 #' ## in this case, we use get_*() fxns internally to first get taxon IDs
 #' classification(c("Chironomus riparius", "aaa vva"), db = 'ncbi')
-#' classification(c("Chironomus riparius", "aaa vva"), db = 'ncbi', verbose=FALSE)
+#' classification(c("Chironomus riparius", "aaa vva"), db = 'ncbi',
+#'   verbose=FALSE)
 #' classification(c("Chironomus riparius", "aaa vva"), db = 'itis')
-#' classification(c("Chironomus riparius", "aaa vva"), db = 'itis', verbose=FALSE)
+#' classification(c("Chironomus riparius", "aaa vva"), db = 'itis',
+#'   verbose=FALSE)
 #' classification(c("Chironomus riparius", "aaa vva"), db = 'eol')
 #' classification(c("Chironomus riparius", "aaa vva"), db = 'col')
 #' classification("Alopias vulpinus", db = 'nbn')
-#' classification(c("Chironomus riparius", "aaa vva"), db = 'col', verbose=FALSE)
+#' classification('Gadus morhua', db = 'worms')
+#' classification('Aquila chrysaetos', db = 'natserv')
+#' classification('Gadus morhua', db = 'natserv')
+#' classification('Pomatomus saltatrix', db = 'natserv')
+#' classification('Aquila chrysaetos', db = 'natserv')
+#' classification(c("Chironomus riparius", "aaa vva"), db = 'col',
+#'   verbose=FALSE)
 #' classification(c("Chironomus riparius", "asdfasdfsfdfsd"), db = 'gbif')
 #' classification("Chironomus", db = 'tol')
 #' classification("Poa annua", db = 'tropicos')
@@ -76,7 +93,8 @@
 #'
 #' classification(get_uid(c("Chironomus riparius", "aaa vva")))
 #' classification(get_tsn(c("Chironomus riparius", "aaa vva")))
-#' classification(get_tsn(c("Chironomus riparius", "aaa vva"), verbose = FALSE))
+#' classification(get_tsn(c("Chironomus riparius", "aaa vva"),
+#'   verbose = FALSE))
 #' classification(get_eolid(c("Chironomus riparius", "aaa vva")))
 #' classification(get_colid(c("Chironomus riparius", "aaa vva")))
 #' classification(get_tpsid(c("Poa annua", "aaa vva")))
@@ -93,7 +111,8 @@
 #' rbind(cl)
 #'
 #' # Many names to get_ids
-#' (out <- get_ids(names=c("Puma concolor","Accipiter striatus"), db = c('ncbi','itis','col')))
+#' (out <- get_ids(names=c("Puma concolor","Accipiter striatus"),
+#'   db = c('ncbi','itis','col')))
 #' (cl <- classification(out))
 #' rbind(cl)
 #' ## cbind with so many names results in some messy data
@@ -101,17 +120,20 @@
 #' ## so you can turn off return_id
 #' cbind( classification(out, return_id=FALSE) )
 #'
-#' # rbind and cbind on class classification (from a call to get_colid, get_tsn, etc.
-#' # - other than get_ids)
-#' (cl_col <- classification(get_colid(c("Puma concolor","Accipiter striatus"))))
+#' # rbind and cbind on class classification (from a
+#' # call to get_colid, get_tsn, etc. other than get_ids)
+#' (cl_col <- classification(
+#'   get_colid(c("Puma concolor","Accipiter striatus"))))
 #' rbind(cl_col)
 #' cbind(cl_col)
 #'
-#' (cl_uid <- classification(get_uid(c("Puma concolor","Accipiter striatus")), return_id=FALSE))
+#' (cl_uid <- classification(get_uid(c("Puma concolor","Accipiter striatus")),
+#'   return_id=FALSE))
 #' rbind(cl_uid)
 #' cbind(cl_uid)
 #' ## cbind works a bit odd when there are lots of ranks without names
-#' (cl_uid <- classification(get_uid(c("Puma concolor","Accipiter striatus")), return_id=TRUE))
+#' (cl_uid <- classification(get_uid(c("Puma concolor","Accipiter striatus")),
+#'   return_id=TRUE))
 #' cbind(cl_uid)
 #'
 #' (cl_tsn <- classification(get_tsn(c("Puma concolor","Accipiter striatus"))))
@@ -123,14 +145,18 @@
 #' cbind(cl_tsns)
 #'
 #' # NBN data
-#' (res <- classification(c("Alopias vulpinus","Pinus sylvestris"), db = 'nbn'))
+#' (res <- classification(c("Alopias vulpinus","Pinus sylvestris"),
+#'   db = 'nbn'))
 #' rbind(res)
 #' cbind(res)
 #'
 #' # Return taxonomic IDs
-#' ## the return_id parameter is logical, and you can turn it on or off. It's TRUE by default
-#' classification(c("Alopias vulpinus","Pinus sylvestris"), db = 'ncbi', return_id = TRUE)
-#' classification(c("Alopias vulpinus","Pinus sylvestris"), db = 'ncbi', return_id = FALSE)
+#' ## the return_id parameter is logical, and you can turn it on or off.
+#' ## It's TRUE by default
+#' classification(c("Alopias vulpinus","Pinus sylvestris"), db = 'ncbi',
+#'   return_id = TRUE)
+#' classification(c("Alopias vulpinus","Pinus sylvestris"), db = 'ncbi',
+#'   return_id = FALSE)
 #'
 #' # Use rows parameter to select certain
 #' classification('Poa annua', db = 'tropicos')
@@ -150,41 +176,49 @@ classification <- function(...){
 #' @export
 #' @rdname classification
 classification.default <- function(x, db = NULL, callopts = list(),
-                                   return_id = TRUE, rows = NA, ...) {
+                                   return_id = TRUE, rows = NaN, ...) {
   nstop(db)
   switch(
     db,
     itis = {
       id <- process_ids(x, db, get_tsn, rows = rows, ...)
-      setNames(classification(id, callopts = callopts, return_id = return_id, ...), x)
+      stats::setNames(classification(id, callopts = callopts, return_id = return_id, ...), x)
     },
     ncbi = {
       id <- process_ids(x, db, get_uid, rows = rows, ...)
-      setNames(classification(id, callopts = callopts, return_id = return_id, ...), x)
+      stats::setNames(classification(id, callopts = callopts, return_id = return_id, ...), x)
     },
     eol = {
       id <- process_ids(x, db, get_eolid, rows = rows, ...)
-      setNames(classification(id, callopts = callopts, return_id = return_id, ...), x)
+      stats::setNames(classification(id, callopts = callopts, return_id = return_id, ...), x)
     },
     col = {
       id <- process_ids(x, db, get_colid, rows = rows, ...)
-      setNames(classification(id, callopts = callopts, return_id = return_id, ...), x)
+      stats::setNames(classification(id, callopts = callopts, return_id = return_id, ...), x)
     },
     tropicos = {
       id <- process_ids(x, db, get_tpsid, rows = rows, ...)
-      setNames(classification(id, callopts = callopts, return_id = return_id, ...), x)
+      stats::setNames(classification(id, callopts = callopts, return_id = return_id, ...), x)
     },
     gbif = {
       id <- process_ids(x, db, get_gbifid, rows = rows, ...)
-      setNames(classification(id, callopts = callopts, return_id = return_id, ...), x)
+      stats::setNames(classification(id, callopts = callopts, return_id = return_id, ...), x)
     },
     nbn = {
       id <- process_ids(x, db, get_nbnid, rows = rows, ...)
-      setNames(classification(id, callopts = callopts, return_id = return_id, ...), x)
+      stats::setNames(classification(id, callopts = callopts, return_id = return_id, ...), x)
     },
     tol = {
       id <- process_ids(x, db, get_tolid, rows = rows, ...)
-      setNames(classification(id, callopts = callopts, return_id = return_id, ...), x)
+      stats::setNames(classification(id, callopts = callopts, return_id = return_id, ...), x)
+    },
+    worms = {
+      id <- process_ids(x, db, get_wormsid, rows = rows, ...)
+      stats::setNames(classification(id, callopts = callopts, return_id = return_id, ...), x)
+    },
+    natserv = {
+      id <- process_ids(x, db, get_natservid, rows = rows, ...)
+      stats::setNames(classification(id, callopts = callopts, return_id = return_id, ...), x)
     },
     stop("the provided db value was not recognised", call. = FALSE)
   )
@@ -192,7 +226,11 @@ classification.default <- function(x, db = NULL, callopts = list(),
 
 process_ids <- function(input, db, fxn, ...){
   g <- tryCatch(as.numeric(as.character(input)), warning = function(e) e)
-  if (is(g,"numeric") || is.character(input) && grepl("N[HB]", input)) {
+  if (
+    inherits(g, "numeric") ||
+    is.character(input) && grepl("N[HB]", input) ||
+    is.character(input) && grepl("ELEMENT_GLOBAL", input)
+  ) {
     as_fxn <- switch(db,
            itis = as.tsn,
            ncbi = as.uid,
@@ -201,7 +239,9 @@ process_ids <- function(input, db, fxn, ...){
            tropicos = as.tpsid,
            gbif = as.gbifid,
            nbn = as.nbnid,
-           tol = as.tolid)
+           tol = as.tolid,
+           worms = as.wormsid,
+           natserv = as.natservid)
     as_fxn(input, check = FALSE)
   } else {
     eval(fxn)(input, ...)
@@ -458,6 +498,65 @@ classification.tolid <- function(id, callopts = list(), return_id = TRUE, ...) {
   names(out) <- id
   structure(out, class = 'classification', db = 'tol')
 }
+
+#' @export
+#' @rdname classification
+classification.wormsid <- function(id, callopts = list(), return_id = TRUE, ...) {
+  fun <- function(x, callopts){
+    if (is.na(x)) {
+      out <- NA
+    } else {
+      out <- tryCatch(worrms::wm_classification(as.numeric(x)), error = function(e) e)
+      if (inherits(out, "error")) {
+        NA
+      } else {
+        row.names(out) <- NULL
+        out <- out[ , c('scientificname','rank', 'AphiaID')]
+        names(out) <- c('name', 'rank', 'id')
+        if (!return_id) out <- out[, c('name', 'rank')]
+        return(out)
+      }
+    }
+  }
+  out <- lapply(id, fun, callopts = callopts)
+  names(out) <- id
+  structure(out, class = 'classification', db = 'worms')
+}
+
+#' @export
+#' @rdname classification
+classification.natservid <- function(id, callopts = list(), return_id = TRUE, ...) {
+  fun <- function(x, callopts) {
+    if (is.na(x)) {
+      out <- NA
+    } else {
+      out <- tryCatch(natserv::ns_data(x), error = function(e) e)
+      if (inherits(out, "error")) {
+        NA
+      } else {
+        tmp <- out[[1]]$classification
+        if (is.null(tmp)) return(NA)
+        tmp <- tmp$taxonomy$formalTaxonomy
+        if (is.null(tmp)) return(NA)
+        tmp <- tmp[names(tmp) %in% c('kingdom', 'phylum', 'class', 'order', 'family', 'genus')]
+        df <- data.frame(scientificname = unname(unlist(tmp)), rank = names(tmp),
+                   stringsAsFactors = FALSE)
+        rks <- c('kingdom', 'phylum', 'class', 'order', 'family', 'genus', 'species')
+        targ_taxon <- c(
+          out[[1]]$classification$names$scientificName$unformattedName[[1]],
+          rks[which(df$rank[length(df$rank)] == rks) + 1]
+        )
+        df <- rbind(df, targ_taxon)
+        return(df)
+      }
+    }
+  }
+  out <- lapply(id, fun, callopts = callopts)
+  names(out) <- id
+  structure(out, class = 'classification', db = 'natserv')
+}
+
+# ---------
 
 #' @export
 #' @rdname classification
