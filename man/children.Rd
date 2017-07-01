@@ -2,12 +2,12 @@
 % Please edit documentation in R/children.R
 \name{children}
 \alias{children}
-\alias{children.colid}
 \alias{children.default}
-\alias{children.ids}
 \alias{children.tsn}
-\alias{children.uid}
+\alias{children.colid}
 \alias{children.wormsid}
+\alias{children.ids}
+\alias{children.uid}
 \title{Retrieve immediate children taxa for a given taxon name or ID.}
 \usage{
 children(...)
@@ -100,8 +100,5 @@ children("Poa", db = 'col', rows=1)
 # use curl options
 library("httr")
 res <- children("Poa", db = 'col', rows=1, config=verbose())
-res <- children("Salmo", db = 'itis', config=verbose())
-res <- children("Salmo", db = 'ncbi', config=verbose())
 }
 }
-

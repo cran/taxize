@@ -8,7 +8,7 @@
 \describe{
   \item{original}{original data record from APG website}
   \item{this}{Order name}
-  \item{that}{Replacment order name}
+  \item{that}{Replacement order name}
 }}
 \source{
 \url{http://www.mobot.org/MOBOT/research/APweb/}
@@ -21,4 +21,3 @@ Website system of flowering plant classification.
 This dataset is from Version 13, incorporated on 2015-04-29.
 }
 \keyword{data}
-

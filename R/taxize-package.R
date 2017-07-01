@@ -56,7 +56,7 @@
 #' @importFrom methods as is
 #' @importFrom stats as.dist hclust na.omit setNames aggregate
 #' @importFrom utils URLencode citation download.file read.delim write.table tail
-#' @importFrom ape read.tree as.phylo.hclust plot.phylo
+#' @importFrom ape read.tree as.phylo.hclust plot.phylo neworder_phylo
 #' @importFrom jsonlite fromJSON toJSON
 #' @importFrom httr GET POST content stop_for_status upload_file warn_for_status
 #' add_headers timeout config
@@ -82,6 +82,13 @@
 NULL
 
 #' Lookup-table for IDs of taxonomic ranks
+#'
+#' data.frame of 35 rows, with 2 columns:
+#' \itemize{
+#'  \item rankid - a numeric rank id, consecutive
+#'  \item ranks - a comma separated vector of names that are equal to
+#'  one another within the row
+#' }
 #'
 #' @name rank_ref
 #' @docType data
@@ -118,7 +125,7 @@ NULL
 #' \describe{
 #'   \item{original}{original data record from APG website}
 #'   \item{this}{Order name}
-#'   \item{that}{Replacment order name}
+#'   \item{that}{Replacement order name}
 #'   \item{order}{Order name}
 #' }
 #' @source \url{http://www.mobot.org/MOBOT/research/APweb/}
@@ -138,7 +145,7 @@ NULL
 #' \describe{
 #'   \item{original}{original data record from APG website}
 #'   \item{this}{Order name}
-#'   \item{that}{Replacment order name}
+#'   \item{that}{Replacement order name}
 #' }
 #' @source \url{http://www.mobot.org/MOBOT/research/APweb/}
 #' @name apg_orders

@@ -179,49 +179,94 @@ hr {
 </tr>
 </thead><tbody>
 <tr>
-<td>children</td>
+<td><code>children</code></td>
 <td>Get direct children</td>
 <td>COL, NCBI, ITIS</td>
 </tr>
 <tr>
-<td>classification</td>
+<td><code>classification</code></td>
 <td>Upstream classification</td>
 <td>COL, NCBI, ITIS, Tropicos, EOL, GBIF, NBN</td>
 </tr>
 <tr>
-<td>comm2sci</td>
+<td><code>comm2sci</code></td>
 <td>Get scientific from common names</td>
 <td>EOL, NCBI, ITIS, Tropicos</td>
 </tr>
 <tr>
-<td>downstream</td>
+<td><code>downstream</code></td>
 <td>Downstream taxa to specified rank</td>
 <td>COL, ITIS, GBIF</td>
 </tr>
 <tr>
-<td>get_ids</td>
+<td><code>get_ids</code></td>
 <td>Get taxonomic identifiers</td>
 <td>COL, NCBI, ITIS, Tropicos, EOL, GBIF, NBN</td>
 </tr>
 <tr>
-<td>resolve</td>
-<td>Resolve names using any resolver</td>
+<td><code>resolve</code></td>
+<td>Resolve names using many resolvers</td>
 <td>GNR, TNRS, iPlant</td>
 </tr>
 <tr>
-<td>sci2comm</td>
+<td><code>gnr_resolve</code></td>
+<td>Resolve names using Global Names Resolver</td>
+<td>GNR</td>
+</tr>
+<tr>
+<td><code>tnrs</code></td>
+<td>Phylotastic Taxonomic Name Resolution Service</td>
+<td>NCBI, iPlant, MSW3</td>
+</tr>
+<tr>
+<td><code>tol_resolve</code></td>
+<td>Resolve names using any resolver</td>
+<td>TOL</td>
+</tr>
+<tr>
+<td><code>iplant_resolve</code></td>
+<td>iPlant name resolution</td>
+<td>iPlant</td>
+</tr>
+<tr>
+<td><code>sci2comm</code></td>
 <td>Get common from scientific names</td>
 <td>EOL, NCBI, ITIS</td>
 </tr>
 <tr>
-<td>synonyms</td>
+<td><code>synonyms</code></td>
 <td>Retrieve synonyms given input names/identifiers</td>
 <td>COL, NCBI, ITIS, Tropicos</td>
 </tr>
 <tr>
-<td>upstream</td>
+<td><code>upstream</code></td>
 <td>Retrieve upstream taxa given names/identifiers</td>
 <td>COL, ITIS</td>
+</tr>
+<tr>
+<td><code>lowest_common</code></td>
+<td>Retrieve the lowest common taxon and rank for a given taxon name or ID</td>
+<td>COL, ITIS, GBIF, TOL, NCBI</td>
+</tr>
+<tr>
+<td><code>genbank2uid</code></td>
+<td>Get NCBI taxonomy UID from GenBankID</td>
+<td>NCBI</td>
+</tr>
+<tr>
+<td><code>tax_name</code></td>
+<td>Get taxonomic names for a given rank</td>
+<td>NCBI, ITIS</td>
+</tr>
+<tr>
+<td><code>tax_rank</code></td>
+<td>Get rank for a given taxonomic name</td>
+<td>BOLD, COL, EOL, GBIF, NATSERV, NBN, TOL, TROPICOS, ITIS, NCBI, WORMS</td>
+</tr>
+<tr>
+<td><code>tpl_get</code></td>
+<td>Get The Plant List csv files</td>
+<td>TPL</td>
 </tr>
 </tbody></table>
 
@@ -237,6 +282,13 @@ hr {
 <li>iPlant: iPlant Name Resolution Service</li>
 <li>GNR: Global Names Resolver</li>
 <li>TNRS: Taxonomic Name Resolution Service</li>
+<li>TOL: Open Tree of Life</li>
+<li>MSW3: Mammal Species of the World, 3rd Edition</li>
+<li>TPL: The Plant List</li>
+<li>BOLD: Barcode of Life</li>
+<li>NATSERV: Natureserve</li>
+<li>TROPICOS: Tropicos plant database</li>
+<li>WORMS: World Register of Marine Species</li>
 </ul>
 
 </body>

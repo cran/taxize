@@ -12,10 +12,11 @@ pluck <- function(x, name, type) {
   }
 }
 
-collapse <- function(x, fxn, class, match=TRUE, ...){
+collapse <- function(x, fxn, class, match=TRUE, ...) {
   tmp <- lapply(x, fxn, ...)
   if (match) {
     structure(sapply(tmp, unclass), class = class,
+              name = unlist(sapply(tmp, attr, which = "name")),
               match = sapply(tmp, attr, which = "match"),
               multiple_matches = sapply(tmp, attr, which = "multiple_matches"),
               pattern_match = sapply(tmp, attr, which = "pattern_match"),
@@ -26,23 +27,12 @@ collapse <- function(x, fxn, class, match=TRUE, ...){
   }
 }
 
-make_generic <- function(x, uu, clz, check=TRUE){
-  if (check) {
-    if ( evalfxn(clz)(x) ) {
-      toid(x, uu, clz)
-    } else {
-      structure(NA, class = clz, match = "not found", multiple_matches = FALSE, pattern_match = FALSE, uri = NA)
-    }
-  } else {
-    toid(x, uu, clz)
-  }
-}
-
 evalfxn <- function(x) eval(parse(text = paste0("check", "_", x)))
 
-toid <- function(x, url, class){
+toid <- function(x, url, class, ...) {
   uri <- sprintf(url, x)
-  structure(x, class = class, match = "found", multiple_matches = FALSE, pattern_match = FALSE, uri = uri)
+  structure(x, class = class, match = "found", multiple_matches = FALSE,
+            pattern_match = FALSE, uri = uri, ...)
 }
 
 add_uri <- function(ids, url, z = NULL){
@@ -184,4 +174,27 @@ assert <- function(x, y) {
            paste0(y, collapse = ", "), call. = FALSE)
     }
   }
+}
+
+dt2df <- function(x) {
+  (data.table::setDF(
+    data.table::rbindlist(x, use.names = TRUE, fill = TRUE, idcol = TRUE)))
+}
+
+dbswap <- function(x) {
+  switch(
+    x,
+    boldid = "bold",
+    colid = "col",
+    eolid = "eol",
+    gbifid = "gbif",
+    natservid = "natserv",
+    nbnid = "nbn",
+    tolid = "tol",
+    tpsid = "tropicos",
+    tsn = "itis",
+    uid = "ncbi",
+    wormsid = "worms",
+    stop("'db' not recognized", call. = FALSE)
+  )
 }

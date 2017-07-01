@@ -2,31 +2,42 @@
 % Please edit documentation in R/nbn_classification.R
 \name{nbn_classification}
 \alias{nbn_classification}
-\title{Search UK National Biodiversity Network database for taxonomic classification}
+\title{Search UK National Biodiversity Network database for
+taxonomic classification}
 \usage{
 nbn_classification(id, ...)
 }
 \arguments{
-\item{id}{(character) An NBN idientifier.}
+\item{id}{(character) An NBN identifier.}
 
 \item{...}{Further args passed on to \code{\link[httr]{GET}}.}
 }
+\value{
+A data.frame
+}
 \description{
-Search UK National Biodiversity Network database for taxonomic classification
+Search UK National Biodiversity Network database for
+taxonomic classification
 }
 \examples{
 \dontrun{
-nbn_classification(id="NHMSYS0000502940")
+nbn_classification(id="NHMSYS0000376773")
 
 # get id first, then pass to this fxn
-id <- get_nbnid("blue tit", rec_only = TRUE, rank = "Species")
+id <- get_nbnid("Zootoca vivipara", rec_only = TRUE, rank = "Species")
 nbn_classification(id)
 
 library('httr')
 nbn_classification(id="NHMSYS0000502940", config=verbose())
 }
 }
+\references{
+<https://api.nbnatlas.org/>
+}
+\seealso{
+Other nbn: \code{\link{get_nbnid}},
+  \code{\link{nbn_search}}, \code{\link{nbn_synonyms}}
+}
 \author{
 Scott Chamberlain, \email{myrmecocystus@gmail.com}
 }
-

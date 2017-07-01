@@ -1,7 +1,6 @@
 #' Resolve names using Global Names Resolver.
 #'
-#' Uses the Global Names Index, see \url{http://gni.globalnames.org/}.
-#'
+#' @export
 #' @param names character; taxonomic names to be resolved. Doesn't work for
 #' vernacular/common names.
 #' @param data_source_ids character; IDs to specify what data source
@@ -19,31 +18,66 @@
 #'    (without tax. authorities and abbreviations).
 #' @param highestscore logical; Return those names with the highest score for
 #'    each searched name? Defunct
-#' @param best_match_only (logical) If \code{TRUE}, best match only returned. Default:
-#' \code{FALSE}
-#' @param preferred_data_sources (character) A vector of one or more data source IDs.
-#' @param with_canonical_ranks (logical) Returns names with infraspecific ranks, if present.
-#'    If \code{TRUE}, we force \code{canonical=TRUE}, otherwise this parameter would
-#'    have no effect. Default: \code{FALSE}
+#' @param best_match_only (logical) If \code{TRUE}, best match only returned.
+#' Default: \code{FALSE}
+#' @param preferred_data_sources (character) A vector of one or more data
+#' source IDs.
+#' @param with_canonical_ranks (logical) Returns names with infraspecific
+#' ranks, if present. If \code{TRUE}, we force \code{canonical=TRUE}, otherwise
+#' this parameter would have no effect. Default: \code{FALSE}
 #' @param http The HTTP method to use, one of "get" or "post". Default: "get".
-#'    Use \code{http="post"} with large queries. Queries with > 300 records use "post"
-#'    automatically because "get" would fail
+#' Use \code{http="post"} with large queries. Queries with > 300 records
+#' use "post" automatically because "get" would fail
 #' @param ... Curl options passed on to \code{\link[httr]{GET}}
 #' @param cap_first (logical) For each name, fix so that the first name part is
-#' capitalized, while others are not. This web service is sensitive to capitalization, so
-#' you'll get different results depending on capitalization. First name capitalized is
-#' likely what you'll want and is the default. If \code{FALSE}, names are not modified.
-#' Default: \code{TRUE}
-#' @param fields (character) One of mimimal (default) or all. Minimal gives back just four
-#' fields, whereas all gives all fields back.
+#' capitalized, while others are not. This web service is sensitive to
+#' capitalization, so you'll get different results depending on capitalization.
+#' First name capitalized is likely what you'll want and is the default.
+#' If \code{FALSE}, names are not modified. Default: \code{TRUE}
+#' @param fields (character) One of minimal (default) or all. Minimal gives
+#' back just four fields, whereas all gives all fields back.
 #'
 #' @author Scott Chamberlain \email{myrmecocystus@@gmail.com}
-#' @return A data.frame with one attribute \code{not_known}: a character vector of
-#' taxa unknown to the Global Names Index. Acccess like \code{attr(output, "not_known")},
-#' or \code{attributes(output)$not_known}
-#' @seealso \code{\link[taxize]{gnr_datasources}}
-#' @export
+#' @return A data.frame with one attribute \code{not_known}: a character
+#' vector of taxa unknown to the Global Names Index. Access like
+#' \code{attr(output, "not_known")}, or \code{attributes(output)$not_known}.
+#' Columns of the output data.frame:
+#' \itemize{
+#'  \item user_supplied_name (character) - the name you passed in to the
+#'  \code{names} parameter, unchanged.
+#'  \item submitted_name (character) - the actual name submitted to the GNR
+#'  service
+#'  \item data_source_id (integer/numeric) - data source ID
+#'  \item data_source_title (character) - data source name
+#'  \item gni_uuid (character) - Global Names Index UUID (aka identifier)
+#'  \item matched_name (character) - the matched name in the GNR service
+#'  \item matched_name2 (character) - returned if \code{canonical=TRUE}, in
+#'  which case \emph{matched_name} is not returned
+#'  \item classification_path (character) - names of the taxonomic
+#'  classification tree, with names separated by pipes (\code{|})
+#'  \item classification_path_ranks (character) - ranks of the taxonomic
+#'  classification tree, with names separated by pipes (\code{|})
+#'  \item classification_path_ids (character) - identifiers of the taxonomic
+#'  classification tree, with names separated by pipes (\code{|})
+#'  \item taxon_id (character) - taxon identifier
+#'  \item edit_distance (integer/numeric) - edit distance
+#'  \item imported_at (character) - date imported
+#'  \item match_type (integer/numeric) - match type
+#'  \item match_value (character) - description of match type
+#'  \item prescore (character) - pre score
+#'  \item score (numeric) - score
+#'  \item local_id (character) - local identifier
+#'  \item url (character) - URL for taxon
+#'  \item global_id (character) - global identifier
+#'  \item current_taxon_id (character) - current taxon id
+#'  \item current_name_string (character) - current name string
+#' }
+#' Note that names (i.e. rows) are dropped that are NA, are zero length
+#' strings, are not character vectors, or are not found by the API.
+#' @seealso \code{\link[taxize]{gnr_datasources}} \code{\link{tnrs}}
 #' @keywords resolve names taxonomy
+#' @references \url{http://gnrd.globalnames.org/api}
+#' \url{http://gnrd.globalnames.org/}
 #' @examples \dontrun{
 #' gnr_resolve(names = c("Helianthus annuus", "Homo sapiens"))
 #' gnr_resolve(names = c("Asteraceae", "Plantae"))
@@ -78,14 +112,18 @@
 #' }
 
 gnr_resolve <- function(names, data_source_ids = NULL, resolve_once = FALSE,
-  with_context = FALSE, canonical = FALSE, highestscore = TRUE, best_match_only = FALSE,
-  preferred_data_sources = NULL, with_canonical_ranks = FALSE, http = "get",
-  cap_first = TRUE, fields = "minimal", ...) {
+  with_context = FALSE, canonical = FALSE, highestscore = TRUE,
+  best_match_only = FALSE, preferred_data_sources = NULL,
+  with_canonical_ranks = FALSE, http = "get", cap_first = TRUE,
+  fields = "minimal", ...) {
 
   fields <- match.arg(fields, c("minimal", "all"))
   http <- match.arg(http, c("get", "post"))
   num = NULL
   url <- "http://resolver.globalnames.org/name_resolvers.json"
+  # clean out zero length strings
+  names <- Filter(function(x) nzchar(x) && !is.na(x) && is.character(x), names)
+  # store original names supplied by user
   orig_names <- names
   if (cap_first) names <- taxize_capwords(names, onlyfirst = TRUE)
   names2 <- paste0(names, collapse = "|")
@@ -93,7 +131,8 @@ gnr_resolve <- function(names, data_source_ids = NULL, resolve_once = FALSE,
 
   data_source_ids <- paste0(data_source_ids, collapse = "|")
   preferred_data_sources <- paste0(preferred_data_sources, collapse = "|")
-  if (nchar(preferred_data_sources, keepNA = FALSE) == 0) preferred_data_sources <- NULL
+  if (nchar(preferred_data_sources, keepNA = FALSE) == 0)
+    preferred_data_sources <- NULL
   if (with_canonical_ranks) canonical <- TRUE
 
   args <- tc(list(names = names2, data_source_ids = data_source_ids,
@@ -114,10 +153,13 @@ gnr_resolve <- function(names, data_source_ids = NULL, resolve_once = FALSE,
     datbits <- list()
     for (i in seq_along(nms)) {
       tt <- data.frame(num = 1:length(nms[[i]]), names = nms[[i]])
-      tt <- data.frame(ddply(tt, .(num), summarise, paste0(num, "|", names))[,2])
+      tt <- data.frame(ddply(tt, .(num), summarise,
+                             paste0(num, "|", names))[,2])
       file <- tempfile(fileext = ".txt")
-      write.table(tt, file = file, row.names = FALSE, col.names = FALSE, quote = FALSE)
-      ss <- POST(url, query = args, body = list(file = upload_file(path = file)), ...)
+      write.table(tt, file = file, row.names = FALSE,
+                  col.names = FALSE, quote = FALSE)
+      ss <- POST(url, query = args,
+                 body = list(file = upload_file(path = file)), ...)
       warn_for_status(ss)
       ss <- con_utf8(ss)
       datbits[[i]] <- jsonlite::fromJSON(ss, FALSE)$data
@@ -134,7 +176,8 @@ gnr_resolve <- function(names, data_source_ids = NULL, resolve_once = FALSE,
       if (!is.null(unlist(y$results))) {
         res <- lapply(y$results, function(x) {
           take_fields <- switch(fields,
-            minimal = c("name_string", "data_source_title","score", "canonical_form"),
+            minimal = c("name_string", "data_source_title","score",
+                        "canonical_form"),
             all = names(x)
           )
           take <- x[take_fields]
@@ -153,17 +196,22 @@ gnr_resolve <- function(names, data_source_ids = NULL, resolve_once = FALSE,
 
   # check for empty data object
   drill <- tryCatch(data_[[1]], error = function(e) e)
-  to_rename <- c("original_name", "supplied_name_string", "name_string", "canonical_form")
+  to_rename <- c("original_name", "supplied_name_string", "name_string",
+                 "canonical_form")
   if (inherits(drill, "simpleError")) {
     out <- data.frame(NULL)
   } else {
     if (is.null(preferred_data_sources)) {
-      data_2 <- ldply(data_, function(x) data.frame(x[[1]], ldply( if (length(x[[2]]) == 0) {
-        list(data.frame(name_string = "", data_source_title = "", score = NaN, canonical_form = ""))
+      data_2 <- ldply(data_, function(x)
+        data.frame(x[[1]], ldply( if (length(x[[2]]) == 0) {
+        list(data.frame(name_string = "", data_source_title = "", score = NaN,
+                        canonical_form = ""))
       } else {
         x[[2]]
       }), stringsAsFactors = FALSE))
-      names(data_2)[names(data_2) %in% to_rename] <- c("user_supplied_name", "submitted_name", "matched_name", "matched_name2")
+      names(data_2)[names(data_2) %in% to_rename] <-
+        c("user_supplied_name", "submitted_name",
+          "matched_name", "matched_name2")
       data_2$matched_name <- as.character(data_2$matched_name)
       data_2$data_source_title <- as.character(data_2$data_source_title)
       data_2$matched_name2 <- as.character(data_2$matched_name2)
@@ -180,30 +228,40 @@ gnr_resolve <- function(names, data_source_ids = NULL, resolve_once = FALSE,
         lapply(dat, function(y) {
           if (!is.null(unlist(y$preferred_results))) {
             res <- lapply(y$preferred_results, function(x) {
-              data.frame(x[c("name_string", "data_source_title", "score", "canonical_form")], stringsAsFactors = FALSE)
+              data.frame(x[c("name_string", "data_source_title", "score",
+                             "canonical_form")], stringsAsFactors = FALSE)
             })
           } else {
             res <- NULL
           }
           list(y[c("original_name", "supplied_name_string")], res)
         })
-      data_2_preferred <- ldply(data_preferred, function(x) data.frame(x[[1]], ldply(if (length(x[[2]]) == 0) {
-        list(data.frame(name_string = "", data_source_title = "", score = NaN, canonical_form = ""))
+      data_2_preferred <- ldply(data_preferred, function(x)
+        data.frame(x[[1]], ldply(if (length(x[[2]]) == 0) {
+        list(data.frame(name_string = "", data_source_title = "", score = NaN,
+                        canonical_form = ""))
       } else {
         x[[2]]
       }), stringsAsFactors = FALSE))
       if (NROW(data_2_preferred) == 0) {
         out <- data_2_preferred
       } else {
-        names(data_2_preferred)[names(data_2_preferred) %in% to_rename] <- c("user_supplied_name", "submitted_name", "matched_name", "matched_name2")
-        data_2_preferred$matched_name <- as.character(data_2_preferred$matched_name)
-        data_2_preferred$data_source_title <- as.character(data_2_preferred$data_source_title)
-        data_2_preferred$matched_name2 <- as.character(data_2_preferred$matched_name2)
+        names(data_2_preferred)[names(data_2_preferred) %in% to_rename] <-
+          c("user_supplied_name", "submitted_name",
+            "matched_name", "matched_name2")
+        data_2_preferred$matched_name <-
+          as.character(data_2_preferred$matched_name)
+        data_2_preferred$data_source_title <-
+          as.character(data_2_preferred$data_source_title)
+        data_2_preferred$matched_name2 <-
+          as.character(data_2_preferred$matched_name2)
 
         if (canonical) {
-          out <- data_2_preferred[ , !names(data_2_preferred) %in% "matched_name"]
+          out <-
+            data_2_preferred[ , !names(data_2_preferred) %in% "matched_name"]
         } else {
-          out <- data_2_preferred[ , !names(data_2_preferred) %in% "matched_name2"]
+          out <-
+            data_2_preferred[ , !names(data_2_preferred) %in% "matched_name2"]
         }
       }
     }

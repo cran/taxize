@@ -337,10 +337,10 @@ upstream("Pinus contorta", db = 'itis', upto = 'Genus', verbose=FALSE)
 synonyms("Acer drummondii", db="itis")
 #> $`Acer drummondii`
 #>   sub_tsn                    acc_name acc_tsn
-#> 1  526853 Acer rubrum var. drummondii  526853
-#> 2  526853 Acer rubrum var. drummondii  526853
-#> 3  526853 Acer rubrum var. drummondii  526853
-#>                          author                            author
+#> 1  183671 Acer rubrum var. drummondii  526853
+#> 2  183671 Acer rubrum var. drummondii  526853
+#> 3  183671 Acer rubrum var. drummondii  526853
+#>                      acc_author                        syn_author
 #> 1 (Hook. & Arn. ex Nutt.) Sarg. (Hook. & Arn. ex Nutt.) E. Murray
 #> 2 (Hook. & Arn. ex Nutt.) Sarg.             Hook. & Arn. ex Nutt.
 #> 3 (Hook. & Arn. ex Nutt.) Sarg.     (Hook. & Arn. ex Nutt.) Small
@@ -422,16 +422,20 @@ Furthermore, you can just back all ids if that's your jam with the `get_*_()` fu
 get_ids_(c("Chironomus riparius", "Pinus contorta"), db = 'nbn', rows=1:3)
 #> $nbn
 #> $nbn$`Chironomus riparius`
-#>   ptaxonversionkey    searchmatchtitle    rank  namestatus
-#> 1 NBNSYS0000027573 Chironomus riparius species Recommended
-#> 2 NHMSYS0001718042   Elaphrus riparius species Recommended
-#> 3 NBNSYS0000023345   Paederus riparius species Recommended
+#>               guid             scientificName    rank taxonomicStatus
+#> 1 NBNSYS0000027573        Chironomus riparius species        accepted
+#> 2 NHMSYS0001718585      Cryptohypnus riparius species         synonym
+#> 3 NHMSYS0000864966 Damaeus (Damaeus) riparius species        accepted
 #> 
 #> $nbn$`Pinus contorta`
-#>   ptaxonversionkey               searchmatchtitle       rank  namestatus
-#> 1 NHMSYS0000494848   Pinus contorta var. contorta    variety Recommended
-#> 2 NBNSYS0000004786                 Pinus contorta    species Recommended
-#> 3 NHMSYS0000494848 Pinus contorta subsp. contorta subspecies Recommended
+#>               guid                  scientificName       rank
+#> 1 NBNSYS0000004786                  Pinus contorta    species
+#> 2 NHMSYS0000494848  Pinus contorta subsp. contorta subspecies
+#> 3 NHMSYS0000494858 Pinus contorta subsp. murreyana subspecies
+#>   taxonomicStatus
+#> 1        accepted
+#> 2         synonym
+#> 3         synonym
 #> 
 #> 
 #> attr(,"class")
@@ -455,8 +459,8 @@ sci2comm('Helianthus annuus', db = 'itis')
 comm2sci("black bear", db = "itis")
 #> $`black bear`
 #> [1] "Ursus thibetanus"            "Ursus thibetanus"           
-#> [3] "Ursus americanus luteolus"   "Ursus americanus"           
-#> [5] "Ursus americanus"            "Ursus americanus americanus"
+#> [3] "Ursus americanus luteolus"   "Ursus americanus americanus"
+#> [5] "Ursus americanus"            "Ursus americanus"           
 #> [7] "Chiropotes satanas"
 ```
 
@@ -561,7 +565,5 @@ Check out our [milestones](https://github.com/ropensci/taxize/milestones) to see
 * Get citation information for `taxize` in R doing `citation(package = 'taxize')`
 * Please note that this project is released with a [Contributor Code of Conduct](CONDUCT.md).
 By participating in this project you agree to abide by its terms.
-
-[![ropensci](https://ropensci.org/public_images/github_footer.png)](https://ropensci.org)
 
 [tut]: https://ropensci.org/tutorials/taxize.html

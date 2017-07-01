@@ -35,7 +35,7 @@ Get taxonomic names for a given rank
 \note{
 While \code{\link{tax_rank}} returns the actual rank of a
 taxon, \code{\link{tax_name}} searches and returns any specified rank
-higher in taxonmy.
+higher in taxonomy.
 }
 \examples{
 \dontrun{
@@ -62,4 +62,3 @@ tax_name(query=c("Helianthus annuus", 'Baetis rhodani'), get=c("genus",
 \seealso{
 \code{\link{classification}}
 }
-

@@ -1,21 +1,85 @@
+taxize 0.8.8
+============
+
+## NEW FEATURES
+
+* New function `ncbi_downstream()` and now NCBI is an option in 
+the function `downstream()` (#583) thanks for the push @andzandz11
+* New data source: Wiki*, which includes Wikipedia, Wikispecies, and 
+Wikidata - you can choose which you'd like to search. Uses new package
+`wikitaxa`, with contributions from @ezwelty (#317)
+* `scrapenames()` gains a parameter `return_content`, a boolean, to 
+optionally return the OCR content as a text string with the results. (#614)
+thanks @fgabriel1891
+* New function `get_iucn()` - to get IUCN Red List ids for taxa. In addition,
+new S3 methods `synonyms.iucn` and `sci2comm.iucn` - no other methods could 
+be made to work with IUCN Red List ids as they do no share their taxonomic
+classification data (#578) thanks @diogoprov 
+
+## MINOR IMPROVEMENTS
+
+* `bold` now an option in `classification()` function (#588)
+* fix to NBN to use new base URL (#582) ($597)
+* `genbank2uid()` can give back more than 1 taxon matched to a given
+Genbank accession number. Now the function can return more than one 
+match for each query, e.g., try `genbank2uid(id = "AM420293")` (#602)
+ thanks @sariya
+* had to modify `cbind()` usage to incclude `...` for method 
+consistency (#612)
+* `tax_rank()` used to be able to do only ncbi and itis. Can now do a 
+lot more data sources: ncbi, itis, eol, col, tropicos, gbif, nbn,
+worms, natserv, bold  (#587)
+* Added to `classification()` docs in a section `Lots of results` a 
+note about how to deal with results when there are A LOT of them. (#596)
+thanks @ahhurlbert for raising the issue
+* `tnrs()` now returns the resulting data.frame in the oder of the 
+names passed in by the user (#613) thanks @wpetry
+* Changes to `gnr_resolve()` to now strip out taxonomic names submitted 
+by user that are NA, or zero length strings, or are not of class 
+character (#606)
+* Added description of the columns of the data.frame output in 
+`gnr_resolve()` (#610) thanks @kamapu 
+* Added noted in `tnrs()` docs that the service doesn't provide any
+information about homonyms. (#610) thanks @kamapu 
+* Added `parvorder` to the `taxize` `rank_ref` dataset - used by NCBI - 
+if tax returned with that rank, some functions in `taxize` were failing 
+due to that rank missing in our reference dataset `rank_ref` (#615)
+
+## BUG FIXES
+
+* Fix to `get_colid()` via problem in parsing within `col_search()` (#585)
+* Fix to `gbif_downstream` (and thus fix in `downstream()`): there 
+was two rows with form in our `rank_ref` reference dataset of rank names, 
+causing > 1 result in some cases, then causing `vapply` to fail as it's 
+expecting length 1 result (#599) thanks @andzandz11
+* Fix `genbank2uid()`: was failing when getting more than 1 result back, 
+works now (#603) and fails better now, giving back warnings/error messages
+that are more informative (see also #602) thanks @sariya
+* Fix to `synonyms.tsn()`: in some cases a TSN has > 1 accepted name. We 
+get accepted names first from the TSN, then look for synonyms, and hadn't 
+accounted for > 1 accepted name. Fixed now (#607) thanks @tdjames
+* Fixed bug in `sci2comm()` - was not dealing internally with passing 
+the `simplify` parameter (#616)
+
+
 taxize 0.8.4
 ============
 
 ## NEW FEATURES
 
 * Added WoRMS integration via the new `worrms` package on CRAN.
-Adds functions `as.wormsid()`, `get_wormsid()`, `get_wormsid_()`, 
-`children.wormsid()`, `classification.wormsid()`, `sci2comm.wormsid()`, 
+Adds functions `as.wormsid()`, `get_wormsid()`, `get_wormsid_()`,
+`children.wormsid()`, `classification.wormsid()`, `sci2comm.wormsid()`,
 `comm2sci.wormsid()`, and `synonyms.wormsid()` (#574) (#579)
 * New functions for NatureServe data, including `as.natservid`,
-`get_natservid`, `get_natservid_`, and `classification.natservid` 
+`get_natservid`, `get_natservid_`, and `classification.natservid`
 (#126)
 
 ## BUG FIXES
 
-* EOL API keys were not passed on to internal functions. fixed now. 
+* EOL API keys were not passed on to internal functions. fixed now.
 thanks @dschlaep ! (#576)
-* Fix in `rankagg()` with respect to `vegan` package to work with 
+* Fix in `rankagg()` with respect to `vegan` package to work with
 older and new version of `vegan` - thank @jarioksa (#580) (#581)
 
 taxize 0.8.0
@@ -27,22 +91,22 @@ taxize 0.8.0
 added: `get_tolid()`, `get_tolid_()`, and `as.tolid()` (#517)
 * related to above `classification()` gains new method for TOL data
 * related to above `lowest_common()` gains new method for TOL data
-* Now using `ritis` package, an external dependency for ITIS taxonomy 
+* Now using `ritis` package, an external dependency for ITIS taxonomy
 data. Note that a large number of ITIS functions were removed, and are
 now available via the package `ritis`. However, there are still many
 high level functions for working with ITIS data (see functions prefixed
 with `itis_`), and `get_tsn()`, `classification.tsn()`, and similar
 high level functions remain unchanged. (#525)
 * EUBON has a new API (v1.2). We now interact with that new API version.
-In addition, `eubon()` fxn is now `eubon_search()`, although either still 
-work - though `eubon()` will be made defunct in the next version of 
+In addition, `eubon()` fxn is now `eubon_search()`, although either still
+work - though `eubon()` will be made defunct in the next version of
 this package. Additional new functions were added: `eubon_capabilities()`,
 `eubon_children()`, and `eubon_hierarchy()` (#567)
-* `lowest_common()` function gains two new data source options: COL (Catalogue 
+* `lowest_common()` function gains two new data source options: COL (Catalogue
 of Life) and TOL (Tree of Life) (#505)
-* Addded new function `synonyms_df()` as a slim wrapper around 
+* Addded new function `synonyms_df()` as a slim wrapper around
 `data.table::rbindlist()` to make it easy to combine many outputs
-from `synonyms()` for a single data source - there is a lot of heterogeneity 
+from `synonyms()` for a single data source - there is a lot of heterogeneity
 among data sources in how they report synonyms data, so we don't attempt
 to combine data across sources (#533)
 
@@ -52,13 +116,13 @@ to combine data across sources (#533)
 
 ## BUG FIXES
 
-* Fixed bug in `tax_name()` in which when an invalid taxon was searched 
-for then `classification()` returned no data and caused an error. 
+* Fixed bug in `tax_name()` in which when an invalid taxon was searched
+for then `classification()` returned no data and caused an error.
 Fixed now. (#560) thanks @ljvillanueva for reporting it!
-* Fixed bug in `gnr_resolve()` in which order of input names to the function 
+* Fixed bug in `gnr_resolve()` in which order of input names to the function
 was not retained. fixed now. (#561) thanks @bomeara for reporting it!
-* Fixed bug in `gbif_parse()` - data format changed coming back from 
-GBIF - needed to replace `NULL` with `NA` (#568)  thanks @ChrKoenig for 
+* Fixed bug in `gbif_parse()` - data format changed coming back from
+GBIF - needed to replace `NULL` with `NA` (#568)  thanks @ChrKoenig for
 reporting it!
 
 

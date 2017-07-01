@@ -5,21 +5,27 @@
 #' to query.
 #' @param db character; database to query. either \code{ncbi}, \code{itis},
 #' \code{eol}, \code{col}, \code{tropicos}, \code{gbif}, \code{nbn},
-#' \code{worms}, or \code{natserv}. Note that each taxonomic data source has
-#' their own identifiers, so that if you provide the wrong \code{db} value
-#' for the identifier you could get a result, but it will likely be wrong (not
-#' what you were expecting).
-#' @param id character; identifiers, returned by \code{\link[taxize]{get_tsn}},
-#' \code{\link[taxize]{get_uid}}, \code{\link[taxize]{get_eolid}},
-#' \code{\link[taxize]{get_colid}}, \code{\link[taxize]{get_tpsid}},
-#' \code{\link[taxize]{get_gbifid}}, \code{\link[taxize]{get_tolid}},
-#' \code{\link[taxize]{get_wormsid}}, \code{\link[taxize]{get_natservid}}
+#' \code{worms}, \code{natserv}, \code{bold}, or \code{wiki}. Note that each
+#' taxonomic data source has, their own identifiers, so that if you provide
+#' the wrong \code{db} value for the identifier you could get a result, but
+#' it will likely be wrong (not what you were expecting).
+#' @param id character; identifiers, returned by \code{\link{get_tsn}},
+#' \code{\link{get_uid}}, \code{\link{get_eolid}},
+#' \code{\link{get_colid}}, \code{\link{get_tpsid}},
+#' \code{\link{get_gbifid}}, \code{\link{get_tolid}},
+#' \code{\link{get_wormsid}}, \code{\link{get_natservid}},
+#' \code{\link{get_wormsid}}, \code{\link{get_wiki}}
 #' @param callopts Curl options passed on to \code{\link[httr]{GET}}
-#' @param ... Other arguments passed to \code{\link[taxize]{get_tsn}},
-#' \code{\link[taxize]{get_uid}}, \code{\link[taxize]{get_eolid}},
-#' \code{\link[taxize]{get_colid}}, \code{\link[taxize]{get_tpsid}},
-#' \code{\link[taxize]{get_gbifid}}, \code{\link[taxize]{get_wormsid}},
-#' or \code{\link[taxize]{get_natservid}}
+#' @param ... For \code{classification}: other arguments passed to
+#' \code{\link{get_tsn}},
+#' \code{\link{get_uid}}, \code{\link{get_eolid}},
+#' \code{\link{get_colid}}, \code{\link{get_tpsid}},
+#' \code{\link{get_gbifid}}, \code{\link{get_wormsid}},
+#' \code{\link{get_natservid}}, \code{\link{get_wormsid}},
+#' \code{\link{get_wiki}}. For \code{rbind.classification} and
+#' \code{cbind.classification}: one or more objects of class
+#' \code{classification}
+#'
 #' @param start The first record to return. If omitted, the results are returned
 #' 		from the first record (start=0). This is useful if the total number of
 #' 		results is larger than the maximum number of results returned by a single
@@ -40,7 +46,7 @@
 #'    every supplied taxa.
 #' @details If IDs are supplied directly (not from the \code{get_*} functions)
 #' you must specify the type of ID. There is a timeout of 1/3 seconds between
-#' querries to NCBI.
+#' queries to NCBI.
 #'
 #' BEWARE: Right now, NBN doesn't return the queried taxon in the
 #' classification. But you can attach it yourself quite easily of course.
@@ -49,7 +55,17 @@
 #' @seealso \code{\link{get_tsn}}, \code{\link{get_uid}},
 #'    \code{\link{get_eolid}}, \code{\link{get_colid}},
 #'    \code{\link{get_tpsid}}, \code{\link{get_gbifid}}
-#'    \code{\link{get_wormsid}}, \code{\link{get_natservid}}
+#'    \code{\link{get_wormsid}}, \code{\link{get_natservid}},
+#'    \code{\link{get_boldid}}, \code{\link{get_wiki}}
+#'
+#' @section Lots of results:
+#' It may happen sometimes that you get more results back from your query
+#' than will show in the data.frame on screen. Our advice is to refine your
+#' query in those cases. On a data source basis we can attempt to help
+#' make it easier to refine queries, whether it be with the data provider
+#' (unlikely to happen), or in the code in this package (more likely) -
+#' let us know if you run into too many results problem and we'll see what
+#' we can do.
 #'
 #' @examples \dontrun{
 #' # Plug in taxon IDs
@@ -62,9 +78,22 @@
 #' classification(c(2704179, 2441176), db = 'gbif')
 #' classification(25509881, db = 'tropicos')
 #' classification("NBNSYS0000004786", db = 'nbn')
+#' classification(as.nbnid("NBNSYS0000004786"), db = 'nbn')
 #' classification(3930798, db = 'tol')
 #' ## works the same if IDs are in class character
 #' classification(c("2704179", "2441176"), db = 'gbif')
+#' classification("Agapostemon", db = "bold")
+#'
+#' # wikispecies
+#' classification("Malus domestica", db = "wiki")
+#' classification("Pinus contorta", db = "wiki")
+#' classification("Pinus contorta", db = "wiki", wiki_site = "commons")
+#' classification("Pinus contorta", db = "wiki", wiki_site = "pedia")
+#' classification("Pinus contorta", db = "wiki", wiki_site = "pedia", wiki = "fr")
+#'
+#' classification(get_wiki("Malus domestica", "commons"))
+#' classification(get_wiki("Malus domestica", "species"))
+#' classification(c("Pinus contorta", "Malus domestica"), db = "wiki")
 #'
 #' # Plug in taxon names
 #' ## in this case, we use get_*() fxns internally to first get taxon IDs
@@ -167,7 +196,7 @@
 #'
 #' @examples \dontrun{
 #' # Fails without db param set
-#' classification(315576)
+#' # classification(315576)
 #' }
 classification <- function(...){
   UseMethod("classification")
@@ -220,6 +249,14 @@ classification.default <- function(x, db = NULL, callopts = list(),
       id <- process_ids(x, db, get_natservid, rows = rows, ...)
       stats::setNames(classification(id, callopts = callopts, return_id = return_id, ...), x)
     },
+    bold = {
+      id <- process_ids(x, db, get_boldid, rows = rows, ...)
+      stats::setNames(classification(id, callopts = callopts, return_id = return_id, ...), x)
+    },
+    wiki = {
+      id <- process_ids(x, db, get_wiki, rows = rows, ...)
+      stats::setNames(classification(id, callopts = callopts, return_id = return_id, ...), x)
+    },
     stop("the provided db value was not recognised", call. = FALSE)
   )
 }
@@ -241,7 +278,9 @@ process_ids <- function(input, db, fxn, ...){
            nbn = as.nbnid,
            tol = as.tolid,
            worms = as.wormsid,
-           natserv = as.natservid)
+           natserv = as.natservid,
+           bold = as.boldid,
+           wiki = as.wiki)
     as_fxn(input, check = FALSE)
   } else {
     eval(fxn)(input, ...)
@@ -250,24 +289,26 @@ process_ids <- function(input, db, fxn, ...){
 
 #' @export
 #' @rdname classification
-classification.tsn <- function(id, callopts = list(), return_id = TRUE, ...) {
-  fun <- function(x, callopts){
+classification.tsn <- function(id, return_id = TRUE, ...) {
+  fun <- function(x) {
     # return NA if NA is supplied
     if (is.na(x)) {
       out <- NA
     } else {
-      out <- ritis::hierarchy_full(x, wt = "json", raw = FALSE, callopts)
+      out <- ritis::hierarchy_full(as.character(x), wt = "json", raw = FALSE)
       if (NROW(out) < 1) return(NA)
+      # make normal data.frame
+      out <- data.frame(out, stringsAsFactors = FALSE)
       # remove overhang
       out <- out[1:which(out$tsn == x), c('taxonname', 'rankname', 'tsn')]
       names(out) <- c('name', 'rank', 'id')
       # Optionally return tsn of lineage
       if (!return_id) out <- out[, c('name', 'rank')]
       out$rank <- tolower(out$rank)
-      return(out)
     }
+    return(out)
   }
-  out <- lapply(id, fun, callopts = callopts)
+  out <- lapply(id, fun)
   names(out) <- id
   structure(out, class = 'classification', db = 'itis')
 }
@@ -451,11 +492,12 @@ classification.nbnid <- function(id, callopts = list(), return_id = TRUE, ...) {
     if (is.na(x)) {
       out <- NA
     } else {
-      out <- suppressWarnings(tryCatch(nbn_classification(id = x, callopts), error = function(e) e))
-      if (is(out, "simpleError")) {
+      out <- suppressWarnings(tryCatch(nbn_classification(id = x, callopts),
+                                       error = function(e) e))
+      if (inherits(out, "simpleError")) {
         NA
       } else {
-        out <- out[ , c('name','rank', 'taxonversionkey')]
+        out <- out[ , c('scientificname', 'rank', 'guid')]
         names(out) <- c('name', 'rank', 'id')
         # Optionally return id of lineage
         if (!return_id) out <- out[, c('name', 'rank')]
@@ -556,8 +598,66 @@ classification.natservid <- function(id, callopts = list(), return_id = TRUE, ..
   structure(out, class = 'classification', db = 'natserv')
 }
 
-# ---------
+#' @export
+#' @rdname classification
+classification.boldid <- function(id, callopts = list(), return_id = TRUE, ...) {
+  fun <- function(x, callopts) {
+    if (is.na(x)) {
+      out <- NA
+    } else {
+      out <- tryCatch(bold_search(id = x, includeTree = TRUE), error = function(e) e)
+      if (inherits(out, "error")) {
+        NA
+      } else {
+        if (is.null(out)) return(NA)
+        tmp <- out[names(out) %in% c('taxid', 'taxon', 'tax_rank')]
+        df <- data.frame(name = tmp$taxon, rank = tmp$tax_rank,
+                          id = tmp$taxid, stringsAsFactors = FALSE)
+        return(df)
+      }
+    }
+  }
+  out <- lapply(id, fun, callopts = callopts)
+  names(out) <- id
+  structure(out, class = 'classification', db = 'bold')
+}
 
+#' @export
+#' @rdname classification
+classification.wiki <- function(id, callopts = list(), return_id = TRUE, ...) {
+  fun <- function(x, wiki_site = "species", wiki = "en", callopts) {
+    if (is.na(x)) {
+      out <- NA
+    } else {
+      fxn <- switch(
+        wiki_site,
+        species = wikitaxa::wt_wikispecies,
+        commons = wikitaxa::wt_wikicommons,
+        pedia = wikitaxa::wt_wikipedia
+      )
+      out <- tryCatch(fxn(x)$classification, error = function(e) e)
+      if (inherits(out, "error")) {
+        NA
+      } else {
+        if (is.null(out) || NROW(out) == 0) return(NA)
+        df <- data.frame(name = out$name, rank = out$rank,
+                         stringsAsFactors = FALSE)
+        return(df)
+      }
+    }
+  }
+  out <- list()
+  for (i in seq_along(id)) {
+    out[[i]] <-
+      fun(id[i], attr(id, "wiki_site"), attr(id, "wiki_lang"))
+  }
+  #out <- lapply(id, fun, callopts = callopts)
+  names(out) <- id
+  structure(out, class = 'classification', db = 'wiki',
+            wiki_site = attr(id, "wiki_site"), wiki = attr(id, "wiki_lang"))
+}
+
+# ---------
 #' @export
 #' @rdname classification
 classification.ids <- function(id, ...) {
@@ -575,7 +675,7 @@ classification.ids <- function(id, ...) {
 
 #' @export
 #' @rdname classification
-cbind.classification <- function(x) {
+cbind.classification <- function(...) {
   gethiernames <- function(x) {
     x <- data.frame(x)
     x$name <- as.character(x$name)
@@ -589,8 +689,7 @@ cbind.classification <- function(x) {
       values
     }
   }
-  input <- x
-  #input <- input[sapply(input, class) %in% "data.frame"]
+  input <- x <- c(...)
   input <- input[vapply(x, function(z) inherits(z, "data.frame"), logical(1))]
   tmp <- do.call(rbind.fill, lapply(input, gethiernames))
   tmp$query <- names(x)
@@ -600,10 +699,9 @@ cbind.classification <- function(x) {
 
 #' @export
 #' @rdname classification
-rbind.classification <- function(x) {
-  input <- x
+rbind.classification <- function(...) {
+  input <- x <- c(...)
   db <- attr(input, "db")
-  #x <- input[vapply(x, class, "") %in% "data.frame"]
   x <- input[vapply(x, function(z) inherits(z, "data.frame"), logical(1))]
   for (i in seq_along(x)) {
     x[[i]]$query <- names(x[i])

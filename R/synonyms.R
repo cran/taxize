@@ -25,9 +25,13 @@
 #' toggle whether only accepted names are used \code{accepted = TRUE}, or if
 #' all are used \code{accepted = FALSE}. The default is \code{accepted = FALSE}
 #'
+#' Note that IUCN requires an API key. See
+#' \code{\link[rredlist]{rredlist-package}} for help on authentiating with
+#' IUCN Redlist
+#'
 #' @seealso \code{\link[taxize]{get_tsn}}, \code{\link[taxize]{get_tpsid}},
 #' \code{\link[taxize]{get_nbnid}}, \code{\link[taxize]{get_colid}},
-#' \code{\link[taxize]{get_wormsid}}
+#' \code{\link[taxize]{get_wormsid}}, \code{\link[taxize]{get_iucn}}
 #'
 #' @export
 #' @examples \dontrun{
@@ -35,8 +39,9 @@
 #' synonyms(183327, db="itis")
 #' synonyms("25509881", db="tropicos")
 #' synonyms("NBNSYS0000004629", db='nbn')
-#' synonyms("87e986b0873f648711900866fa8abde7", db='col')
+#' # synonyms("87e986b0873f648711900866fa8abde7", db='col') # FIXME
 #' synonyms(105706, db='worms')
+#' synonyms(12392, db='iucn')
 #'
 #' # Plug in taxon names directly
 #' synonyms("Pinus contorta", db="itis")
@@ -63,6 +68,7 @@
 #' synonyms(get_tpsid("Poa annua"))
 #' synonyms(get_nbnid("Carcharodon carcharias"))
 #' synonyms(get_colid("Ornithodoros lagophilus"))
+#' synonyms(get_iucn('Loxodonta africana'))
 #'
 #' # Pass many ids from class "ids"
 #' out <- get_ids(names="Poa annua", db = c('itis','tropicos'))
@@ -134,6 +140,11 @@ synonyms.default <- function(x, db = NULL, rows = NaN, ...) {
       structure(stats::setNames(synonyms(id, ...), x),
                 class = "synonyms", db = "worms")
     },
+    iucn = {
+      id <- process_syn_ids(x, db, get_iucn, ...)
+      structure(stats::setNames(synonyms(id, ...), x),
+                class = "synonyms", db = "iucn")
+    },
     stop("the provided db value was not recognised", call. = FALSE)
   )
 }
@@ -147,8 +158,10 @@ process_syn_ids <- function(input, db, fxn, ...){
                      tropicos = as.tpsid,
                      nbn = as.nbnid,
                      col = as.colid,
-                     worms = as.wormsid)
-    as_fxn(input, check = FALSE)
+                     worms = as.wormsid,
+                     iucn = as.iucn)
+    if (db == "iucn") return(as_fxn(input, check = TRUE))
+    return(as_fxn(input, check = FALSE))
   } else {
     eval(fxn)(input, ...)
   }
@@ -160,24 +173,26 @@ synonyms.tsn <- function(id, ...) {
   fun <- function(x){
     if (is.na(x)) { NA } else {
       is_acc <- rit_acc_name(x, ...)
-      if (!is.na(is_acc$acceptedName)) {
-        x <- is_acc$acceptedTsn
-        accdf <- setNames(
+      if (all(!is.na(is_acc$acceptedName))) {
+        accdf <- stats::setNames(
           data.frame(x[1], is_acc, stringsAsFactors = FALSE),
-          c("sub_tsn", "acc_name", "acc_tsn", "author")
+          c("sub_tsn", "acc_name", "acc_tsn", "acc_author")
         )
-        message("Accepted name is '", is_acc$acceptedName, "'")
-        message("Using tsn ", is_acc$acceptedTsn, "\n")
+        x <- is_acc$acceptedTsn
+        message("Accepted name(s) is/are '",
+                paste0(is_acc$acceptedName, collapse = "/"), "'")
+        message("Using tsn(s) ", paste0(is_acc$acceptedTsn, collapse = "/"),
+                "\n")
       } else {
         accdf <- data.frame(sub_tsn = x[1], acc_tsn = x[1],
                             stringsAsFactors = FALSE)
       }
-      out <- ritis::synonym_names(x, ...)
+      out <- do.call("rbind", lapply(x, ritis::synonym_names, ...))
       if (NROW(out) == 0) {
         out <- data.frame(syn_name = "nomatch", syn_tsn = x[1],
                           stringsAsFactors = FALSE)
       } else {
-        out <- setNames(out, c('author', 'syn_name', 'syn_tsn'))
+        out <- stats::setNames(out, c('syn_author', 'syn_name', 'syn_tsn'))
       }
       if (as.character(out[1,1]) == 'nomatch') {
         out <- data.frame(message = "no syns found", stringsAsFactors = FALSE)
@@ -270,6 +285,22 @@ synonyms.wormsid <- function(id, ...) {
   }
   stats::setNames(lapply(id, fun), id)
 }
+
+#' @export
+#' @rdname synonyms
+synonyms.iucn <- function(id, ...) {
+  out <- vector(mode = "list", length = length(id))
+  for (i in seq_along(id)) {
+    if (is.na(id[[i]])) {
+      out[[i]] <- NA
+    } else {
+      out[[i]] <- rredlist::rl_synonyms(attr(id, "name")[i], ...)$result
+    }
+  }
+  stats::setNames(out, id)
+}
+
+
 
 
 

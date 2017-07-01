@@ -25,8 +25,8 @@
 #' @seealso \code{\link[taxize]{classification}}
 #'
 #' @examples \dontrun{
-#' get_tsn(searchterm = "Quercus douglasii")
-#' get_tsn(searchterm = "Chironomus riparius")
+#' get_tsn("Quercus douglasii")
+#' get_tsn("Chironomus riparius")
 #' get_tsn(c("Chironomus riparius","Quercus douglasii"))
 #' splist <- c("annona cherimola", 'annona muricata', "quercus robur",
 #' 		"shorea robusta", "pandanus patina", "oryza sativa", "durio zibethinus")
@@ -67,11 +67,6 @@
 #' get_tsn_("Arni", rows=1)
 #' get_tsn_("Arni", rows=1:2)
 #' get_tsn_(c("asdfadfasd","Pinus contorta"), rows=1:5)
-#'
-#' # use curl options
-#' library("httr")
-#' get_tsn("Quercus douglasii", config=verbose())
-#' bb <- get_tsn("Quercus douglasii", config=progress())
 #' }
 
 get_tsn <- function(searchterm, searchtype = "scientific", accepted = FALSE, ask = TRUE,
@@ -85,7 +80,6 @@ get_tsn <- function(searchterm, searchtype = "scientific", accepted = FALSE, ask
     searchtype <- match.arg(searchtype, c("scientific", "common"))
     tsn_df <- ritis::terms(x, what = searchtype, ...)
     mm <- NROW(tsn_df) > 1
-    # tsn_df <- sub_rows(tsn_df, rows)
 
     if (!inherits(tsn_df, "tbl_df") || NROW(tsn_df) == 0) {
       tsn <- NA_character_
@@ -119,6 +113,7 @@ get_tsn <- function(searchterm, searchtype = "scientific", accepted = FALSE, ask
 
       # check for direct match
       if (nrow(tsn_df) > 1) {
+        tsn_df <- data.frame(tsn_df, stringsAsFactors = FALSE)
 
         names(tsn_df)[grep(searchtype, names(tsn_df))] <- "target"
         direct <- match(tolower(tsn_df$target), tolower(x))
@@ -143,7 +138,7 @@ get_tsn <- function(searchterm, searchtype = "scientific", accepted = FALSE, ask
           names(tsn_df)[grep(searchtype, names(tsn_df))] <- "target"
           # user prompt
           tsn_df <- tsn_df[order(tsn_df$target), ]
-          #rownames(tsn_df) <- 1:NROW(tsn_df)
+          rownames(tsn_df) <- NULL
 
           # prompt
           message("\n\n")

@@ -24,7 +24,7 @@ IMPORTANT!!!!! ->
     POST is the only option for this parameter if you want to
     use source or code parameters.}
 
-\item{sleep}{Numer of seconds by which to pause between calls. Defaults to 0
+\item{sleep}{Number of seconds by which to pause between calls. Defaults to 0
 seconds. Use when doing many calls in a for loop ar lapply type call.}
 
 \item{splitby}{Number by which to split species list for querying the TNRS.}
@@ -35,7 +35,9 @@ seconds. Use when doing many calls in a for loop ar lapply type call.}
 \code{\link[httr]{POST}}}
 }
 \value{
-data.frame of results from TNRS plus the name submitted.
+data.frame of results from TNRS plus the name submitted, with
+rows in order of user supplied names, though those with no matches are
+dropped
 }
 \description{
 Match taxonomic names using the Taxonomic Name Resolution
@@ -44,7 +46,18 @@ accepted or not.
 }
 \details{
 If there is no match in the Taxosaurus database, nothing is
-   returned, so you will not get anything back for non-matches.
+returned, so you will not get anything back for non-matches.
+
+TNRS doesn't provide any advice about the occurrence of homonyms when
+queries have no indication of a taxonomic name's authority. So if there
+is any chance of a homonym, you probably want to send the authority as
+well, or use \code{\link{gnr_resolve}}. For example,
+\code{tnrs(query="Jussiaea linearis", source="iPlant_TNRS")} gives result of
+\emph{Jussiaea linearis (Willd.) Oliv. ex Kuntze}, but there is a
+homonym. If you do
+\code{tnrs(query="Jussiaea linearis Hochst.", source="iPlant_TNRS")} you
+get a direct match for that name. So, beware that there's no indication
+of homonyms.
 }
 \examples{
 \dontrun{
@@ -73,4 +86,9 @@ mynames <- c("Helianthus annuus", "Poa annua", "Mimulus bicolor")
 tnrs(query = mynames, source = "iPlant_TNRS", config = verbose())
 }
 }
-
+\references{
+\url{http://taxosaurus.org/}
+}
+\seealso{
+\code{\link{gnr_resolve}}
+}
