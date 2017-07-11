@@ -5,7 +5,7 @@ Description: Interacts with a suite of web API's for taxonomic tasks,
     species names, getting taxonomic hierarchies, fetching downstream and 
     upstream taxonomic names, getting taxonomic synonyms, converting 
     scientific to common names and vice versa, and more.
-Version: 0.8.8
+Version: 0.8.9
 License: MIT + file LICENSE
 URL: https://github.com/ropensci/taxize
 BugReports: https://github.com/ropensci/taxize/issues
@@ -32,7 +32,7 @@ Imports: graphics, methods, stats, utils, httr (>= 1.2.1), xml2 (>=
 Suggests: testthat, roxygen2 (>= 6.0.1), knitr, vegan
 RoxygenNote: 6.0.1
 NeedsCompilation: no
-Packaged: 2017-06-30 17:59:35 UTC; sacmac
+Packaged: 2017-07-11 19:31:44 UTC; sacmac
 Author: Scott Chamberlain [aut, cre],
   Eduard Szoecs [aut],
   Zachary Foster [aut],
@@ -44,4 +44,4 @@ Author: Scott Chamberlain [aut, cre],
   Jari Oksanen [ctb]
 Maintainer: Scott Chamberlain <myrmecocystus@gmail.com>
 Repository: CRAN
-Date/Publication: 2017-07-01 15:05:27 UTC
+Date/Publication: 2017-07-11 23:10:52 UTC

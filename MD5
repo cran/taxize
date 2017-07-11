@@ -1,7 +1,7 @@
-bfd8b0cecd3d4a6e3fdd3abb9465322e *DESCRIPTION
+fb6ab2d0fda53409c68f60c4f1e2c205 *DESCRIPTION
 c5af52351472a750055a760a8924ce71 *LICENSE
-293e0a922f212a3c6c9be3d5511e7a46 *NAMESPACE
-2a730ffd0d91c3d34150135ee1bdb072 *NEWS.md
+e7f6a039fa2059acc3eec28a09fb20c1 *NAMESPACE
+f32504bb316e8647c1fb994f76bc8f2e *NEWS.md
 7f11465aa3af8b5ab06988e9f332deb3 *R/apg.R
 37930c9da8fe4fc8ee0a14a00d20bb09 *R/apg_lookup.R
 9a346ec0950068852aa014d3a17da18e *R/bold_search.R
@@ -98,7 +98,7 @@ d65519a4074cf96ed573547f9f9d294c *R/status_codes.R
 9a606566e77f0755339bf76a7e09e288 *R/tax_agg.R
 29d092b1b5f50cc1a0159af925e206c1 *R/tax_name.R
 c7e3e2eb788b6e0f92150b2dfb40a84c *R/tax_rank.R
-26e86bae14cde073c25dd91ad3d222a7 *R/taxize-package.R
+e6e3aa6c77e6faa71b72ee397b0ea18e *R/taxize-package.R
 91b944860248e52f0dadb75483a4a4f7 *R/taxize_capwords.r
 0e5c1db2e14e0ab89b3d611642f63205 *R/taxize_cite.R
 b0aee22aadbb01b3b359ef8aa2c3fd41 *R/taxize_ldfast.R
@@ -124,7 +124,7 @@ f4b5227c3af3bf11ded4364a2ebddb3e *R/ubio_id.R
 3933fc90cfe2a975efa10fac32019bf3 *R/vascan_search.r
 96c7d8ff28e6cab679b470a0ab8182fb *R/zzz.R
 cc2b23b12d6b4d084a1c588d82b4a342 *README.md
-e632209d80362c0c23cd38c470fe1113 *build/vignette.rds
+d5bc173668d72370c20743058084b84e *build/vignette.rds
 be73efb3e7b6a0ab72e5f7067343b598 *data/apg_families.RData
 e4071c6f9f4984f2245762c876072775 *data/apg_orders.RData
 e661723ce7d3b531f38b95efd64c4038 *data/plantGenusNames.RData
@@ -365,7 +365,7 @@ ceb4c3939fab7a4eeeb8127c005c17a5 *tests/testthat/test-tp_accnames.R
 80047db34d31d1e16d0837ffb4b2694f *tests/testthat/test-tp_dist.R
 b01148a27883a1933a4ff5dc06238279 *tests/testthat/test-tp_refs.R
 62883bace4fed63128ca093ce0cc8547 *tests/testthat/test-tp_search.R
-92ff9e49ed973624e08452dc22e329ca *tests/testthat/test-tp_summary.R
+f74257ba1182b14f533ee5097f3b0f2b *tests/testthat/test-tp_summary.R
 9739b1654944ba59a799687639328546 *tests/testthat/test-tp_synonyms.R
 4d2d5045ad928da3ad9af40c3dc69451 *tests/testthat/test-vascan_search.r
 342627c848411b37647f6436f70649dc *vignettes/name_cleaning.Rmd
