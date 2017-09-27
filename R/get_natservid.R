@@ -90,14 +90,14 @@
 #' get_natservid_("Ruby*", rows=1:3)
 #' }
 get_natservid <- function(query, searchtype = "scientific", ask = TRUE,
-                          verbose = TRUE, rows = NaN, key = NULL, ...) {
+                          verbose = TRUE, rows = NA, key = NULL, ...) {
 
+  assert(ask, "logical")
   assert(searchtype, "character")
   assert(ask, "logical")
   assert(verbose, "logical")
-  assert(rows, c("numeric", "integer"))
 
-  fun <- function(x, searchtype, ask, verbose, key, ...) {
+  fun <- function(x, searchtype, ask, verbose, key, rows, ...) {
     direct <- FALSE
     mssg(verbose, "\nRetrieving data for taxon '", x, "'\n")
 
@@ -136,21 +136,28 @@ get_natservid <- function(query, searchtype = "scientific", ask = TRUE,
         names(nsdf)[grep(searchtype, names(nsdf))] <- "target"
         direct <- match(tolower(nsdf$target), tolower(x))
 
-        if (!all(is.na(direct))) {
-          nsid <- nsdf$id[!is.na(direct)]
-          direct <- TRUE
-          att <- 'found'
+        if (length(direct) == 1) {
+          if (!all(is.na(direct))) {
+            nsid <- nsdf$id[!is.na(direct)]
+            direct <- TRUE
+            att <- 'found'
+          } else {
+            direct <- FALSE
+            nsid <- NA_character_
+            att <- 'not found'
+          }
         } else {
           direct <- FALSE
           nsid <- NA_character_
-          att <- 'not found'
+          att <- 'NA due to ask=FALSE & no direct match found'
+          warning("> 1 result; no direct match found", call. = FALSE)
         }
       }
 
       # multiple matches
       if (any(
-        nrow(nsdf) > 1 && is.na(nsid) |
-        nrow(nsdf) > 1 && att == "found" & length(nsid) > 1
+        nrow(nsdf) > 1 && is.na(nsid) ||
+        nrow(nsdf) > 1 && att == "found" && length(nsid) > 1
       )) {
         if (ask) {
           names(nsdf)[grep(searchtype, names(nsdf))] <- "target"
@@ -181,8 +188,15 @@ get_natservid <- function(query, searchtype = "scientific", ask = TRUE,
             att <- 'not found'
           }
         } else {
-          nsid <- NA_character_
-          att <- "NA due to ask=FALSE"
+          if (length(nsid) != 1) {
+            warning(
+              sprintf("More than one NatureServe ID found for taxon '%s'; refine query or set ask=TRUE",
+                      x),
+              call. = FALSE
+            )
+            nsid <- NA_character_
+            att <- 'NA due to ask=FALSE & > 1 result'
+          }
         }
       }
 
@@ -196,7 +210,8 @@ get_natservid <- function(query, searchtype = "scientific", ask = TRUE,
       stringsAsFactors = FALSE)
   }
   query <- as.character(query)
-  outd <- ldply(query, fun, searchtype, ask, verbose, key, ...)
+  outd <- ldply(query, fun, searchtype = searchtype, ask = ask,
+                verbose = verbose, key = key, rows = rows, ...)
   out <- outd$nsid
   attr(out, 'match') <- outd$att
   attr(out, 'multiple_matches') <- outd$multiple
@@ -258,7 +273,7 @@ check_natservid <- function(x){
 
 #' @export
 #' @rdname get_natservid
-get_natservid_ <- function(query, verbose = TRUE, rows = NaN, key = NULL, ...) {
+get_natservid_ <- function(query, verbose = TRUE, rows = NA, key = NULL, ...) {
   stats::setNames(
     lapply(query, get_natservid_help, verbose = verbose, rows = rows,
            key = key, ...),

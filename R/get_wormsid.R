@@ -87,13 +87,12 @@
 #' # get_wormsid_(c("asdfadfasd","Plat"), rows=1:5)
 #' }
 get_wormsid <- function(query, searchtype = "scientific", accepted = FALSE,
-                      ask = TRUE, verbose = TRUE, rows = NaN, ...) {
+                      ask = TRUE, verbose = TRUE, rows = NA, ...) {
 
   assert(searchtype, "character")
   assert(accepted, "logical")
   assert(ask, "logical")
   assert(verbose, "logical")
-  assert(rows, c("numeric", "integer"))
 
   fun <- function(x, searchtype, ask, verbose, ...) {
     direct <- FALSE
@@ -144,15 +143,23 @@ get_wormsid <- function(query, searchtype = "scientific", accepted = FALSE,
         names(wmdf)[grep("scientificname", names(wmdf))] <- "target"
         direct <- match(tolower(wmdf$target), tolower(x))
 
-        if (!all(is.na(direct))) {
-          wmid <- wmdf$id[!is.na(direct)]
-          direct <- TRUE
-          att <- 'found'
+        if (length(direct) == 1) {
+          if (!all(is.na(direct))) {
+            wmid <- wmdf$id[!is.na(direct)]
+            direct <- TRUE
+            att <- 'found'
+          } else {
+            direct <- FALSE
+            wmid <- NA_character_
+            att <- 'not found'
+          }
         } else {
           direct <- FALSE
           wmid <- NA_character_
-          att <- 'not found'
+          att <- 'NA due to ask=FALSE & no direct match found'
+          warning("> 1 result; no direct match found", call. = FALSE)
         }
+
       }
 
       # multiple matches
@@ -188,8 +195,15 @@ get_wormsid <- function(query, searchtype = "scientific", accepted = FALSE,
             att <- 'not found'
           }
         } else {
-          wmid <- NA_character_
-          att <- "NA due to ask=FALSE"
+          if (length(wmid) != 1) {
+            warning(
+              sprintf("More than one WORMS ID found for taxon '%s'; refine query or set ask=TRUE",
+                      x),
+              call. = FALSE
+            )
+            wmid <- NA_character_
+            att <- 'NA due to ask=FALSE & > 1 result'
+          }
         }
       }
 

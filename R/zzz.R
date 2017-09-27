@@ -46,12 +46,21 @@ add_uri <- function(ids, url, z = NULL){
 }
 
 check_rows <- function(x){
-  stopifnot(is.numeric(x) || any(is.na(x)))
-  x
+  if (!is.numeric(x) && !any(is.na(x))) {
+    stop("'rows' must be numeric or NA", call. = FALSE)
+  }
+  if (is.numeric(x)) {
+    if (length(x) == 1) {
+      if (x < 1) {
+        stop("'rows' value must be an integer 1 or greater",
+             call. = FALSE)
+      }
+    }
+  }
 }
 
 sub_rows <- function(x, rows){
-  rows <- check_rows(rows)
+  check_rows(rows)
   if ( any(is.na(rows)) ) {
     x
   } else {

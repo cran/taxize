@@ -111,20 +111,28 @@ get_colid <- function(sciname, ask = TRUE, verbose = TRUE, rows = NA,
                       kingdom = NULL, phylum = NULL, class = NULL, order = NULL,
                       family = NULL, rank = NULL, ...){
 
+  assert(ask, "logical")
+  assert(verbose, "logical")
+  assert(kingdom, "character")
+  assert(phylum, "character")
+  assert(class, "character")
+  assert(order, "character")
+  assert(family, "character")
+  assert(rank, "character")
+
   fun <- function(sciname, ask, verbose, rows, ...) {
     direct <- FALSE
     mssg(verbose, "\nRetrieving data for taxon '", sciname, "'\n")
     df <- col_search(name = sciname, response = "full", ...)[[1]]
     df <- df[, names(df) %in% c("name","rank","id","name_status","kingdom","family","acc_name")]
     mm <- NROW(df) > 1
-    #df <- sub_rows(df, rows)
 
     rank_taken <- NA
     if (NROW(df) == 0) {
       id <- NA_character_
       att <- "not found"
     } else {
-      df <- setNames(df, tolower(names(df)))
+      df <- stats::setNames(df, tolower(names(df)))
       df <- rename(df, c("id" = "colid"))
       colnames(df)[which(colnames(df) == 'id')] <- 'colid'
       id <- df$colid
@@ -140,28 +148,28 @@ get_colid <- function(sciname, ask = TRUE, verbose = TRUE, rows = NA,
     }
     # more than one found -> user input
     if (length(id) > 1) {
-      if (ask) {
-        rownames(df) <- 1:nrow(df)
+      rownames(df) <- 1:nrow(df)
 
-        if (!is.null(kingdom) || !is.null(phylum) || !is.null(class) ||
-            !is.null(order) || !is.null(family) || !is.null(rank)) {
-          df <- filt(df, "kingdom", kingdom)
-          df <- filt(df, "phylum", phylum)
-          df <- filt(df, "class", class)
-          df <- filt(df, "order", order)
-          df <- filt(df, "family", family)
-          df <- filt(df, "rank", rank)
-        }
+      if (!is.null(kingdom) || !is.null(phylum) || !is.null(class) ||
+          !is.null(order) || !is.null(family) || !is.null(rank)) {
+        df <- filt(df, "kingdom", kingdom)
+        df <- filt(df, "phylum", phylum)
+        df <- filt(df, "class", class)
+        df <- filt(df, "order", order)
+        df <- filt(df, "family", family)
+        df <- filt(df, "rank", rank)
+      }
 
-        df <- sub_rows(df, rows)
-        id <- df$colid
-        if (length(id) == 1) {
-          rank_taken <- as.character(df$rank)
-          direct <- TRUE
-          att <- "found"
-        }
+      df <- sub_rows(df, rows)
+      id <- df$colid
+      if (length(id) == 1) {
+        rank_taken <- as.character(df$rank)
+        direct <- TRUE
+        att <- "found"
+      }
 
-        if (length(id) > 1) {
+      if (length(id) > 1) {
+        if (ask) {
           # prompt
           rownames(df) <- 1:nrow(df)
           message("\n\n")
@@ -185,10 +193,17 @@ get_colid <- function(sciname, ask = TRUE, verbose = TRUE, rows = NA,
             att <- "not found"
             mssg(verbose, "\nReturned 'NA'!\n\n")
           }
+        } else {
+          if (length(id) != 1) {
+            warning(
+              sprintf("More than one id found for taxon '%s'; refine query or set ask=TRUE",
+                      sciname),
+              call. = FALSE
+            )
+            id <- NA_character_
+            att <- 'NA due to ask=FALSE & > 1 result'
+          }
         }
-      } else{
-        id <- NA_character_
-        att <- "NA due to ask=FALSE"
       }
     }
     list(id = id, rank = rank_taken, att = att, multiple = mm, direct = direct)
