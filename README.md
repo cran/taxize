@@ -348,18 +348,8 @@ upstream("Pinus contorta", db = 'itis', upto = 'Genus', verbose=FALSE)
 #> 7     accepted
 #> 8     accepted
 #> 9     accepted
-#> $`Pinus contorta`
-#>      tsn parentname parenttsn   taxonname rankid rankname
-#> 1  18031   Pinaceae     18030       Abies    180    genus
-#> 2  18033   Pinaceae     18030       Picea    180    genus
-#> 3  18035   Pinaceae     18030       Pinus    180    genus
-#> 4 183396   Pinaceae     18030       Tsuga    180    genus
-#> 5 183405   Pinaceae     18030      Cedrus    180    genus
-#> 6 183409   Pinaceae     18030       Larix    180    genus
-#> 7 183418   Pinaceae     18030 Pseudotsuga    180    genus
-#> 8 822529   Pinaceae     18030  Keteleeria    180    genus
-#> 9 822530   Pinaceae     18030 Pseudolarix    180    genus
-#> 
+#> Pinus contorta 
+#>             NA 
 #> attr(,"class")
 #> [1] "upstream"
 #> attr(,"db")
@@ -375,18 +365,7 @@ synonyms("Acer drummondii", db="itis")
 #> 1 183671    Acer drummondii          NA not accepted
 #> 2 183672 Rufacer drummondii          NA not accepted
 #> $`Acer drummondii`
-#>   sub_tsn                    acc_name acc_tsn
-#> 1  183671 Acer rubrum var. drummondii  526853
-#> 2  183671 Acer rubrum var. drummondii  526853
-#> 3  183671 Acer rubrum var. drummondii  526853
-#>                      acc_author                        syn_author
-#> 1 (Hook. & Arn. ex Nutt.) Sarg. (Hook. & Arn. ex Nutt.) E. Murray
-#> 2 (Hook. & Arn. ex Nutt.) Sarg.             Hook. & Arn. ex Nutt.
-#> 3 (Hook. & Arn. ex Nutt.) Sarg.     (Hook. & Arn. ex Nutt.) Small
-#>                      syn_name syn_tsn
-#> 1 Acer rubrum ssp. drummondii   28730
-#> 2             Acer drummondii  183671
-#> 3          Rufacer drummondii  183672
+#> [1] NA
 #> 
 #> attr(,"class")
 #> [1] "synonyms"
@@ -499,8 +478,7 @@ sci2comm('Helianthus annuus', db = 'itis')
 #> 6                                                         NA not accepted
 #> 7                                                         NA not accepted
 #> $`Helianthus annuus`
-#> [1] "common sunflower" "sunflower"        "wild sunflower"  
-#> [4] "annual sunflower"
+#> [1] NA
 ```
 
 ## Scientific names from common names
@@ -509,10 +487,10 @@ sci2comm('Helianthus annuus', db = 'itis')
 ```r
 comm2sci("black bear", db = "itis")
 #> $`black bear`
-#> [1] "Chiropotes satanas"          "Ursus thibetanus"           
-#> [3] "Ursus thibetanus"            "Ursus americanus luteolus"  
-#> [5] "Ursus americanus"            "Ursus americanus"           
-#> [7] "Ursus americanus americanus"
+#> [1] "Ursus thibetanus"            "Ursus thibetanus"           
+#> [3] "Chiropotes satanas"          "Ursus americanus luteolus"  
+#> [5] "Ursus americanus americanus" "Ursus americanus"           
+#> [7] "Ursus americanus"
 ```
 
 ## Lowest common rank among taxa
@@ -542,7 +520,7 @@ as.uid(315567)
 #> attr(,"pattern_match")
 #> [1] FALSE
 #> attr(,"uri")
-#> [1] "http://www.ncbi.nlm.nih.gov/taxonomy/315567"
+#> [1] "https://www.ncbi.nlm.nih.gov/taxonomy/315567"
 ```
 
 `list` to `uid`
@@ -560,9 +538,9 @@ as.uid(list("315567", "3339", "9696"))
 #> attr(,"pattern_match")
 #> [1] FALSE FALSE FALSE
 #> attr(,"uri")
-#> [1] "http://www.ncbi.nlm.nih.gov/taxonomy/315567"
-#> [2] "http://www.ncbi.nlm.nih.gov/taxonomy/3339"  
-#> [3] "http://www.ncbi.nlm.nih.gov/taxonomy/9696"
+#> [1] "https://www.ncbi.nlm.nih.gov/taxonomy/315567"
+#> [2] "https://www.ncbi.nlm.nih.gov/taxonomy/3339"  
+#> [3] "https://www.ncbi.nlm.nih.gov/taxonomy/9696"
 ```
 
 ## Coerce taxonomic id classes to a data.frame
@@ -575,11 +553,15 @@ out <- as.uid(c(315567, 3339, 9696))
 #> 1 315567   uid found            FALSE         FALSE
 #> 2   3339   uid found            FALSE         FALSE
 #> 3   9696   uid found            FALSE         FALSE
-#>                                           uri
-#> 1 http://www.ncbi.nlm.nih.gov/taxonomy/315567
-#> 2   http://www.ncbi.nlm.nih.gov/taxonomy/3339
-#> 3   http://www.ncbi.nlm.nih.gov/taxonomy/9696
+#>                                            uri
+#> 1 https://www.ncbi.nlm.nih.gov/taxonomy/315567
+#> 2   https://www.ncbi.nlm.nih.gov/taxonomy/3339
+#> 3   https://www.ncbi.nlm.nih.gov/taxonomy/9696
 ```
+
+## Contributing
+
+See our [CONTRIBUTING](.github/CONTRIBUTING.md) document.
 
 ## Contributors
 
@@ -614,7 +596,7 @@ Check out our [milestones](https://github.com/ropensci/taxize/milestones) to see
 * Please [report any issues or bugs](https://github.com/ropensci/taxize/issues).
 * License: MIT
 * Get citation information for `taxize` in R doing `citation(package = 'taxize')`
-* Please note that this project is released with a [Contributor Code of Conduct](CONDUCT.md).
+* Please note that this project is released with a [Contributor Code of Conduct](CODE_OF_CONDUCT.md).
 By participating in this project you agree to abide by its terms.
 
 [tut]: https://ropensci.org/tutorials/taxize.html

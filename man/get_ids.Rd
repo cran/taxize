@@ -43,6 +43,11 @@ you like.
 \note{
 There is a timeout of 1/3 seconds between queries to NCBI.
 }
+\section{Authentication}{
+
+See \code{\link{taxize-authentication}} for help on authentication
+}
+
 \examples{
 \dontrun{
 # Plug in taxon names directly
@@ -55,7 +60,6 @@ get_ids(names="Poa annua", db=c("col","eol"), rows=1:2)
 
 ## Or you can specify which source you want via the db parameter
 get_ids(names="Chironomus riparius", db = 'ncbi')
-
 get_ids(names="Salvelinus fontinalis", db = 'nbn')
 
 get_ids(names=c("Chironomus riparius", "Pinus contorta"), db = 'ncbi')
@@ -63,7 +67,6 @@ get_ids(names=c("Chironomus riparius", "Pinus contorta"), db = c('ncbi','itis'))
 get_ids(names=c("Chironomus riparius", "Pinus contorta"), db = c('ncbi','itis','col'))
 get_ids(names="Pinus contorta", db = c('ncbi','itis','col','eol','tropicos'))
 get_ids(names="ava avvva", db = c('ncbi','itis','col','eol','tropicos'))
-get_ids(names="ava avvva", db = c('ncbi','itis','col','eol','tropicos'), verbose=FALSE)
 
 # Pass on to other functions
 out <- get_ids(names="Pinus contorta", db = c('ncbi','itis','col','eol','tropicos'))
@@ -75,9 +78,7 @@ get_ids_(c("Chironomus riparius", "Pinus contorta"), db = 'nbn', rows=1:10)
 get_ids_(c("Chironomus riparius", "Pinus contorta"), db = c('nbn','gbif'), rows=1:10)
 
 # use curl options
-library("httr")
-get_ids("Agapostemon", db = "ncbi", config=verbose())
-bb <- get_ids("Pinus contorta", db = c('nbn','gbif'), config=progress())
+get_ids("Agapostemon", db = "ncbi", verbose = TRUE)
 }
 }
 \seealso{

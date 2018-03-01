@@ -295,14 +295,13 @@ has a sister method with and trailing underscore, e.g., <code>get_tsn()</code> a
 <pre><code class="r">get_tsn_(searchterm = &quot;Quercus b&quot;)
 #&gt; $`Quercus b`
 #&gt; # A tibble: 5 x 4
-#&gt;      tsn         scientificName                           commonNames
-#&gt;    &lt;chr&gt;                  &lt;chr&gt;                                 &lt;chr&gt;
-#&gt; 1  19300        Quercus bicolor     swamp white oak,ch&lt;ea&gt;ne bicolore
-#&gt; 2 195166      Quercus boyntonii Boynton&#39;s sand post oak,Boynton&#39;s oak
-#&gt; 3 195168       Quercus buckleyi               Texas oak,Buckley&#39;s oak
-#&gt; 4 506533        Quercus brantii                           Brant&#39;s oak
-#&gt; 5 507263 Quercus berberidifolia                             scrub oak
-#&gt; # ... with 1 more variables: nameUsage &lt;chr&gt;
+#&gt;   tsn    scientificName         commonNames                      nameUsage
+#&gt;   &lt;chr&gt;  &lt;chr&gt;                  &lt;chr&gt;                            &lt;chr&gt;    
+#&gt; 1 19300  Quercus bicolor        swamp white oak,chêne bicolore   accepted 
+#&gt; 2 195166 Quercus boyntonii      Boynton&#39;s sand post oak,Boynton… accepted 
+#&gt; 3 195168 Quercus buckleyi       Texas oak,Buckley&#39;s oak          accepted 
+#&gt; 4 506533 Quercus brantii        Brant&#39;s oak                      accepted 
+#&gt; 5 507263 Quercus berberidifolia scrub oak                        accepted
 </code></pre>
 
 <p>The result is a single data.frame for each taxon queried, which can be
@@ -314,18 +313,18 @@ number of a range of numbers:</p>
 <pre><code class="r">get_tsn_(searchterm = &quot;Quercus b&quot;, rows = 1)
 #&gt; $`Quercus b`
 #&gt; # A tibble: 1 x 4
-#&gt;     tsn  scientificName                       commonNames nameUsage
-#&gt;   &lt;chr&gt;           &lt;chr&gt;                             &lt;chr&gt;     &lt;chr&gt;
-#&gt; 1 19300 Quercus bicolor swamp white oak,ch&lt;ea&gt;ne bicolore  accepted
+#&gt;   tsn   scientificName  commonNames                    nameUsage
+#&gt;   &lt;chr&gt; &lt;chr&gt;           &lt;chr&gt;                          &lt;chr&gt;    
+#&gt; 1 19300 Quercus bicolor swamp white oak,chêne bicolore accepted
 </code></pre>
 
 <pre><code class="r">get_tsn_(searchterm = &quot;Quercus b&quot;, rows = 1:2)
 #&gt; $`Quercus b`
 #&gt; # A tibble: 2 x 4
-#&gt;      tsn    scientificName                           commonNames nameUsage
-#&gt;    &lt;chr&gt;             &lt;chr&gt;                                 &lt;chr&gt;     &lt;chr&gt;
-#&gt; 1  19300   Quercus bicolor     swamp white oak,ch&lt;ea&gt;ne bicolore  accepted
-#&gt; 2 195166 Quercus boyntonii Boynton&#39;s sand post oak,Boynton&#39;s oak  accepted
+#&gt;   tsn    scientificName    commonNames                           nameUsage
+#&gt;   &lt;chr&gt;  &lt;chr&gt;             &lt;chr&gt;                                 &lt;chr&gt;    
+#&gt; 1 19300  Quercus bicolor   swamp white oak,chêne bicolore        accepted 
+#&gt; 2 195166 Quercus boyntonii Boynton&#39;s sand post oak,Boynton&#39;s oak accepted
 </code></pre>
 
 <h2>as.* methods</h2>
@@ -405,60 +404,22 @@ in a programmatic workflow straight away.</p>
 
 <pre><code class="r">spp &lt;- names_list(rank = &quot;species&quot;, size = 10)
 gnr_resolve(names = spp, preferred_data_sources = 11)
-#&gt;          user_supplied_name           submitted_name
-#&gt; 1     Helichrysum candollei    Helichrysum candollei
-#&gt; 2          Haworthia retusa         Haworthia retusa
-#&gt; 3          Crypsinus bakeri         Crypsinus bakeri
-#&gt; 4  Mangifera philippinensis Mangifera philippinensis
-#&gt; 5    Selaginella atirrensis   Selaginella atirrensis
-#&gt; 6   Hymenostomum sullivanii  Hymenostomum sullivanii
-#&gt; 7   Hymenostomum sullivanii  Hymenostomum sullivanii
-#&gt; 8         Cytisus urumoffii        Cytisus urumoffii
-#&gt; 9         Cytisus urumoffii        Cytisus urumoffii
-#&gt; 10        Cytisus urumoffii        Cytisus urumoffii
-#&gt; 11        Baptisia uniflora        Baptisia uniflora
-#&gt; 12        Baptisia uniflora        Baptisia uniflora
-#&gt; 13        Baptisia uniflora        Baptisia uniflora
-#&gt; 14        Baptisia uniflora        Baptisia uniflora
-#&gt; 15     Nephelium xerocarpum     Nephelium xerocarpum
-#&gt; 16  Baccharis gnaphalioides  Baccharis gnaphalioides
-#&gt; 17  Baccharis gnaphalioides  Baccharis gnaphalioides
-#&gt;                                             matched_name
-#&gt; 1  Helichrysum candollei (Bojer ex DC.) R.Vig. &amp; Humbert
-#&gt; 2                            Haworthia retusa (L.) Duval
-#&gt; 3                        Crypsinus bakeri (Luerss.) Tag.
-#&gt; 4                      Mangifera philippinensis Mukherji
-#&gt; 5                         Selaginella atirrensis Hieron.
-#&gt; 6      Hymenostomum sullivanii C. Müller ex Geheeb, 1897
-#&gt; 7                      Hymenostomum sullivanii C. Müller
-#&gt; 8                     Cytisus urumoffii Davidov ex Stoj.
-#&gt; 9                Cytisus urumoffii Davidoff ex Stoyanoff
-#&gt; 10                            Cytisus urumoffii Davidoff
-#&gt; 11                               Baptisia uniflora Hook.
-#&gt; 12                      Baptisia uniflora (Michx.) Nutt.
-#&gt; 13                        Baptisia uniflora (Michx.) Sm.
-#&gt; 14                             Baptisia uniflora Spreng.
-#&gt; 15                   Nephelium xerocarpum (Bl.) Cambess.
-#&gt; 16                       Baccharis gnaphalioides Spreng.
-#&gt; 17                           Baccharis gnaphalioides DC.
-#&gt;         data_source_title score
-#&gt; 1  GBIF Backbone Taxonomy 0.988
-#&gt; 2  GBIF Backbone Taxonomy 0.988
-#&gt; 3  GBIF Backbone Taxonomy 0.988
-#&gt; 4  GBIF Backbone Taxonomy 0.988
-#&gt; 5  GBIF Backbone Taxonomy 0.988
-#&gt; 6  GBIF Backbone Taxonomy 0.988
-#&gt; 7  GBIF Backbone Taxonomy 0.988
-#&gt; 8  GBIF Backbone Taxonomy 0.988
-#&gt; 9  GBIF Backbone Taxonomy 0.988
-#&gt; 10 GBIF Backbone Taxonomy 0.988
-#&gt; 11 GBIF Backbone Taxonomy 0.988
-#&gt; 12 GBIF Backbone Taxonomy 0.988
-#&gt; 13 GBIF Backbone Taxonomy 0.988
-#&gt; 14 GBIF Backbone Taxonomy 0.988
-#&gt; 15 GBIF Backbone Taxonomy 0.988
-#&gt; 16 GBIF Backbone Taxonomy 0.988
-#&gt; 17 GBIF Backbone Taxonomy 0.988
+#&gt; # A tibble: 13 x 5
+#&gt;    user_supplied_na… submitted_name  matched_name   data_source_tit… score
+#&gt;  * &lt;chr&gt;             &lt;chr&gt;           &lt;chr&gt;          &lt;chr&gt;            &lt;dbl&gt;
+#&gt;  1 Limonium tamarin… Limonium tamar… Limonium tama… GBIF Backbone T… 0.988
+#&gt;  2 Rhaponticum anna… Rhaponticum an… Rhaponticum a… GBIF Backbone T… 0.988
+#&gt;  3 Chionanthus axil… Chionanthus ax… Chionanthus a… GBIF Backbone T… 0.988
+#&gt;  4 Chionanthus axil… Chionanthus ax… Chionanthus a… GBIF Backbone T… 0.988
+#&gt;  5 Chionanthus axil… Chionanthus ax… Chionanthus a… GBIF Backbone T… 0.988
+#&gt;  6 Saintpaulia watk… Saintpaulia wa… Saintpaulia w… GBIF Backbone T… 0.988
+#&gt;  7 Zygophyllum kara… Zygophyllum ka… Zygophyllum k… GBIF Backbone T… 0.988
+#&gt;  8 Sium brevifolium  Sium brevifoli… Sium brevifol… GBIF Backbone T… 0.988
+#&gt;  9 Neolitsea pinnin… Neolitsea pinn… Neolitsea pin… GBIF Backbone T… 0.988
+#&gt; 10 Ligusticum falca… Ligusticum fal… Ligusticum fa… GBIF Backbone T… 0.988
+#&gt; 11 Centaurea gracil… Centaurea grac… Centaurea gra… GBIF Backbone T… 0.988
+#&gt; 12 Centaurea gracil… Centaurea grac… Centaurea gra… GBIF Backbone T… 0.988
+#&gt; 13 Hieracium hemich… Hieracium hemi… Hieracium hem… GBIF Backbone T… 0.988
 </code></pre>
 
 <h2>Other functions</h2>

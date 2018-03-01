@@ -27,20 +27,21 @@
 #' @param rows (numeric) Any number from 1 to infinity. If the default NA, all
 #' rows are considered. Note that this parameter is ignored if you pass in a
 #' taxonomic id of any of the acceptable classes: tsn, colid.
+#' @param limit Number of records to return
+#' @param start Record number to start at
 #' @param ... Further args passed on to \code{itis_downstream},
 #' \code{col_downstream}, \code{gbif_downstream}, or \code{ncbi_downstream}
 #'
 #' @return A named list of data.frames with the downstream names of every
 #' supplied taxa. You get an NA if there was no match in the database.
+#' 
+#' @section Authentication:
+#' See \code{\link{taxize-authentication}} for help on authentication
 #'
 #' @examples \dontrun{
 #' # Plug in taxon IDs
-#' ## col Ids have to be character, as they are alphanumeric IDs
 #' downstream("015be25f6b061ba517f495394b80f108", db = "col",
 #'   downto = "species")
-#' ## ITIS tsn ids can be numeric or character
-#' downstream("154395", db = "itis", downto = "species")
-#' downstream(154395, db = "itis", downto = "species")
 #'
 #' # Plug in taxon names
 #' downstream("Insecta", db = 'col', downto = 'order')
@@ -92,12 +93,8 @@
 #' downstream("Poa", db = 'col', downto="species")
 #' downstream("Poa", db = 'col', downto="species", rows=1)
 #'
-#' downstream("Poa", db = 'ncbi', downto="species")
-#'
 #' # use curl options
-#' res <- downstream("Apis", db = 'col', downto = 'species', config=verbose())
-#' res <- downstream("Apis", db = 'itis', downto = 'species', config=verbose())
-#' res <- downstream("Ursus", db = 'gbif', downto = 'species', config=verbose())
+#' res <- downstream("Apis", db = 'col', downto = 'species', verbose = TRUE)
 #' }
 downstream <- function(...){
   UseMethod("downstream")
@@ -139,7 +136,7 @@ downstream.default <- function(x, db = NULL, downto = NULL,
 process_stream_ids <- function(input, db, fxn, ...){
   g <- tryCatch(as.numeric(as.character(input)), warning = function(e) e)
   if (is(g, "numeric") || is.character(input) && grepl("[[:digit:]]", input)) {
-    as_fxn <- switch(db, itis = as.tsn, col = as.colid, gbif = as.gbifid)
+    as_fxn <- switch(db, itis = as.tsn, col = as.colid, gbif = as.gbifid, ncbi = as.uid)
     as_fxn(input, check = FALSE)
   } else {
     eval(fxn)(input, ...)
@@ -182,17 +179,20 @@ downstream.colid <- function(x, db = NULL, downto = NULL,
 #' @export
 #' @rdname downstream
 downstream.gbifid <- function(x, db = NULL, downto = NULL,
-                              intermediate = FALSE, ...) {
-  fun <- function(y, downto, intermediate, ...){
+                              intermediate = FALSE, limit = 100,
+                              start = NULL, ...) {
+  fun <- function(y, downto, intermediate, limit, start, ...){
     # return NA if NA is supplied
     if (is.na(y)) {
       NA
     } else {
       gbif_downstream(key = y, downto = downto,
-                      intermediate = intermediate, ...)
+                      intermediate = intermediate, limit = limit,
+                      start = start, ...)
     }
   }
-  out <- lapply(x, fun, downto = downto, intermediate = intermediate, ...)
+  out <- lapply(x, fun, downto = downto, intermediate = intermediate,
+    limit = limit, start = start, ...)
   structure(out, class = 'downstream', db = 'gbif')
 }
 

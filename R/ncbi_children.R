@@ -26,11 +26,16 @@
 #' @param ambiguous \code{logical; length 1} If \code{FALSE}, children taxa with words like
 #'   "unclassified", "unknown", "uncultured", or "sp." are removed from the output.
 #'   NOTE: This option only applies when \code{out_type = "summary"}.
-#' @param ... Curl options passed on to \code{\link[httr]{GET}}
+#' @param key (character) NCBI Entrez API key. optional. See Details.
+#' @param ... Curl options passed on to \code{\link[crul]{HttpClient}}
 #' @return The output type depends on the value of the \code{out_type} parameter. Taxa that cannot
 #' be found will result in \code{NA}s and a lack of children results in an empty data structure.
 #' @seealso \code{\link{ncbi_get_taxon_summary}}, \code{\link[taxize]{children}}
 #' @author Zachary Foster \email{zacharyfoster1989@@gmail.com}
+#' 
+#' @section Authentication:
+#' See \code{\link{taxize-authentication}} for help on authentication
+#'
 #' @examples
 #' \dontrun{
 #' ncbi_children(name="Satyrium") #Satyrium is the name of two different genera
@@ -40,17 +45,20 @@
 #' ncbi_children(id="62858") #"62858" is the uid for the orchid genus
 #'
 #' # use curl options
-#' library("httr")
-#' ncbi_children(name="Satyrium", ancestor="Eumaeini", config=verbose())
+#' ncbi_children(name="Satyrium", ancestor="Eumaeini", verbose = TRUE)
 #' }
 ncbi_children <- function(name = NULL, id = NULL, start = 0, max_return = 1000,
-                          ancestor = NULL, out_type = c("summary", "uid"), ambiguous = FALSE, ...) {
+                          ancestor = NULL, out_type = c("summary", "uid"), ambiguous = FALSE, 
+                          key = NULL, ...) {
+
+  key <- getkey(key, "ENTREZ_KEY")
+
   # Constants --------------------------------------------------------------------------------------
   ambiguous_regex <- paste(sep = "|", "unclassified", "environmental", "uncultured", "unknown",
                            "unidentified", "candidate", "sp\\.", "s\\.l\\.", "sensu lato", "clone",
                            "miscellaneous", "candidatus", "affinis", "aff\\.", "incertae sedis",
                            "mixed", "samples", "libaries")
-  base_url <- paste0(ncbi_base(), "/entrez/eutils/esearch.fcgi?db=taxonomy")
+  # base_url <- paste0(ncbi_base(), "/entrez/eutils/esearch.fcgi?db=taxonomy")
   # Argument validation ----------------------------------------------------------------------------
   if (sum(c(is.null(name), is.null(id))) != 1) {
     stop("Either name or id must be specified, but not both")
@@ -78,22 +86,57 @@ ncbi_children <- function(name = NULL, id = NULL, start = 0, max_return = 1000,
     } else {
       ancestor_query <- paste0("+AND+", ancestor, "[subtree]")
     }
-    taxon_query <- paste0("term=", name, "[Next+Level]", ancestor_query)
-    max_return_query <- paste0("RetMax=", max_return)
-    start_query <- paste0("RetStart=", start)
-    query <- paste(base_url, taxon_query, max_return_query, start_query, sep = "&")
-    query <- gsub(" ", "+", query) #spaces must be replaced with '+'
-    # Search ncbi for children - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    rr <- GET(query, ...)
-    stop_for_status(rr)
-    raw_results <- con_utf8(rr)
-    # Parse results  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    results <- xml2::read_xml(raw_results)
-    children_uid <- xml2::xml_text(xml2::xml_find_all(results, "//eSearchResult/IdList/Id"))
+    
+    if (is.null(id)) {
+      args <- list(
+        db = 'taxonomy', 
+        term = paste0(name, "[Next+Level]", ancestor_query),
+        RetMax = max_return,
+        RetStart = start,
+        api_key = key
+      )
+      args$term <- gsub("\\+", " ", args$term)
+      
+      # Search ncbi for children - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+      cli <- crul::HttpClient$new(ncbi_base(), opts = list(...))
+      rr <- cli$get('entrez/eutils/esearch.fcgi', query = args)
+      rr$raise_for_status()
+      raw_results <- rr$parse("UTF-8")
+      
+      # Parse results  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+      results <- xml2::read_xml(raw_results)
+      children_uid <- xml2::xml_text(xml2::xml_find_all(results, "//eSearchResult/IdList/Id"))
+      
+    } else {
+      args <- list(
+        dbfrom = 'taxonomy',
+        db = 'taxonomy',
+        id = id,
+        term = paste0(name, "[Next+Level]"),
+        RetMax = max_return,
+        RetStart = start,
+        api_key = key
+      )
+      args$term <- gsub("\\+", " ", args$term)
+      
+      # Search ncbi for children - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+      cli <- crul::HttpClient$new(ncbi_base(), opts = list(...))
+      rr <- cli$get('entrez/eutils/elink.fcgi', query = args)
+      rr$raise_for_status()
+      raw_results <- rr$parse("UTF-8")
+      
+      # Parse results  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+      results <- xml2::read_xml(raw_results)
+      children_uid <- xml2::xml_text(xml2::xml_find_all(results, "//eLinkResult/LinkSet/LinkSetDb/Link/Id"))
+    }
     if (length(children_uid) == 0) {
       if (out_type == "summary") {
-        output <- data.frame(childtaxa_id = numeric(), childtaxa_name = character(),
-                             childtaxa_rank = character())
+        output <- data.frame(
+          childtaxa_id     = character(),
+          childtaxa_name   = character(),
+          childtaxa_rank   = character(),
+          stringsAsFactors = FALSE
+        )
       } else {
         output <- numeric()
       }

@@ -12,8 +12,9 @@
 \alias{get_uid_}
 \title{Get the UID codes from NCBI for taxonomic names.}
 \usage{
-get_uid(sciname, ask = TRUE, verbose = TRUE, rows = NA, modifier = NULL,
-  rank_query = NULL, division_filter = NULL, rank_filter = NULL, ...)
+get_uid(sciname, ask = TRUE, messages = TRUE, rows = NA,
+  modifier = NULL, rank_query = NULL, division_filter = NULL,
+  rank_filter = NULL, key = NULL, ...)
 
 as.uid(x, check = TRUE)
 
@@ -29,7 +30,7 @@ as.uid(x, check = TRUE)
 
 \method{as.data.frame}{uid}(x, ...)
 
-get_uid_(sciname, verbose = TRUE, rows = NA)
+get_uid_(sciname, messages = TRUE, rows = NA, key = NULL, ...)
 }
 \arguments{
 \item{sciname}{character; scientific name.}
@@ -38,8 +39,8 @@ get_uid_(sciname, verbose = TRUE, rows = NA)
 more than one TSN is found for the species, the user is asked for input. If
 FALSE NA is returned for multiple matches.}
 
-\item{verbose}{logical; If TRUE the actual taxon queried is printed on the
-console.}
+\item{messages}{logical; If `TRUE` (default) the actual taxon queried is 
+printed on the console.}
 
 \item{rows}{numeric; Any number from 1 to infinity. If the default NA, all
 rows are considered. Note that this function still only gives back a uid
@@ -65,6 +66,8 @@ data after retrieved from NCBI. Optional. See \code{Filtering} below.}
 retrieved from NCBI. See \code{\link{rank_ref}} for possible options.
 Though note that some data sources use atypical ranks, so inspect the data
 itself for options. Optional. See \code{Filtering} below.}
+
+\item{key}{(character) NCBI Entrez API key. optional. See Details.}
 
 \item{...}{Ignored}
 
@@ -112,6 +115,15 @@ Retrieve the Unique Identifier (UID) of a taxon from NCBI taxonomy browser.
   in your names, you likely won't get what you are expecting. The lesson:
   clean your names before using this function. Other data sources are better
   about fuzzy matching.
+}
+
+\section{Authentication}{
+
+See \code{\link{taxize-authentication}} for help on authentication
+
+Note that even though you can't pass in your key to `as.uid` functions, 
+we still use your Entrez API key if you have it saved as an R option
+or environment variable.
 }
 
 \examples{
@@ -193,9 +205,7 @@ get_uid_("Dugesia", rows=1:2)
 get_uid_(c("asdfadfasd","Pinus contorta"))
 
 # use curl options
-library("httr")
-get_uid("Quercus douglasii", config=verbose())
-bb <- get_uid("Quercus douglasii", config=progress())
+get_uid("Quercus douglasii", verbose = TRUE)
 }
 }
 \seealso{

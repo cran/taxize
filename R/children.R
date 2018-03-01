@@ -68,8 +68,7 @@
 #' children("Poa", db = 'col', rows=1)
 #'
 #' # use curl options
-#' library("httr")
-#' res <- children("Poa", db = 'col', rows=1, config=verbose())
+#' res <- children("Poa", db = 'col', rows=1, verbose = TRUE)
 #' }
 
 children <- function(...){
@@ -80,7 +79,7 @@ children <- function(...){
 #' @rdname children
 children.default <- function(x, db = NULL, rows = NA, ...) {
   nstop(db)
-  switch(
+  results <- switch(
     db,
     itis = {
       id <- process_children_ids(x, db, get_tsn, rows = rows, ...)
@@ -110,12 +109,49 @@ children.default <- function(x, db = NULL, rows = NA, ...) {
 
     stop("the provided db value was not recognised", call. = FALSE)
   )
+
+  set_output_types(results, x, db)
+}
+
+# Ensure that the output types are consistent when searches return nothing
+itis_blank <- data.frame(
+  parentname = character(0),
+  parenttsn  = character(0),
+  rankname   = character(0),
+  taxonname  = character(0),
+  tsn        = character(0),
+  stringsAsFactors=FALSE
+)
+worms_blank <- col_blank <- ncbi_blank <-
+  data.frame(
+    childtaxa_id     = character(0),
+    childtaxa_name   = character(0),
+    childtaxa_rank   = character(0),
+    stringsAsFactors = FALSE
+  )
+
+set_output_types <- function(x, x_names, db){
+  blank_fun <- switch(
+    db,
+    itis  = function(x) if (nrow(x) == 0 || is.na(x)) itis_blank else x,
+    col   = function(x) {
+      if (inherits(x, "list")) x <- x[[1]]
+      if (nrow(x) == 0 || is.na(x)) col_blank else x
+    },
+    ncbi  = function(x) if (nrow(x) == 0 || is.na(x)) ncbi_blank else x,
+    worms = function(x) if (nrow(x) == 0 || is.na(x)) worms_blank else x
+  )
+
+  typed_results <- lapply(seq_along(x), function(i) blank_fun(x[[i]]))
+  names(typed_results) <- x_names
+  attributes(typed_results) <- attributes(x)
+  typed_results
 }
 
 process_children_ids <- function(input, db, fxn, ...){
   g <- tryCatch(as.numeric(as.character(input)), warning = function(e) e)
   if (is(g, "numeric") || is.character(input) && grepl("[[:digit:]]", input)) {
-    as_fxn <- switch(db, itis = as.tsn, col = as.colid)
+    as_fxn <- switch(db, itis = as.tsn, col = as.colid, worms = as.wormsid)
     as_fxn(input, check = FALSE)
   } else {
     eval(fxn)(input, ...)
@@ -221,7 +257,11 @@ children.ids <- function(x, db = NULL, ...) {
 #' @export
 #' @rdname children
 children.uid <- function(x, db = NULL, ...) {
-  out <- ncbi_children(id = x, ...)
+  out <- if (is.na(x)) {
+    stats::setNames(list(ncbi_blank), x)
+  } else {
+    ncbi_children(id = x, ...)
+  }
   class(out) <- 'children'
   attr(out, 'db') <- 'ncbi'
   return(out)

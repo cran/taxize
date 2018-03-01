@@ -22,7 +22,7 @@ downstream(...)
   intermediate = FALSE, ...)
 
 \method{downstream}{gbifid}(x, db = NULL, downto = NULL,
-  intermediate = FALSE, ...)
+  intermediate = FALSE, limit = 100, start = NULL, ...)
 
 \method{downstream}{uid}(x, db = NULL, downto = NULL,
   intermediate = FALSE, ...)
@@ -58,6 +58,10 @@ intermediate taxonomic groups. Default: \code{FALSE}}
 \item{rows}{(numeric) Any number from 1 to infinity. If the default NA, all
 rows are considered. Note that this parameter is ignored if you pass in a
 taxonomic id of any of the acceptable classes: tsn, colid.}
+
+\item{limit}{Number of records to return}
+
+\item{start}{Record number to start at}
 }
 \value{
 A named list of data.frames with the downstream names of every
@@ -70,15 +74,16 @@ can get data from ITIS (itis), Catalogue of Life (col), GBIF (gbif), or
 NCBI (ncbi). There is no method exposed by these four services for
 getting taxa at a specific taxonomic rank, so we do it ourselves here.
 }
+\section{Authentication}{
+
+See \code{\link{taxize-authentication}} for help on authentication
+}
+
 \examples{
 \dontrun{
 # Plug in taxon IDs
-## col Ids have to be character, as they are alphanumeric IDs
 downstream("015be25f6b061ba517f495394b80f108", db = "col",
   downto = "species")
-## ITIS tsn ids can be numeric or character
-downstream("154395", db = "itis", downto = "species")
-downstream(154395, db = "itis", downto = "species")
 
 # Plug in taxon names
 downstream("Insecta", db = 'col', downto = 'order')
@@ -130,11 +135,7 @@ downstream(get_colid("Animalia"), downto="class", intermediate=TRUE)
 downstream("Poa", db = 'col', downto="species")
 downstream("Poa", db = 'col', downto="species", rows=1)
 
-downstream("Poa", db = 'ncbi', downto="species")
-
 # use curl options
-res <- downstream("Apis", db = 'col', downto = 'species', config=verbose())
-res <- downstream("Apis", db = 'itis', downto = 'species', config=verbose())
-res <- downstream("Ursus", db = 'gbif', downto = 'species', config=verbose())
+res <- downstream("Apis", db = 'col', downto = 'species', verbose = TRUE)
 }
 }

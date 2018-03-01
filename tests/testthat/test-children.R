@@ -16,6 +16,13 @@ test_that("passing in an id works", {
   skip_on_cran()
 
   ch_ncbi <- children(8028, db = 'ncbi')
+  ch_worms <- sw(children(254966, db='worms'))
+
+  expect_is(ch_worms, "children")
+  expect_equal(attr(ch_worms, "db"), "worms")
+  expect_named(ch_worms, '254966')
+  expect_is(ch_worms$`254966`, "data.frame")
+  expect_named(ch_worms$`254966`, c('childtaxa_id', 'childtaxa_name', 'childtaxa_rank'))
 
   expect_is(ch_ncbi, "children")
   expect_equal(attr(ch_ncbi, "db"), "ncbi")
@@ -31,8 +38,51 @@ test_that("queries with no results fail well", {
   expect_equal(NROW(aa[[1]]), 0)
 })
 
+test_that("itis types are correct", {
+  skip_on_cran()
+
+  itis_expected_col_types <- c(
+      parentname = 'character',
+      parenttsn  = 'character',
+      rankname   = 'character',
+      taxonname  = 'character',
+      tsn        = 'character'
+    )
+  # for no result
+  expect_equal(
+    sapply(children(1234123434, 'itis')[['1234123434']], class), 
+    itis_expected_col_types 
+  )
+  # for good result
+  expect_equal(
+    sapply(children(161994, 'itis')[['161994']], class), 
+    itis_expected_col_types 
+  )
+})
+
 test_that("rows parameter, when used, works", {
   skip_on_cran()
 
   expect_is(children("Asdfafsfd", db = 'ncbi', rows = 1, verbose = FALSE), "children")
+})
+
+test_that("consistent results for no query match when using get_* fxns", {
+  skip_on_cran()
+
+  itis_x <- children(get_tsn(23424234234, messages = FALSE))
+  itis_y <- children(23424234234, db = "itis", messages = FALSE)
+
+  col_x <- children(get_colid(23424234234, messages = FALSE))
+  col_y <- children('23424234234', db = "col", messages = FALSE)
+
+  ncbi_x <- children(get_uid(23424234234, messages = FALSE))
+  ncbi_y <- children('dragon', db = "ncbi", messages = FALSE)
+
+  worms_x <- children(get_wormsid(23424234234, messages = FALSE))
+  worms_y <- children(get_wormsid(23424234234, messages = FALSE))
+  
+  expect_named(itis_x, NA_character_)
+  expect_null(names(col_x))
+  expect_named(ncbi_x, NA_character_)
+  expect_named(worms_x, NA_character_)
 })
