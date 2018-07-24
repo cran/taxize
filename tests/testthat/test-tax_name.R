@@ -28,6 +28,14 @@ test_that("tax_name returns the correct class", {
   expect_that(nrow(tmp_ncbi2), equals(2))
 })
 
+test_that("tax_name works with ncbi and rows arg", {
+  aa <- tax_name('Bacillus', c("family", "order"), db="ncbi", rows=1)
+  expect_is(aa, "data.frame")
+  expect_equal(NCOL(aa), 4)
+  expect_equal(NROW(aa), 1)
+  expect_named(aa, c("db", "query", "family", "order"))
+})
+
 test_that("tax_name accepts ask-argument", {
   skip_on_cran()
 
@@ -38,25 +46,20 @@ test_that("tax_name accepts ask-argument", {
 test_that("taxon with no data returned from classification() works", {
   skip_on_cran()
 
-  aa <- sw(tax_name("Galagoides demidovii", get = "species",
-                                  rows = 1, verbose = FALSE))
+  aa <- sw(tax_name("foo bar", get = "species",
+                                  rows = 1, messages = FALSE))
   expect_is(aa, "data.frame")
   expect_true(is.na(aa$species))
-  expect_warning(
-    tax_name("Galagoides demidovii", get = "species", rows = 1,
-             verbose = FALSE),
-    "no hierarchy data found in ITIS"
-  )
 
-  bb <- sw(tax_name("Asterias helianthus", get = "species", verbose = FALSE))
+  bb <- sw(tax_name("Asterias helianthus", get = "genus", messages = FALSE))
   expect_is(bb, "data.frame")
-  expect_true(is.na(bb$species))
-  expect_warning(tax_name("Asterias helianthus", get = "species", verbose = FALSE),
-                 "no hierarchy data found in ITIS")
+  expect_true(is.na(bb$genus))
+  expect_warning(tax_name("Asterias helianthus", get = "genus", messages = FALSE),
+                 "rank requested")
 
-  cc <- sw(tax_name("Stellonia helianthus", get = "species", verbose = FALSE))
+  cc <- sw(tax_name("Stellonia helianthus", get = "genus", messages = FALSE))
   expect_is(cc, "data.frame")
-  expect_true(is.na(cc$species))
-  expect_warning(tax_name("Stellonia helianthus", get = "species", verbose = FALSE),
-                 "no hierarchy data found in ITIS")
+  expect_true(is.na(cc$genus))
+  expect_warning(tax_name("Stellonia helianthus", get = "genus", messages = FALSE),
+                 "rank requested")
 })
