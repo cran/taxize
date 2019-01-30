@@ -232,14 +232,14 @@ head(temp)
 </code></pre>
 
 <pre><code>#&gt; # A tibble: 6 x 5
-#&gt;   user_supplied_name submitted_name   matched_name  data_source_tit… score
-#&gt;   &lt;chr&gt;              &lt;chr&gt;            &lt;chr&gt;         &lt;chr&gt;            &lt;dbl&gt;
-#&gt; 1 Helianthos annus   Helianthos annus Helianthus a… EOL              0.750
-#&gt; 2 Helianthos annus   Helianthos annus Helianthus a… EOL              0.750
-#&gt; 3 Helianthos annus   Helianthos annus Helianthus a… uBio NameBank    0.750
-#&gt; 4 Helianthos annus   Helianthos annus Helianthus a… Open Tree of Li… 0.750
-#&gt; 5 Helianthos annus   Helianthos annus Helianthus a… Catalogue of Li… 0.750
-#&gt; 6 Helianthos annus   Helianthos annus Helianthus a… ITIS             0.750
+#&gt;   user_supplied_na… submitted_name  matched_name     data_source_tit… score
+#&gt;   &lt;chr&gt;             &lt;chr&gt;           &lt;chr&gt;            &lt;chr&gt;            &lt;dbl&gt;
+#&gt; 1 Helianthos annus  Helianthos ann… Helianthus annus EOL               0.75
+#&gt; 2 Helianthos annus  Helianthos ann… Helianthus annu… EOL               0.75
+#&gt; 3 Helianthos annus  Helianthos ann… Helianthus annus uBio NameBank     0.75
+#&gt; 4 Helianthos annus  Helianthos ann… Helianthus annu… Catalogue of Li…  0.75
+#&gt; 5 Helianthos annus  Helianthos ann… Helianthus annu… ITIS              0.75
+#&gt; 6 Helianthos annus  Helianthos ann… Helianthus annu… NCBI              0.75
 </code></pre>
 
 <p>The correct spellings are <em>Helianthus annuus</em> and <em>Homo sapiens</em>. Another approach uses the Taxonomic Name Resolution Service via the Taxosaurus API developed by iPLant and the Phylotastic organization. In this example, we provide a list of species names, some of which are misspelled, and we&#39;ll call the API with the <em>tnrs</em> function.</p>
@@ -405,8 +405,8 @@ classification(specieslist, db = &#39;itis&#39;)
 #&gt; 1 active subgenus seed plants          Pinus hard pines 139271      
 #&gt; 2 active    genus seed plants          Pinus              3337      
 #&gt;   species subsp modificationdate
-#&gt; 1               2015/09/16 00:00
-#&gt; 2               2018/01/31 00:00
+#&gt; 1               2017/06/14 00:00
+#&gt; 2               2016/03/25 00:00
 </code></pre>
 
 <pre><code>#&gt; [1] &quot;139271&quot;
@@ -486,7 +486,7 @@ get_tsn(searchterm = splist, searchtype = &quot;scientific&quot;)
 <pre><code>#&gt;              nbnid                    scientificName       rank
 #&gt; 1 NHMSYS0001706186                  Zootoca vivipara    species
 #&gt; 2 NHMSYS0020784960 Zootoca vivipara subsp. pannonica subspecies
-#&gt; 3 NHMSYS0020233881               Chaetozone vivipara    species
+#&gt; 3 NHMSYS0000067192               Spirillina vivipara    species
 #&gt;   taxonomicStatus
 #&gt; 1        accepted
 #&gt; 2        accepted
@@ -526,17 +526,17 @@ NROW(out$`Poa annua`)
 </code></pre>
 
 <pre><code>#&gt; $`Poa annua`
-#&gt;                guid    scientificName    rank taxonomicStatus
-#&gt; 1  NBNSYS0000002544         Poa annua species        accepted
-#&gt; 2  NBNSYS0200003392  Triumfetta annua species        accepted
-#&gt; 3  NBNSYS0000002918     Lunaria annua species        accepted
-#&gt; 4  NBNSYS0200001901      Bellis annua species        accepted
-#&gt; 5  NBNSYS0000033325   Artemisia annua species        accepted
-#&gt; 6  NHMSYS0000456951 Carrichtera annua species        accepted
-#&gt; 7  NBNSYS0200002555       Lonas annua species        accepted
-#&gt; 8  NBNSYS0200002917         Poa ampla species        accepted
-#&gt; 9  NBNSYS0200002926  Poa schimperiana species        accepted
-#&gt; 10 NBNSYS0200002923    Poa leptoclada species        accepted
+#&gt;                guid     scientificName    rank taxonomicStatus
+#&gt; 1  NBNSYS0000002544          Poa annua species        accepted
+#&gt; 2  NBNSYS0200001901       Bellis annua species        accepted
+#&gt; 3  NBNSYS0200003392   Triumfetta annua species        accepted
+#&gt; 4  NHMSYS0000456951  Carrichtera annua species        accepted
+#&gt; 5  NBNSYS0200002555        Lonas annua species        accepted
+#&gt; 6  NHMSYS0000461807 Poa labillardierei species        accepted
+#&gt; 7  NBNSYS0200002925      Poa poiformis species        accepted
+#&gt; 8  NBNSYS0200002917          Poa ampla species        accepted
+#&gt; 9  NHMSYS0000461806      Poa imbecilla species        accepted
+#&gt; 10 NHMSYS0000461808      Poa ligularis species        accepted
 </code></pre>
 
 <h2>Coerce numerics/alphanumerics to taxon IDs</h2>
@@ -623,14 +623,14 @@ NROW(out$`Poa annua`)
 </code></pre>
 
 <pre><code>#&gt;    user  system elapsed 
-#&gt;   0.113   0.007   2.393
+#&gt;   0.080   0.004   2.693
 </code></pre>
 
 <pre><code class="r">system.time( replicate(3, as.gbifid(c(&quot;2704179&quot;,&quot;2435099&quot;,&quot;3171445&quot;), check=FALSE)) )
 </code></pre>
 
 <pre><code>#&gt;    user  system elapsed 
-#&gt;   0.001   0.000   0.001
+#&gt;   0.002   0.000   0.002
 </code></pre>
 
 <h2>What taxa are downstream of my taxon of interest?</h2>
@@ -650,6 +650,14 @@ downstream(apis_col_id, downto = &quot;species&quot;, db = &quot;col&quot;)
 #&gt; 5 4bbc06b9dfbde0b72c619810b564c6e6 Apis koschevnikovi        species
 #&gt; 6 67cbbcf92cd60748759e58e802d98518     Apis mellifera        species
 #&gt; 7 213668a26ba6d2aad9575218f10d422f   Apis nigrocincta        species
+#&gt;   childtaxa_extinct
+#&gt; 1             FALSE
+#&gt; 2             FALSE
+#&gt; 3             FALSE
+#&gt; 4             FALSE
+#&gt; 5             FALSE
+#&gt; 6             FALSE
+#&gt; 7             FALSE
 #&gt; 
 #&gt; attr(,&quot;class&quot;)
 #&gt; [1] &quot;downstream&quot;
@@ -696,6 +704,14 @@ children(apis_col_id, db = &quot;col&quot;)
 #&gt; 5 4bbc06b9dfbde0b72c619810b564c6e6 Apis koschevnikovi        species
 #&gt; 6 67cbbcf92cd60748759e58e802d98518     Apis mellifera        species
 #&gt; 7 213668a26ba6d2aad9575218f10d422f   Apis nigrocincta        species
+#&gt;   childtaxa_extinct
+#&gt; 1             FALSE
+#&gt; 2             FALSE
+#&gt; 3             FALSE
+#&gt; 4             FALSE
+#&gt; 5             FALSE
+#&gt; 6             FALSE
+#&gt; 7             FALSE
 #&gt; 
 #&gt; attr(,&quot;class&quot;)
 #&gt; [1] &quot;children&quot;

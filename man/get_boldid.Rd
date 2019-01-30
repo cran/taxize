@@ -65,7 +65,7 @@ below.}
 \item{parent}{(character) A parent name (i.e., the parent of the target search
 taxon). Optional. See \code{Filtering} below.}
 
-\item{...}{Curl options passed on to \code{\link[httr]{GET}}}
+\item{...}{Curl options passed on to \code{\link[crul]{verb-GET}}}
 
 \item{x}{Input to \code{\link{as.boldid}}}
 
@@ -172,3 +172,4 @@ Other taxonomic-ids: \code{\link{get_colid}},
   \code{\link{get_tsn}}, \code{\link{get_uid}},
   \code{\link{get_wiki}}, \code{\link{get_wormsid}}
 }
+\concept{taxonomic-ids}

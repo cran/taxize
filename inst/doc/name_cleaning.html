@@ -295,13 +295,13 @@ has a sister method with and trailing underscore, e.g., <code>get_tsn()</code> a
 <pre><code class="r">get_tsn_(searchterm = &quot;Quercus b&quot;)
 #&gt; $`Quercus b`
 #&gt; # A tibble: 5 x 4
-#&gt;   tsn    scientificName         commonNames                      nameUsage
-#&gt;   &lt;chr&gt;  &lt;chr&gt;                  &lt;chr&gt;                            &lt;chr&gt;    
-#&gt; 1 19300  Quercus bicolor        swamp white oak,chêne bicolore   accepted 
-#&gt; 2 195166 Quercus boyntonii      Boynton&#39;s sand post oak,Boynton… accepted 
-#&gt; 3 195168 Quercus buckleyi       Texas oak,Buckley&#39;s oak          accepted 
-#&gt; 4 506533 Quercus brantii        Brant&#39;s oak                      accepted 
-#&gt; 5 507263 Quercus berberidifolia scrub oak                        accepted
+#&gt;   tsn    scientificName        commonNames                        nameUsage
+#&gt;   &lt;chr&gt;  &lt;chr&gt;                 &lt;chr&gt;                              &lt;chr&gt;    
+#&gt; 1 19300  Quercus bicolor       swamp white oak,chêne bicolore     accepted 
+#&gt; 2 195166 Quercus boyntonii     Boynton&#39;s sand post oak,Boynton&#39;s… accepted 
+#&gt; 3 195168 Quercus buckleyi      Texas oak,Buckley&#39;s oak            accepted 
+#&gt; 4 506533 Quercus brantii       Brant&#39;s oak                        accepted 
+#&gt; 5 507263 Quercus berberidifol… scrub oak                          accepted
 </code></pre>
 
 <p>The result is a single data.frame for each taxon queried, which can be
@@ -404,22 +404,24 @@ in a programmatic workflow straight away.</p>
 
 <pre><code class="r">spp &lt;- names_list(rank = &quot;species&quot;, size = 10)
 gnr_resolve(names = spp, preferred_data_sources = 11)
-#&gt; # A tibble: 13 x 5
-#&gt;    user_supplied_na… submitted_name  matched_name   data_source_tit… score
-#&gt;  * &lt;chr&gt;             &lt;chr&gt;           &lt;chr&gt;          &lt;chr&gt;            &lt;dbl&gt;
-#&gt;  1 Limonium tamarin… Limonium tamar… Limonium tama… GBIF Backbone T… 0.988
-#&gt;  2 Rhaponticum anna… Rhaponticum an… Rhaponticum a… GBIF Backbone T… 0.988
-#&gt;  3 Chionanthus axil… Chionanthus ax… Chionanthus a… GBIF Backbone T… 0.988
-#&gt;  4 Chionanthus axil… Chionanthus ax… Chionanthus a… GBIF Backbone T… 0.988
-#&gt;  5 Chionanthus axil… Chionanthus ax… Chionanthus a… GBIF Backbone T… 0.988
-#&gt;  6 Saintpaulia watk… Saintpaulia wa… Saintpaulia w… GBIF Backbone T… 0.988
-#&gt;  7 Zygophyllum kara… Zygophyllum ka… Zygophyllum k… GBIF Backbone T… 0.988
-#&gt;  8 Sium brevifolium  Sium brevifoli… Sium brevifol… GBIF Backbone T… 0.988
-#&gt;  9 Neolitsea pinnin… Neolitsea pinn… Neolitsea pin… GBIF Backbone T… 0.988
-#&gt; 10 Ligusticum falca… Ligusticum fal… Ligusticum fa… GBIF Backbone T… 0.988
-#&gt; 11 Centaurea gracil… Centaurea grac… Centaurea gra… GBIF Backbone T… 0.988
-#&gt; 12 Centaurea gracil… Centaurea grac… Centaurea gra… GBIF Backbone T… 0.988
-#&gt; 13 Hieracium hemich… Hieracium hemi… Hieracium hem… GBIF Backbone T… 0.988
+#&gt; # A tibble: 15 x 5
+#&gt;    user_supplied_na… submitted_name  matched_name    data_source_tit… score
+#&gt;  * &lt;chr&gt;             &lt;chr&gt;           &lt;chr&gt;           &lt;chr&gt;            &lt;dbl&gt;
+#&gt;  1 Calligonum tenue  Calligonum ten… Calligonum ten… GBIF Backbone T… 0.988
+#&gt;  2 Eriogonum luteol… Eriogonum lute… Eriogonum lute… GBIF Backbone T… 0.988
+#&gt;  3 Eriogonum luteol… Eriogonum lute… Eriogonum lute… GBIF Backbone T… 0.988
+#&gt;  4 Hieracium antenn… Hieracium ante… Hieracium ante… GBIF Backbone T… 0.988
+#&gt;  5 Hieracium antenn… Hieracium ante… Hieracium ante… GBIF Backbone T… 0.988
+#&gt;  6 Mikania pacei     Mikania pacei   Mikania pacei … GBIF Backbone T… 0.988
+#&gt;  7 Radiovittaria ga… Radiovittaria … Radiovittaria … GBIF Backbone T… 0.988
+#&gt;  8 Alchemilla giewo… Alchemilla gie… Alchemilla gie… GBIF Backbone T… 0.988
+#&gt;  9 Alchemilla giewo… Alchemilla gie… Alchemilla gie… GBIF Backbone T… 0.988
+#&gt; 10 Tristaniopsis li… Tristaniopsis … Tristaniopsis … GBIF Backbone T… 0.988
+#&gt; 11 Lotus borbasii    Lotus borbasii  Lotus borbasii… GBIF Backbone T… 0.988
+#&gt; 12 Persoonia pruino… Persoonia prui… Persoonia prui… GBIF Backbone T… 0.988
+#&gt; 13 Persoonia pruino… Persoonia prui… Persoonia prui… GBIF Backbone T… 0.988
+#&gt; 14 Persoonia pruino… Persoonia prui… Persoonia prui… GBIF Backbone T… 0.988
+#&gt; 15 Persoonia pruino… Persoonia prui… Persoonia prui… GBIF Backbone T… 0.988
 </code></pre>
 
 <h2>Other functions</h2>
