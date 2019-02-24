@@ -93,10 +93,7 @@ get_wormsid <- function(query, searchtype = "scientific", accepted = FALSE,
   assert(accepted, "logical")
   assert(ask, "logical")
   assert(messages, "logical")
-  if (!is.na(rows)) {
-    assert(rows, c("numeric", "integer"))
-    stopifnot(rows > 0)
-  }
+  assert_rows(rows)
 
   fun <- function(x, searchtype, ask, messages, ...) {
     direct <- FALSE
@@ -117,7 +114,7 @@ get_wormsid <- function(query, searchtype = "scientific", accepted = FALSE,
       att <- "not found"
     } else {
       wmdf <- suppressWarnings(data.frame(wmdf))
-      wmdf <- wmdf[, c("AphiaID","scientificname","authority","status")]
+      wmdf <- wmdf[, c("AphiaID", "scientificname", "authority", "status")]
       names(wmdf)[1] <- "id"
 
       if (accepted) {
@@ -130,38 +127,27 @@ get_wormsid <- function(query, searchtype = "scientific", accepted = FALSE,
       if (nrow(wmdf) == 0) {
         mssg(messages, m_not_found_sp_altclass)
         wmid <- NA_character_
-        att <- 'not found'
+        att <- "not found"
       }
 
       # take the one wmid from data.frame
       if (nrow(wmdf) == 1) {
         wmid <- wmdf$id
-        att <- 'found'
+        att <- "found"
       }
 
       # check for direct match
       if (nrow(wmdf) > 1) {
-
         names(wmdf)[grep("scientificname", names(wmdf))] <- "target"
-        direct <- match(tolower(wmdf$target), tolower(x))
-
-        if (length(direct) == 1) {
-          if (!all(is.na(direct))) {
-            wmid <- wmdf$id[!is.na(direct)]
-            direct <- TRUE
-            att <- 'found'
-          } else {
-            direct <- FALSE
-            wmid <- NA_character_
-            att <- 'not found'
-          }
+        matchtmp <- wmdf[tolower(wmdf$target) %in% tolower(x), "id"]
+        if (length(matchtmp) == 1) {
+          wmid <- matchtmp
+          direct <- TRUE
+          att <- "found"
         } else {
-          direct <- FALSE
           wmid <- NA_character_
-          att <- m_na_ask_false_no_direct
-          warning("> 1 result; no direct match found", call. = FALSE)
+          att <- "not found"
         }
-
       }
 
       # multiple matches
@@ -190,11 +176,11 @@ get_wormsid <- function(query, searchtype = "scientific", accepted = FALSE,
             take <- as.numeric(take)
             message("Input accepted, took taxon '", as.character(wmdf$target[take]), "'.\n")
             wmid <-  wmdf$id[take]
-            att <- 'found'
+            att <- "found"
           } else {
             wmid <- NA_character_
             mssg(messages, "\nReturned 'NA'!\n\n")
-            att <- 'not found'
+            att <- "not found"
           }
         } else {
           if (length(wmid) != 1) {

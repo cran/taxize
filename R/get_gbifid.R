@@ -128,10 +128,7 @@ get_gbifid <- function(sciname, ask = TRUE, messages = TRUE, rows = NA,
   assert(family, "character")
   assert(rank, "character")
   assert(method, "character")
-  if (!is.na(rows)) {
-    assert(rows, c("numeric", "integer"))
-    stopifnot(rows > 0)
-  }
+  assert_rows(rows)
 
   fun <- function(sciname, ask, messages, rows, ...) {
     direct <- FALSE
@@ -162,7 +159,6 @@ get_gbifid <- function(sciname, ask = TRUE, messages = TRUE, rows = NA,
       att <- "not found"
     }
 
-    # more than one found -> user input
     if (length(id) > 1) {
       # check for exact match
       matchtmp <- df[as.character(df$canonicalname) %in% sciname, "gbifid"]
@@ -191,6 +187,7 @@ get_gbifid <- function(sciname, ask = TRUE, messages = TRUE, rows = NA,
           }
         }
 
+        # more than one found -> user input
         if (length(id) > 1) {
           if (ask) {
             # limit to subset of columns for ease of use

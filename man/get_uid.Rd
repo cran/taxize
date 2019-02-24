@@ -39,7 +39,7 @@ get_uid_(sciname, messages = TRUE, rows = NA, key = NULL, ...)
 more than one TSN is found for the species, the user is asked for input. If
 FALSE NA is returned for multiple matches.}
 
-\item{messages}{logical; If `TRUE` (default) the actual taxon queried is 
+\item{messages}{logical; If `TRUE` (default) the actual taxon queried is
 printed on the console.}
 
 \item{rows}{numeric; Any number from 1 to infinity. If the default NA, all
@@ -121,7 +121,7 @@ Retrieve the Unique Identifier (UID) of a taxon from NCBI taxonomy browser.
 
 See \code{\link{taxize-authentication}} for help on authentication
 
-Note that even though you can't pass in your key to `as.uid` functions, 
+Note that even though you can't pass in your key to `as.uid` functions,
 we still use your Entrez API key if you have it saved as an R option
 or environment variable.
 }
@@ -215,9 +215,10 @@ Other taxonomic-ids: \code{\link{get_boldid}},
   \code{\link{get_colid}}, \code{\link{get_eolid}},
   \code{\link{get_gbifid}}, \code{\link{get_ids}},
   \code{\link{get_iucn}}, \code{\link{get_natservid}},
-  \code{\link{get_nbnid}}, \code{\link{get_tolid}},
-  \code{\link{get_tpsid}}, \code{\link{get_tsn}},
-  \code{\link{get_wiki}}, \code{\link{get_wormsid}}
+  \code{\link{get_nbnid}}, \code{\link{get_pow}},
+  \code{\link{get_tolid}}, \code{\link{get_tpsid}},
+  \code{\link{get_tsn}}, \code{\link{get_wiki}},
+  \code{\link{get_wormsid}}
 }
 \author{
 Eduard Szoecs, \email{eduardszoecs@gmail.com}

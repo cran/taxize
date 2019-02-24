@@ -1,4 +1,4 @@
-#' Get the Catalogue of Life ID from taxonomic names.
+#' Get the Catalogue of Life ID from taxonomic names
 #'
 #' @export
 #' @param sciname character; scientific name.
@@ -7,32 +7,48 @@
 #' input. If FALSE NA is returned for multiple matches.
 #' @param messages logical; If TRUE the actual taxon queried is printed on the
 #'    console.
-#' @param rows numeric; Any number from 1 to infinity. If the default NA, all rows are considered.
-#' Note that this function still only gives back a colid class object with one to many identifiers.
-#' See \code{\link[taxize]{get_colid_}} to get back all, or a subset, of the raw data that you are
-#' presented during the ask process.
+#' @param rows numeric; Any number from 1 to infinity. If the default NA, all
+#' rows are considered. Note that this function still only gives back a colid
+#' class object with one to many identifiers. See
+#' \code{\link[taxize]{get_colid_}} to get back all, or a subset, of the raw
+#' data that you are presented during the ask process.
 #' @param kingdom (character) A kingdom name. Optional. See \code{Filtering}
 #' below.
-#' @param phylum (character) A phylum (aka division) name. Optional. See \code{Filtering}
-#' below.
+#' @param phylum (character) A phylum (aka division) name. Optional.
+#' See \code{Filtering} below.
 #' @param class (character) A class name. Optional. See \code{Filtering} below.
-#' @param order (character) An order name. Optional. See \code{Filtering} below.
-#' @param family (character) A family name. Optional. See \code{Filtering} below.
-#' @param rank (character) A taxonomic rank name. See \code{\link{rank_ref}} for possible
-#' options. Though note that some data sources use atypical ranks, so inspect the
-#' data itself for options. Optional. See \code{Filtering} below.
+#' @param order (character) An order name. Optional. See \code{Filtering}
+#' below.
+#' @param family (character) A family name. Optional. See \code{Filtering}
+#' below.
+#' @param rank (character) A taxonomic rank name. See \code{\link{rank_ref}}
+#' for possible options. Though note that some data sources use atypical ranks,
+#' so inspect the data itself for options. Optional.
+#' See \code{Filtering} below.
+#' @param status (character) A name status, e.g., "accepted name",
+#' "misapplied name", "synonym", "ambiguous synonym", "common name", and more.
+#' Optional. See \code{Filtering} below.
 #' @param x Input to as.colid
 #' @param ... Ignored
-#' @param check logical; Check if ID matches any existing on the DB, only used in
-#' \code{\link{as.colid}}
+#' @param check logical; Check if ID matches any existing on the DB, only used
+#' in \code{\link{as.colid}}
 #' @template getreturn
+#' 
+#' @section Number of results:
+#' We didn't used to, but as of \pkg{taxize} version \code{v0.9.6} we paginate
+#' through results for any queries so that you get all results. For example,
+#' COL allows only 50 records per request for full responses that we request,
+#' so if a query results in 100 records, we make two requests to get all the
+#' data.
 #'
 #' @section Filtering:
-#' The parameters \code{kingdom}, \code{phylum}, \code{class}, \code{order}, \code{family},
-#' and \code{rank} are not used in the search to the data provider, but are used in filtering
-#' the data down to a subset that is closer to the target you want. For all these parameters,
-#' you can use regex strings since we use \code{\link{grep}} internally to match.
-#' Filtering narrows down to the set that matches your query, and removes the rest.
+#' The parameters \code{kingdom}, \code{phylum}, \code{class}, \code{order},
+#' \code{family}, \code{rank}, and \code{status} are not used in the search
+#' to the data provider, but are used in filtering the data down to a subset
+#' that is closer to the target you want. For all these parameters, you
+#' can use regex strings since we use \code{\link{grep}} internally to
+#' match. Filtering narrows down to the set that matches your query,
+#' and removes the rest.
 #'
 #' @family taxonomic-ids
 #' @seealso \code{\link[taxize]{classification}}
@@ -43,7 +59,7 @@
 #' get_colid(sciname='Poa annua')
 #' get_colid(sciname='Pinus contorta')
 #' get_colid(sciname='Puma concolor')
-#' # get_colid(sciname="Abudefduf saxatilis")
+#' get_colid(sciname="Abudefduf saxatilis")
 #'
 #' get_colid(c("Poa annua", "Pinus contorta"))
 #'
@@ -79,17 +95,22 @@
 #' as.colid(get_colid(c("Chironomus riparius","Pinus contorta"))) # same
 #' as.colid("714831352ad94741e4321eccdeb29f58") # character
 #' # character vector, length > 1
-#' as.colid(c("714831352ad94741e4321eccdeb29f58", "3b35900f74ff6e4b073ddb95c32b1f8d"))
+#' as.colid(c("714831352ad94741e4321eccdeb29f58",
+#'   "3b35900f74ff6e4b073ddb95c32b1f8d"))
 #' # list, either numeric or character
-#' as.colid(list("714831352ad94741e4321eccdeb29f58", "3b35900f74ff6e4b073ddb95c32b1f8d"))
+#' as.colid(list("714831352ad94741e4321eccdeb29f58",
+#'   "3b35900f74ff6e4b073ddb95c32b1f8d"))
 #' ## dont check, much faster
 #' as.colid("714831352ad94741e4321eccdeb29f58", check=FALSE)
-#' as.colid(c("714831352ad94741e4321eccdeb29f58", "3b35900f74ff6e4b073ddb95c32b1f8d"),
+#' as.colid(c("714831352ad94741e4321eccdeb29f58",
+#'  "3b35900f74ff6e4b073ddb95c32b1f8d"),
 #'  check=FALSE)
-#' as.colid(list("714831352ad94741e4321eccdeb29f58", "3b35900f74ff6e4b073ddb95c32b1f8d"),
+#' as.colid(list("714831352ad94741e4321eccdeb29f58",
+#'  "3b35900f74ff6e4b073ddb95c32b1f8d"),
 #'  check=FALSE)
 #'
-#' (out <- as.colid(c("714831352ad94741e4321eccdeb29f58", "3b35900f74ff6e4b073ddb95c32b1f8d")))
+#' (out <- as.colid(c("714831352ad94741e4321eccdeb29f58",
+#'  "3b35900f74ff6e4b073ddb95c32b1f8d")))
 #' data.frame(out)
 #' as.colid( data.frame(out) )
 #'
@@ -106,8 +127,8 @@
 #' }
 
 get_colid <- function(sciname, ask = TRUE, messages = TRUE, rows = NA,
-                      kingdom = NULL, phylum = NULL, class = NULL, order = NULL,
-                      family = NULL, rank = NULL, ...){
+  kingdom = NULL, phylum = NULL, class = NULL, order = NULL,
+  family = NULL, rank = NULL, status = NULL, ...) {
 
   assert(ask, "logical")
   assert(messages, "logical")
@@ -117,23 +138,23 @@ get_colid <- function(sciname, ask = TRUE, messages = TRUE, rows = NA,
   assert(order, "character")
   assert(family, "character")
   assert(rank, "character")
-  if (!is.na(rows)) {
-    assert(rows, c("numeric", "integer"))
-    stopifnot(rows > 0)
-  }
+  assert(status, "character")
+  assert_rows(rows)
 
   fun <- function(sciname, ask, messages, rows, ...) {
     direct <- FALSE
     mssg(messages, "\nRetrieving data for taxon '", sciname, "'\n")
-    df <- col_search(name = sciname, response = "full", ...)[[1]]
-    df <- df[, names(df) %in% c("name","rank","id","name_status","kingdom","family","acc_name")]
+    df <- col_search_paginate(name = sciname, response = "full", ...)[[1]]
+    df <- data.frame(df, stringsAsFactors = FALSE)
     mm <- NROW(df) > 1
 
-    rank_taken <- NA
+    rank_taken <- NA_character_
     if (NROW(df) == 0) {
       id <- NA_character_
       att <- "not found"
     } else {
+      df <- df[, names(df) %in% c("name","rank","id","name_status",
+        "kingdom","family","acc_name")]
       df <- stats::setNames(df, tolower(names(df)))
       df <- rename(df, c("id" = "colid"))
       colnames(df)[which(colnames(df) == 'id')] <- 'colid'
@@ -150,16 +171,18 @@ get_colid <- function(sciname, ask = TRUE, messages = TRUE, rows = NA,
     }
     # more than one found -> user input
     if (length(id) > 1) {
-      rownames(df) <- 1:nrow(df)
+      rownames(df) <- NULL
 
       if (!is.null(kingdom) || !is.null(phylum) || !is.null(class) ||
-          !is.null(order) || !is.null(family) || !is.null(rank)) {
+          !is.null(order) || !is.null(family) || !is.null(rank) ||
+          !is.null(status)) {
         df <- filt(df, "kingdom", kingdom)
         df <- filt(df, "phylum", phylum)
         df <- filt(df, "class", class)
         df <- filt(df, "order", order)
         df <- filt(df, "family", family)
         df <- filt(df, "rank", rank)
+        df <- filt(df, "name_status", status)
       }
 
       df <- sub_rows(df, rows)
@@ -168,6 +191,15 @@ get_colid <- function(sciname, ask = TRUE, messages = TRUE, rows = NA,
         rank_taken <- as.character(df$rank)
         direct <- TRUE
         att <- "found"
+      }
+
+      if (length(id) > 1) {
+        matchtmp <- df[tolower(df$name) %in% tolower(sciname), "colid"]
+        if (length(matchtmp) == 1) {
+          id <- matchtmp
+          direct <- TRUE
+          att <- "found"
+        }
       }
 
       if (length(id) > 1) {
@@ -287,6 +319,6 @@ get_colid_ <- function(sciname, messages = TRUE, rows = NA){
 
 get_colid_help <- function(sciname, messages, rows){
   mssg(messages, "\nRetrieving data for taxon '", sciname, "'\n")
-  df <- col_search(name = sciname)[[1]]
+  df <- col_search_paginate(name = sciname)[[1]]
   if (NROW(df) == 0) NULL else sub_rows(df, rows)
 }

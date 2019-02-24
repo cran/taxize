@@ -96,10 +96,7 @@ get_natservid <- function(query, searchtype = "scientific", ask = TRUE,
   assert(searchtype, "character")
   assert(ask, "logical")
   assert(verbose, "logical")
-  if (!is.na(rows)) {
-    assert(rows, c("numeric", "integer"))
-    stopifnot(rows > 0)
-  }
+  assert_rows(rows)
 
   fun <- function(x, searchtype, ask, verbose, key, rows, ...) {
     direct <- FALSE
@@ -266,7 +263,8 @@ as.data.frame.natservid <- function(x, ...){
 make_natserv <- function(x, check=TRUE) make_generic(x, ns_base_uri(), "natservid", check)
 
 check_natservid <- function(x){
-  tt <- crul::HttpClient$new(sprintf(ns_base_uri(), x))$get()$parse("UTF-8")
+  tt <- crul::HttpClient$new(sprintf(ns_base_uri(), x),
+    headers = tx_ual)$get()$parse("UTF-8")
   !grepl("No records matched", tt)
 }
 

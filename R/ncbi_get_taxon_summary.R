@@ -22,7 +22,8 @@
 #' will run into the HTTP 414 error "Request-URI Too Long".
 #' 
 #' @section Authentication:
-#' See \code{\link{taxize-authentication}} for help on authentication
+#' See \code{\link{taxize-authentication}} for help on authentication. 
+#' We strongly recommend getting an API key
 #' 
 #' @examples \dontrun{
 #' ncbi_get_taxon_summary(c(1430660, 4751))
@@ -47,7 +48,7 @@ chunks for multiple HTTP requests"))
     ids_list <- list(paste(id, collapse = "+"))
   }
 
-  cli <- crul::HttpClient$new(url = ncbi_base(), opts = list(...))
+  cli <- crul::HttpClient$new(url = ncbi_base(), headers = tx_ual, opts = list(...))
   out <- list()
   for (i in seq_along(ids_list)) {
     query <- tc(list(db = "taxonomy", id = ids_list[[i]], api_key = key))

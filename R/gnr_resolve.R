@@ -1,4 +1,6 @@
-#' Resolve names using Global Names Resolver.
+#' Resolve names using Global Names Resolver
+#' 
+#' See section \strong{Age of datasets in the Global Names Resolver}
 #'
 #' @export
 #' @param names character; taxonomic names to be resolved. Doesn't work for
@@ -76,6 +78,12 @@
 #' Note that names (i.e. rows) are dropped that are NA, are zero length
 #' strings, are not character vectors, or are not found by the API.
 #' 
+#' @section Age of datasets in the Global Names Resolver:
+#' IMPORTANT: Datasets used in the Global Names Resolver vary in how recently
+#' they've been updated. See the \code{updated_at} field in the 
+#' output of \code{\link{gnr_datasources}} for dates when each dataset 
+#' was last updated.
+#' 
 #' @section preferred_data_sources:
 #' If \code{preferred_data_sources} is used, only the preferred data 
 #' is returned - if it has any results.
@@ -148,7 +156,8 @@ gnr_resolve <- function(names, data_source_ids = NULL, resolve_once = FALSE,
             with_canonical_ranks = cv(with_canonical_ranks)))
   args <- argsnull(args)
 
-  cli <- crul::HttpClient$new(url = url, opts = list(...))
+  cli <- crul::HttpClient$new(url = url,
+    headers = tx_ual, opts = list(...))
   if (http == 'get') {
     tmp <- cli$get(query = args)
     tmp$raise_for_status()

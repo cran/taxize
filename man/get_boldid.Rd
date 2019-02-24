@@ -112,11 +112,13 @@ get_boldid(searchterm="Osmi", fuzzy=TRUE, rows = 1:10)
 get_boldid(searchterm=c("Osmi","Aga"), fuzzy=TRUE, rows = 1)
 get_boldid(searchterm=c("Osmi","Aga"), fuzzy=TRUE, rows = 1:3)
 
+# found
+get_boldid('Epicordulia princeps')
+get_boldid('Arigomphus furcifer')
+
 # When not found
 get_boldid("howdy")
 get_boldid(c("Chironomus riparius", "howdy"))
-get_boldid('Epicordulia princeps')
-get_boldid('Arigomphus furcifer')
 get_boldid("Cordulegaster erronea")
 get_boldid("Nasiaeshna pentacantha")
 
@@ -168,8 +170,9 @@ Other taxonomic-ids: \code{\link{get_colid}},
   \code{\link{get_eolid}}, \code{\link{get_gbifid}},
   \code{\link{get_ids}}, \code{\link{get_iucn}},
   \code{\link{get_natservid}}, \code{\link{get_nbnid}},
-  \code{\link{get_tolid}}, \code{\link{get_tpsid}},
-  \code{\link{get_tsn}}, \code{\link{get_uid}},
-  \code{\link{get_wiki}}, \code{\link{get_wormsid}}
+  \code{\link{get_pow}}, \code{\link{get_tolid}},
+  \code{\link{get_tpsid}}, \code{\link{get_tsn}},
+  \code{\link{get_uid}}, \code{\link{get_wiki}},
+  \code{\link{get_wormsid}}
 }
 \concept{taxonomic-ids}

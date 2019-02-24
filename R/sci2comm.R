@@ -6,7 +6,9 @@
 #' \emph{"itis"} \emph{"eol"}, \emph{"worms"}, or \emph{"iucn"}. Note that
 #' each taxonomic data source has their own identifiers,  so that if you
 #' provide the wrong \code{db} value for the identifier you could get a
-#' result, but it will likely be wrong (not what you were expecting).
+#' result, but it will likely be wrong (not what you were expecting). 
+#' If using ncbi, eol or iucn we recommend getting an API key; 
+#' see \code{\link{taxize-authentication}}
 #' @param simplify (logical) If TRUE, simplify output to a vector of names.
 #' If FALSE, return variable formats from different sources, usually a
 #' data.frame. Only applies to eol and itis. Specify \code{FALSE} to obtain
@@ -174,7 +176,8 @@ itis_foo <- function(x, simplify=TRUE, ...){
 ncbi_foo <- function(x, ...){
   key <- getkey(NULL, "ENTREZ_KEY")
   query <- tc(list(db = "taxonomy", ID = x, api_key = key))
-  cli <- crul::HttpClient$new(url = ncbi_base(), opts = list(...))
+  cli <- crul::HttpClient$new(url = ncbi_base(), headers = tx_ual,
+    opts = list(...))
   res <- cli$get("entrez/eutils/efetch.fcgi", query = query)
   res$raise_for_status()
   tt <- res$parse("UTF-8")

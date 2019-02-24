@@ -44,7 +44,8 @@
 #' @author Zachary Foster \email{zacharyfoster1989@@gmail.com}
 #' 
 #' @section Authentication:
-#' See \code{\link{taxize-authentication}} for help on authentication
+#' See \code{\link{taxize-authentication}} for help on authentication. 
+#' We strongly recommend getting an API key
 #'
 #' @examples
 #' \dontrun{
@@ -111,7 +112,7 @@ ncbi_children <- function(name = NULL, id = NULL, start = 0, max_return = 1000,
       args$term <- gsub("\\+", " ", args$term)
       
       # Search ncbi for children - - - - - - - - - - - - - - - - - - - - - - - 
-      cli <- crul::HttpClient$new(ncbi_base(), opts = list(...))
+      cli <- crul::HttpClient$new(ncbi_base(), headers = tx_ual, opts = list(...))
       rr <- cli$get('entrez/eutils/esearch.fcgi', query = args)
       rr$raise_for_status()
       raw_results <- rr$parse("UTF-8")
@@ -133,7 +134,7 @@ ncbi_children <- function(name = NULL, id = NULL, start = 0, max_return = 1000,
       args$term <- gsub("\\+", " ", args$term)
       
       # Search ncbi for children - - - - - - - - - - - - - - - - - - - - - - - 
-      cli <- crul::HttpClient$new(ncbi_base(), opts = list(...))
+      cli <- crul::HttpClient$new(ncbi_base(), headers = tx_ual, opts = list(...))
       rr <- cli$get('entrez/eutils/elink.fcgi', query = args)
       rr$raise_for_status()
       raw_results <- rr$parse("UTF-8")

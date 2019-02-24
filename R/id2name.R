@@ -7,7 +7,8 @@
 #' \code{bold}. Note that each 
 #' taxonomic data source has their own  identifiers, so that if you provide 
 #' the wrong \code{db} value for the identifier you could get a result, 
-#' but it will likely be wrong (not what you were expecting).
+#' but it will likely be wrong (not what you were expecting). If using ncbi
+#' we recommend getting API keys; see \code{\link{taxize-authentication}}
 #' @param ... Further args passed on to \code{tol_id2name} or
 #' \code{\link{itis_getrecord}}, or other internal functions.
 #' See those functions for what parameters can be passed on.
@@ -107,7 +108,8 @@ id2name.tsn <- function(x, ...) {
 # NCBI
 ncbi_id2name <- function(x, ...) {
   key <- getkey(NULL, "ENTREZ_KEY")
-  cli <- crul::HttpClient$new(url = ncbi_base(), opts = list(...))
+  cli <- crul::HttpClient$new(url = ncbi_base(), headers = tx_ual,
+    opts = list(...))
   args <- tc(list(db = "taxonomy", id = x, api_key = key))
   res <- cli$get("entrez/eutils/esummary.fcgi", query = args)
   res$raise_for_status()

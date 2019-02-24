@@ -278,9 +278,9 @@ attr(,&quot;multiple_matches&quot;)
 attr(,&quot;pattern_match&quot;)
 [1] FALSE FALSE FALSE
 attr(,&quot;uri&quot;)
-[1] &quot;http://www.itis.gov/servlet/SingleRpt/SingleRpt?search_topic=TSN&amp;search_value=525928&quot;
-[2] &quot;http://www.itis.gov/servlet/SingleRpt/SingleRpt?search_topic=TSN&amp;search_value=525929&quot;
-[3] &quot;http://www.itis.gov/servlet/SingleRpt/SingleRpt?search_topic=TSN&amp;search_value=525930&quot;
+[1] &quot;https://www.itis.gov/servlet/SingleRpt/SingleRpt?search_topic=TSN&amp;search_value=525928&quot;
+[2] &quot;https://www.itis.gov/servlet/SingleRpt/SingleRpt?search_topic=TSN&amp;search_value=525929&quot;
+[3] &quot;https://www.itis.gov/servlet/SingleRpt/SingleRpt?search_topic=TSN&amp;search_value=525930&quot;
 attr(,&quot;class&quot;)
 [1] &quot;tsn&quot;
 </code></pre>
@@ -309,38 +309,6 @@ attr(,&quot;class&quot;)
 
 <pre><code class="r">specieslist &lt;- c(&quot;Abies procera&quot;,&quot;Pinus contorta&quot;)
 classification(specieslist, db = &#39;itis&#39;)
-</code></pre>
-
-<pre><code>#&gt;      tsn                        target
-#&gt; 1 183327                Pinus contorta
-#&gt; 2 183332 Pinus contorta ssp. bolanderi
-#&gt; 3 822698  Pinus contorta ssp. contorta
-#&gt; 4 183329 Pinus contorta ssp. latifolia
-#&gt; 5 183330 Pinus contorta ssp. murrayana
-#&gt; 6 529672 Pinus contorta var. bolanderi
-#&gt; 7 183328  Pinus contorta var. contorta
-#&gt; 8 529673 Pinus contorta var. latifolia
-#&gt; 9 529674 Pinus contorta var. murrayana
-#&gt;                                                        commonNames
-#&gt; 1               scrub pine,shore pine,tamarack pine,lodgepole pine
-#&gt; 2                                            Bolander&#39;s beach pine
-#&gt; 3                                                               NA
-#&gt; 4                         black pine,Rocky Mountain lodgepole pine
-#&gt; 5                              tamarack pine,Sierra lodgepole pine
-#&gt; 6                                              Bolander beach pine
-#&gt; 7                  coast pine,lodgepole pine,beach pine,shore pine
-#&gt; 8 tall lodgepole pine,lodgepole pine,Rocky Mountain lodgepole pine
-#&gt; 9      Murray&#39;s lodgepole pine,Sierra lodgepole pine,tamarack pine
-#&gt;      nameUsage
-#&gt; 1     accepted
-#&gt; 2 not accepted
-#&gt; 3 not accepted
-#&gt; 4 not accepted
-#&gt; 5 not accepted
-#&gt; 6     accepted
-#&gt; 7     accepted
-#&gt; 8     accepted
-#&gt; 9     accepted
 </code></pre>
 
 <pre><code>#&gt; $`Abies procera`
@@ -428,22 +396,17 @@ classification(specieslist, db = &#39;itis&#39;)
 get_tsn(searchterm = splist, searchtype = &quot;scientific&quot;)
 </code></pre>
 
-<pre><code>#&gt;      tsn                      target commonNames    nameUsage
-#&gt; 1  19405               Quercus robur English oak     accepted
-#&gt; 2 845209 Quercus robur f. fastigiata          NA not accepted
-</code></pre>
-
 <pre><code>#&gt; [1] &quot;506198&quot; &quot;18098&quot;  &quot;19405&quot; 
 #&gt; attr(,&quot;match&quot;)
 #&gt; [1] &quot;found&quot; &quot;found&quot; &quot;found&quot;
 #&gt; attr(,&quot;multiple_matches&quot;)
 #&gt; [1] FALSE FALSE  TRUE
 #&gt; attr(,&quot;pattern_match&quot;)
-#&gt; [1] FALSE FALSE FALSE
+#&gt; [1] FALSE FALSE  TRUE
 #&gt; attr(,&quot;uri&quot;)
-#&gt; [1] &quot;http://www.itis.gov/servlet/SingleRpt/SingleRpt?search_topic=TSN&amp;search_value=506198&quot;
-#&gt; [2] &quot;http://www.itis.gov/servlet/SingleRpt/SingleRpt?search_topic=TSN&amp;search_value=18098&quot; 
-#&gt; [3] &quot;http://www.itis.gov/servlet/SingleRpt/SingleRpt?search_topic=TSN&amp;search_value=19405&quot; 
+#&gt; [1] &quot;https://www.itis.gov/servlet/SingleRpt/SingleRpt?search_topic=TSN&amp;search_value=506198&quot;
+#&gt; [2] &quot;https://www.itis.gov/servlet/SingleRpt/SingleRpt?search_topic=TSN&amp;search_value=18098&quot; 
+#&gt; [3] &quot;https://www.itis.gov/servlet/SingleRpt/SingleRpt?search_topic=TSN&amp;search_value=19405&quot; 
 #&gt; attr(,&quot;class&quot;)
 #&gt; [1] &quot;tsn&quot;
 </code></pre>
@@ -483,20 +446,6 @@ get_tsn(searchterm = splist, searchtype = &quot;scientific&quot;)
 <pre><code class="r">get_nbnid(c(&quot;Zootoca vivipara&quot;,&quot;Pinus contorta&quot;), rows = 1:3)
 </code></pre>
 
-<pre><code>#&gt;              nbnid                    scientificName       rank
-#&gt; 1 NHMSYS0001706186                  Zootoca vivipara    species
-#&gt; 2 NHMSYS0020784960 Zootoca vivipara subsp. pannonica subspecies
-#&gt; 3 NHMSYS0000067192               Spirillina vivipara    species
-#&gt;   taxonomicStatus
-#&gt; 1        accepted
-#&gt; 2        accepted
-#&gt; 3        accepted
-#&gt;              nbnid                scientificName    rank taxonomicStatus
-#&gt; 1 NBNSYS0000004786                Pinus contorta species        accepted
-#&gt; 2 NHMSYS0000494858 Pinus contorta var. murrayana variety        accepted
-#&gt; 3 NHMSYS0000494848  Pinus contorta var. contorta variety        accepted
-</code></pre>
-
 <pre><code>#&gt; [1] &quot;NHMSYS0001706186&quot; &quot;NBNSYS0000004786&quot;
 #&gt; attr(,&quot;class&quot;)
 #&gt; [1] &quot;nbnid&quot;
@@ -505,7 +454,7 @@ get_tsn(searchterm = splist, searchtype = &quot;scientific&quot;)
 #&gt; attr(,&quot;multiple_matches&quot;)
 #&gt; [1] TRUE TRUE
 #&gt; attr(,&quot;pattern_match&quot;)
-#&gt; [1] FALSE FALSE
+#&gt; [1] TRUE TRUE
 #&gt; attr(,&quot;uri&quot;)
 #&gt; [1] &quot;https://species.nbnatlas.org/species/NHMSYS0001706186&quot;
 #&gt; [2] &quot;https://species.nbnatlas.org/species/NBNSYS0000004786&quot;
@@ -623,7 +572,7 @@ NROW(out$`Poa annua`)
 </code></pre>
 
 <pre><code>#&gt;    user  system elapsed 
-#&gt;   0.080   0.004   2.693
+#&gt;   0.078   0.002   1.943
 </code></pre>
 
 <pre><code class="r">system.time( replicate(3, as.gbifid(c(&quot;2704179&quot;,&quot;2435099&quot;,&quot;3171445&quot;), check=FALSE)) )

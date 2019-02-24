@@ -7,7 +7,7 @@
 #' @param ask logical; should get_uid be run in interactive mode? If TRUE and
 #' more than one TSN is found for the species, the user is asked for input. If
 #' FALSE NA is returned for multiple matches.
-#' @param messages logical; If `TRUE` (default) the actual taxon queried is 
+#' @param messages logical; If `TRUE` (default) the actual taxon queried is
 #' printed on the console.
 #' @param rows numeric; Any number from 1 to infinity. If the default NA, all
 #' rows are considered. Note that this function still only gives back a uid
@@ -56,11 +56,11 @@
 #'   in your names, you likely won't get what you are expecting. The lesson:
 #'   clean your names before using this function. Other data sources are better
 #'   about fuzzy matching.
-#' 
+#'
 #' @section Authentication:
 #' See \code{\link{taxize-authentication}} for help on authentication
-#' 
-#' Note that even though you can't pass in your key to `as.uid` functions, 
+#'
+#' Note that even though you can't pass in your key to `as.uid` functions,
 #' we still use your Entrez API key if you have it saved as an R option
 #' or environment variable.
 #'
@@ -152,7 +152,7 @@
 
 get_uid <- function(sciname, ask = TRUE, messages = TRUE, rows = NA,
                     modifier = NULL, rank_query = NULL,
-                    division_filter = NULL, rank_filter = NULL, 
+                    division_filter = NULL, rank_filter = NULL,
                     key = NULL, ...) {
 
   assert(ask, "logical")
@@ -161,30 +161,27 @@ get_uid <- function(sciname, ask = TRUE, messages = TRUE, rows = NA,
   assert(rank_query, "character")
   assert(division_filter, "character")
   assert(rank_filter, "character")
-  if (!is.na(rows)) {
-    assert(rows, c("numeric", "integer"))
-    stopifnot(rows > 0)
-  }
+  assert_rows(rows)
   key <- getkey(key, service = "entrez")
 
   fun <- function(sciname, ask, messages, rows, ...) {
     direct <- FALSE
     mssg(messages, "\nRetrieving data for taxon '", sciname, "'\n")
     sciname <- gsub(" ", "+", sciname)
-    if (!is.null(modifier)) 
+    if (!is.null(modifier))
       sciname <- paste0(sciname, sprintf("[%s]", modifier))
     term <- sciname
-    if (!is.null(rank_query)) 
+    if (!is.null(rank_query))
       term <- paste0(term, sprintf(" AND %s[Rank]", rank_query))
     try_again_errors <- c("Could not resolve host: eutils.ncbi.nlm.nih.gov")
     query_args <- tc(list(db = "taxonomy", term = term, api_key = key))
     raw_xml_result <- repeat_until_it_works(try_again_errors,
-                                            "esearch", 
+                                            "esearch",
                                             query = query_args,
                                             ...)
     xml_result <- xml2::read_xml(raw_xml_result)
 
-    # NCBI limits requests to three per second when no key 
+    # NCBI limits requests to three per second when no key
     if (is.null(key)) Sys.sleep(0.33)
     uid <- xml2::xml_text(xml2::xml_find_all(xml_result, "//IdList/Id"))
     mm <- length(uid) > 1
@@ -206,7 +203,7 @@ get_uid <- function(sciname, ask = TRUE, messages = TRUE, rows = NA,
       ID <- paste(uid, collapse = ",")
       try_again_errors <- c("Could not resolve host: eutils.ncbi.nlm.nih.gov")
       query_args <- tc(list(db = "taxonomy", ID = ID, api_key = key))
-      tt <- repeat_until_it_works(try_again_errors, "esummary", 
+      tt <- repeat_until_it_works(try_again_errors, "esummary",
                                   query_args, ...)
       ttp <- xml2::read_xml(tt)
       df <- parse_ncbi(ttp)
@@ -225,6 +222,17 @@ get_uid <- function(sciname, ask = TRUE, messages = TRUE, rows = NA,
       }
       if (length(uid) == 0) {
         uid <- NA_character_
+      }
+
+      if (length(uid) > 1) {
+        # check for exact match
+        matchtmp <- df[
+          tolower(
+            as.character(df$scientificname)) %in% tolower(sciname), "uid"]
+        if (length(matchtmp) == 1) {
+          uid <- as.character(matchtmp)
+          direct <- TRUE
+        }
       }
 
       if (length(uid) > 1) {
@@ -278,7 +286,7 @@ get_uid <- function(sciname, ask = TRUE, messages = TRUE, rows = NA,
   add_uri(out, 'https://www.ncbi.nlm.nih.gov/taxonomy/%s')
 }
 
-repeat_until_it_works <- function(catch, path, query, max_tries = 3, 
+repeat_until_it_works <- function(catch, path, query, max_tries = 3,
   wait_time = 10, messages = TRUE, ...) {
 
   error_handler <- function(e) {
@@ -290,7 +298,8 @@ repeat_until_it_works <- function(catch, path, query, max_tries = 3,
     }
   }
   for (count in 1:max_tries) {
-    cli <- crul::HttpClient$new(url = ncbi_base(), opts = list(...))
+    cli <- crul::HttpClient$new(url = ncbi_base(),
+      headers = tx_ual, opts = list(...))
     res <- cli$get(sprintf("entrez/eutils/%s.fcgi", path),
       query = tc(query))
     output <- tryCatch(res$parse("UTF-8"), error = error_handler)
@@ -341,13 +350,13 @@ as.data.frame.uid <- function(x, ...){
 }
 
 make_uid <- function(x, check=TRUE) {
-  make_generic(x, 'https://www.ncbi.nlm.nih.gov/taxonomy/%s', 
+  make_generic(x, 'https://www.ncbi.nlm.nih.gov/taxonomy/%s',
     "uid", check)
 }
 
 check_uid <- function(x){
   key <- getkey(NULL, "ENTREZ_KEY")
-  cli <- crul::HttpClient$new(url = ncbi_base())
+  cli <- crul::HttpClient$new(url = ncbi_base(), headers = tx_ual)
   args <- tc(list(db = "taxonomy", id = x, api_key = key))
   res <- cli$get("entrez/eutils/esummary.fcgi", query = args)
   res$raise_for_status()
@@ -361,15 +370,16 @@ check_uid <- function(x){
 #' @rdname get_uid
 get_uid_ <- function(sciname, messages = TRUE, rows = NA, key = NULL, ...){
   key <- getkey(key, "ENTREZ_KEY")
-  stats::setNames(lapply(sciname, get_uid_help, messages = messages, 
+  stats::setNames(lapply(sciname, get_uid_help, messages = messages,
     rows = rows, key = key, ...), sciname)
 }
 
 get_uid_help <- function(sciname, messages, rows, key, ...) {
   mssg(messages, "\nRetrieving data for taxon '", sciname, "'\n")
-  cli <- crul::HttpClient$new(url = ncbi_base(), opts = list(...))  
+  cli <- crul::HttpClient$new(url = ncbi_base(), headers = tx_ual,
+    opts = list(...))
   res <- cli$get(
-    "entrez/eutils/esearch.fcgi", 
+    "entrez/eutils/esearch.fcgi",
     query = tc(list(api_key = key,
       db = "taxonomy", term = gsub(" ", "+", sciname))))
   res$raise_for_status()
@@ -379,8 +389,8 @@ get_uid_help <- function(sciname, messages, rows, key, ...) {
   if (length(uid) == 0) {
     NULL
   } else {
-    res <- cli$get("entrez/eutils/esummary.fcgi", 
-      query = tc(list(api_key = key, db = "taxonomy", 
+    res <- cli$get("entrez/eutils/esummary.fcgi",
+      query = tc(list(api_key = key, db = "taxonomy",
         ID = paste(uid, collapse = ","))))
     res$raise_for_status()
     ttp <- xml2::read_xml(res$parse("UTF-8"))
@@ -391,13 +401,13 @@ get_uid_help <- function(sciname, messages, rows, key, ...) {
 
 parse_ncbi <- function(x) {
   mget <- c("Status", "Rank", "Division", "ScientificName",
-            "CommonName", "TaxId", "Genus", "Species", "Subsp", 
+            "CommonName", "TaxId", "Genus", "Species", "Subsp",
             "ModificationDate")
   nget <- paste0('Item[@Name="', mget, "\"]")
   nodes <- xml_find_all(x, "//DocSum")
   tmp <- taxize_ldfast(lapply(nodes, function(z) {
     data.frame(as.list(
-      setNames(sapply(nget, function(w) xml_text(xml_find_all(z, w))), tolower(mget))), 
+      setNames(sapply(nget, function(w) xml_text(xml_find_all(z, w))), tolower(mget))),
       stringsAsFactors = FALSE)
   }))
   rename(tmp, c('taxid' = 'uid'))

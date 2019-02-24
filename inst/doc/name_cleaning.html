@@ -279,7 +279,7 @@ to know which one you want:</p>
 #&gt; attr(,&quot;pattern_match&quot;)
 #&gt; [1] FALSE
 #&gt; attr(,&quot;uri&quot;)
-#&gt; [1] &quot;http://www.itis.gov/servlet/SingleRpt/SingleRpt?search_topic=TSN&amp;search_value=19303&quot;
+#&gt; [1] &quot;https://www.itis.gov/servlet/SingleRpt/SingleRpt?search_topic=TSN&amp;search_value=19303&quot;
 #&gt; attr(,&quot;class&quot;)
 #&gt; [1] &quot;tsn&quot;
 </code></pre>
@@ -346,7 +346,7 @@ identifier classes if you already know the identifier. For example:</p>
 #&gt; attr(,&quot;pattern_match&quot;)
 #&gt; [1] FALSE
 #&gt; attr(,&quot;uri&quot;)
-#&gt; [1] &quot;http://www.itis.gov/servlet/SingleRpt/SingleRpt?search_topic=TSN&amp;search_value=19322&quot;
+#&gt; [1] &quot;https://www.itis.gov/servlet/SingleRpt/SingleRpt?search_topic=TSN&amp;search_value=19322&quot;
 #&gt; attr(,&quot;class&quot;)
 #&gt; [1] &quot;tsn&quot;
 </code></pre>
@@ -364,9 +364,9 @@ identifier classes if you already know the identifier. For example:</p>
 #&gt; attr(,&quot;pattern_match&quot;)
 #&gt; [1] FALSE FALSE FALSE
 #&gt; attr(,&quot;uri&quot;)
-#&gt; [1] &quot;http://www.itis.gov/servlet/SingleRpt/SingleRpt?search_topic=TSN&amp;search_value=19322&quot; 
-#&gt; [2] &quot;http://www.itis.gov/servlet/SingleRpt/SingleRpt?search_topic=TSN&amp;search_value=129313&quot;
-#&gt; [3] &quot;http://www.itis.gov/servlet/SingleRpt/SingleRpt?search_topic=TSN&amp;search_value=506198&quot;
+#&gt; [1] &quot;https://www.itis.gov/servlet/SingleRpt/SingleRpt?search_topic=TSN&amp;search_value=19322&quot; 
+#&gt; [2] &quot;https://www.itis.gov/servlet/SingleRpt/SingleRpt?search_topic=TSN&amp;search_value=129313&quot;
+#&gt; [3] &quot;https://www.itis.gov/servlet/SingleRpt/SingleRpt?search_topic=TSN&amp;search_value=506198&quot;
 </code></pre>
 
 <p>And you can do the same for character, or list inputs - depending on the data source.</p>
@@ -386,9 +386,9 @@ if you like by setting <code>check = FALSE</code>, and the result is returned mu
 #&gt; attr(,&quot;pattern_match&quot;)
 #&gt; [1] FALSE FALSE FALSE
 #&gt; attr(,&quot;uri&quot;)
-#&gt; [1] &quot;http://www.itis.gov/servlet/SingleRpt/SingleRpt?search_topic=TSN&amp;search_value=19322&quot; 
-#&gt; [2] &quot;http://www.itis.gov/servlet/SingleRpt/SingleRpt?search_topic=TSN&amp;search_value=129313&quot;
-#&gt; [3] &quot;http://www.itis.gov/servlet/SingleRpt/SingleRpt?search_topic=TSN&amp;search_value=506198&quot;
+#&gt; [1] &quot;https://www.itis.gov/servlet/SingleRpt/SingleRpt?search_topic=TSN&amp;search_value=19322&quot; 
+#&gt; [2] &quot;https://www.itis.gov/servlet/SingleRpt/SingleRpt?search_topic=TSN&amp;search_value=129313&quot;
+#&gt; [3] &quot;https://www.itis.gov/servlet/SingleRpt/SingleRpt?search_topic=TSN&amp;search_value=506198&quot;
 </code></pre>
 
 <p>With the output of <code>as.*()</code> methods, you can then proceed with other <code>taxize</code> functions.</p>
@@ -404,24 +404,20 @@ in a programmatic workflow straight away.</p>
 
 <pre><code class="r">spp &lt;- names_list(rank = &quot;species&quot;, size = 10)
 gnr_resolve(names = spp, preferred_data_sources = 11)
-#&gt; # A tibble: 15 x 5
+#&gt; # A tibble: 22 x 5
 #&gt;    user_supplied_na… submitted_name  matched_name    data_source_tit… score
 #&gt;  * &lt;chr&gt;             &lt;chr&gt;           &lt;chr&gt;           &lt;chr&gt;            &lt;dbl&gt;
-#&gt;  1 Calligonum tenue  Calligonum ten… Calligonum ten… GBIF Backbone T… 0.988
-#&gt;  2 Eriogonum luteol… Eriogonum lute… Eriogonum lute… GBIF Backbone T… 0.988
-#&gt;  3 Eriogonum luteol… Eriogonum lute… Eriogonum lute… GBIF Backbone T… 0.988
-#&gt;  4 Hieracium antenn… Hieracium ante… Hieracium ante… GBIF Backbone T… 0.988
-#&gt;  5 Hieracium antenn… Hieracium ante… Hieracium ante… GBIF Backbone T… 0.988
-#&gt;  6 Mikania pacei     Mikania pacei   Mikania pacei … GBIF Backbone T… 0.988
-#&gt;  7 Radiovittaria ga… Radiovittaria … Radiovittaria … GBIF Backbone T… 0.988
-#&gt;  8 Alchemilla giewo… Alchemilla gie… Alchemilla gie… GBIF Backbone T… 0.988
-#&gt;  9 Alchemilla giewo… Alchemilla gie… Alchemilla gie… GBIF Backbone T… 0.988
-#&gt; 10 Tristaniopsis li… Tristaniopsis … Tristaniopsis … GBIF Backbone T… 0.988
-#&gt; 11 Lotus borbasii    Lotus borbasii  Lotus borbasii… GBIF Backbone T… 0.988
-#&gt; 12 Persoonia pruino… Persoonia prui… Persoonia prui… GBIF Backbone T… 0.988
-#&gt; 13 Persoonia pruino… Persoonia prui… Persoonia prui… GBIF Backbone T… 0.988
-#&gt; 14 Persoonia pruino… Persoonia prui… Persoonia prui… GBIF Backbone T… 0.988
-#&gt; 15 Persoonia pruino… Persoonia prui… Persoonia prui… GBIF Backbone T… 0.988
+#&gt;  1 Acetosella crispa Acetosella cri… Acetosella cri… GBIF Backbone T… 0.988
+#&gt;  2 Meteoridium tenu… Meteoridium te… Meteoridium te… GBIF Backbone T… 0.988
+#&gt;  3 Piper attenuatum  Piper attenuat… Piper attenuat… GBIF Backbone T… 0.988
+#&gt;  4 Piper attenuatum  Piper attenuat… Piper attenuat… GBIF Backbone T… 0.988
+#&gt;  5 Piper attenuatum  Piper attenuat… Piper attenuat… GBIF Backbone T… 0.988
+#&gt;  6 Piper attenuatum  Piper attenuat… Piper attenuat… GBIF Backbone T… 0.988
+#&gt;  7 Piper attenuatum  Piper attenuat… Piper attenuat… GBIF Backbone T… 0.988
+#&gt;  8 Piper attenuatum  Piper attenuat… Piper attenuat… GBIF Backbone T… 0.988
+#&gt;  9 Pyrethrum corymb… Pyrethrum cory… Pyrethrum cory… GBIF Backbone T… 0.988
+#&gt; 10 Pyrethrum corymb… Pyrethrum cory… Pyrethrum cory… GBIF Backbone T… 0.988
+#&gt; # … with 12 more rows
 </code></pre>
 
 <h2>Other functions</h2>

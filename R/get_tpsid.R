@@ -6,7 +6,7 @@
 #' If TRUE and more than one ID is found for the species, the user is asked for
 #' input. If FALSE NA is returned for multiple matches.
 #' @param messages logical; If TRUE the actual taxon queried is printed on the console.
-#' @param key Your API key; loads from .Rprofile.
+#' @param key Your API key; see \code{\link{taxize-authentication}}
 #' @param rows numeric; Any number from 1 to infinity. If the default NA, all rows are considered.
 #' Note that this function still only gives back a tpsid class object with one to many identifiers.
 #' See \code{\link[taxize]{get_tpsid_}} to get back all, or a subset, of the raw data that you are
@@ -107,29 +107,26 @@
 #' invisible(get_tpsid("Quercus douglasii", verbose = TRUE))
 #' }
 
-get_tpsid <- function(sciname, ask = TRUE, messages = TRUE, key = NULL, 
+get_tpsid <- function(sciname, ask = TRUE, messages = TRUE, key = NULL,
   rows = NA, family = NULL, rank = NULL, ...) {
 
   assert(ask, "logical")
   assert(messages, "logical")
   assert(family, "character")
   assert(rank, "character")
-  if (!is.na(rows)) {
-    assert(rows, c("numeric", "integer"))
-    stopifnot(rows > 0)
-  }
+  assert_rows(rows)
 
   fun <- function(sciname, ask, messages, rows, ...) {
     direct <- FALSE
     mssg(messages, "\nRetrieving data for taxon '", sciname, "'\n")
     tmp <- tp_search(name = sciname, key = key, ...)
     mm <- NROW(tmp) > 1
-    # tmp <- sub_rows(tmp, rows)
 
-    if (all(names(tmp)[[1]] == "error") || 
-      all(is.na(tmp)) || 
+    if (
+      all(names(tmp)[[1]] == "error") ||
+      all(is.na(tmp)) ||
       inherits(tmp, "character")
-    ) { 
+    ) {
       mssg(messages, m_not_found_sp_altclass)
       id <- NA_character_
       att <- "not found"
@@ -161,6 +158,16 @@ get_tpsid <- function(sciname, ask = TRUE, messages = TRUE, key = NULL,
           rank_taken <- as.character(df$rank)
           direct <- TRUE
           att <- "found"
+        }
+
+        # more than one, try for direct match
+        if (length(id) > 1) {
+          matchtmp <- df[tolower(df$name) %in% tolower(sciname), "tpsid"]
+          if (length(matchtmp) == 1) {
+            id <- matchtmp
+            direct <- TRUE
+            att <- "found"
+          }
         }
 
         if (length(id) > 1) {

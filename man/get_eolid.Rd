@@ -13,7 +13,7 @@
 \title{Get the EOL ID from Encyclopedia of Life from taxonomic names.}
 \usage{
 get_eolid(sciname, ask = TRUE, messages = TRUE, key = NULL,
-  rows = NA, ...)
+  rows = NA, rank = NULL, data_source = NULL, ...)
 
 as.eolid(x, check = TRUE)
 
@@ -42,13 +42,22 @@ input. If FALSE NA is returned for multiple matches.}
 on the console.}
 
 \item{key}{API key. passed on to \code{\link{eol_search}} and
-\code{\link{eol_pages}} internally}
+\code{\link{eol_pages}} internally. We recommend getting an API key; 
+see \code{\link{taxize-authentication}}}
 
 \item{rows}{numeric; Any number from 1 to infinity. If the default NA, all
 rows are considered. Note that this function still only gives back a eolid
 class object with one to many identifiers. See
 \code{\link[taxize]{get_eolid_}} to get back all, or a subset, of the raw
 data that you are presented during the ask process.}
+
+\item{rank}{(character) A taxonomic rank name. See \code{\link{rank_ref}}
+for possible options. Though note that some data sources use atypical ranks,
+so inspect the data itself for options. Optional. See \code{Filtering} below.}
+
+\item{data_source}{(character) A data source inside of EOL. These are 
+longish names like e.g., "Barcode of Life Data Systems" or
+"USDA PLANTS images". Optional. See \code{Filtering} below.}
 
 \item{...}{Further args passed on to \code{\link{eol_search}}}
 
@@ -92,6 +101,16 @@ page id.
 See \code{\link{taxize-authentication}} for help on authentication
 }
 
+\section{Filtering}{
+
+The parameters \code{rank} and \code{data_source} are not used in the
+search to the data provider, but are used in filtering the data down to a
+subset that is closer to the target you want.  For all these parameters,
+you can use regex strings since we use \code{\link{grep}} internally to
+match. Filtering narrows down to the set that matches your query, and
+removes the rest.
+}
+
 \examples{
 \dontrun{
 get_eolid(sciname='Pinus contorta')
@@ -108,6 +127,12 @@ get_eolid('Poa annua', rows=1:2)
 # When not found
 get_eolid(sciname="uaudnadndj")
 get_eolid(c("Chironomus riparius", "uaudnadndj"))
+
+# filter results to a rank or data source, or both
+get_eolid("Satyrium")
+get_eolid("Satyrium", rank = "genus")
+get_eolid("Satyrium", data_source = "INAT")
+get_eolid("Satyrium", rank = "genus", data_source = "North Pacific")
 
 # Convert a eolid without class information to a eolid class
 # already a eolid, returns the same
@@ -148,9 +173,10 @@ Other taxonomic-ids: \code{\link{get_boldid}},
   \code{\link{get_colid}}, \code{\link{get_gbifid}},
   \code{\link{get_ids}}, \code{\link{get_iucn}},
   \code{\link{get_natservid}}, \code{\link{get_nbnid}},
-  \code{\link{get_tolid}}, \code{\link{get_tpsid}},
-  \code{\link{get_tsn}}, \code{\link{get_uid}},
-  \code{\link{get_wiki}}, \code{\link{get_wormsid}}
+  \code{\link{get_pow}}, \code{\link{get_tolid}},
+  \code{\link{get_tpsid}}, \code{\link{get_tsn}},
+  \code{\link{get_uid}}, \code{\link{get_wiki}},
+  \code{\link{get_wormsid}}
 }
 \author{
 Scott Chamberlain, \email{myrmecocystus@gmail.com}
