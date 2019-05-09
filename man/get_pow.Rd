@@ -31,34 +31,34 @@ get_pow_(x, messages = TRUE, rows = NA, ...)
 \arguments{
 \item{x}{character; A vector of common or scientific names}
 
-\item{accepted}{logical; If TRUE, removes names that are not accepted 
-valid names by ITIS. Set to \code{FALSE} (default) to give back both 
+\item{accepted}{logical; If TRUE, removes names that are not accepted
+valid names by ITIS. Set to \code{FALSE} (default) to give back both
 accepted and unaccepted names.}
 
 \item{ask}{logical; should \code{get_pow} be run in interactive mode?
-If TRUE and more than one pow is found for teh species, the user is 
+If TRUE and more than one pow is found for teh species, the user is
 asked for input. If FALSE NA is returned for multiple matches.}
 
 \item{messages}{logical; should progress be printed?}
 
-\item{rows}{numeric; Any number from 1 to infinity. If the default NA, 
-all rows are considered. Note that this function still only gives back 
-a pow class object with one to many identifiers. See 
-\code{\link[taxize]{get_pow_}} to get back all, or a subset,
+\item{rows}{numeric; Any number from 1 to infinity. If the default NA,
+all rows are considered. Note that this function still only gives back
+a pow class object with one to many identifiers. See
+\code{\link[=get_pow_]{get_pow_()}} to get back all, or a subset,
 of the raw data that you are presented during the ask process.}
 
 \item{family_filter}{(character) A division (aka phylum) name to filter
 data after retrieved from NCBI. Optional. See \code{Filtering} below.}
 
 \item{rank_filter}{(character) A taxonomic rank name to filter data after
-retrieved from NCBI. See \code{\link{rank_ref}} for possible options.
+retrieved from NCBI. See \code{\link[=rank_ref]{rank_ref()}} for possible options.
 Though note that some data sources use atypical ranks, so inspect the data
 itself for options. Optional. See \code{Filtering} below.}
 
-\item{...}{Curl options passed on to \code{\link[crul]{HttpClient}}}
+\item{...}{Curl options passed on to \link[crul:HttpClient]{crul::HttpClient}}
 
-\item{check}{logical; Check if ID matches any existing on the DB, only 
-used in \code{\link{as.pow}}}
+\item{check}{logical; Check if ID matches any existing on the DB, only
+used in \code{\link[=as.pow]{as.pow()}}}
 }
 \value{
 A vector of taxonomic identifiers as an S3 class.
@@ -76,10 +76,10 @@ Get Kew's Plants of the World code for a taxon
 }
 \section{Filtering}{
 
-The parameters \code{family_filter} and \code{rank_filter} are not
+The parameters \code{family_filter} an\code{rank_filter}er are not
 used in the search to the data provider, but are used in filtering the data down to a
 subset that is closer to the target you want.  For these two parameters,
-you can use regex strings since we use \code{\link{grep}} internally to match.
+you can use regex strings since we use \code{\link[=grep]{grep()}} internally to match.
 Filtering narrows down to the set that matches your query, and removes the rest.
 }
 
@@ -132,7 +132,7 @@ get_pow_(c("Pinus", "Abies"), rows = 1:3)
 }
 }
 \seealso{
-\code{\link[taxize]{classification}}
+\code{\link[=classification]{classification()}}
 
 Other pow: \code{\link{pow_lookup}},
   \code{\link{pow_search}}

@@ -22,19 +22,19 @@ intermediate taxonomic groups. Default: FALSE}
 
 \item{start}{Record number to start at}
 
-\item{...}{Further args passed on to \code{\link{gbif_name_usage}}}
+\item{...}{Further args passed on to \code{\link[=gbif_name_usage]{gbif_name_usage()}}}
 }
 \value{
 data.frame of taxonomic information downstream to family from e.g.,
-		Order, Class, etc., or if \code{intermediated=TRUE}, list of length two,
-  	with target taxon rank names, and intermediate names.
+Order, Class, etc., or if \code{intermediated=TRUE}, list of length two,
+with target taxon rank names, and intermediate names.
 }
 \description{
 Retrieve all taxa names downstream in hierarchy for GBIF
 }
 \details{
-Sometimes records don't have a \code{canonicalName} entry which is 
-what we look for. In that case we grab the \code{scientificName} entry. 
+Sometimes records don't have a \code{canonicalName} entry which is
+what we look for. In that case we grab the \code{scientificName} entry.
 You can see the type of name colleceted in the column \code{name_type}
 }
 \examples{

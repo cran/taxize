@@ -7,7 +7,7 @@
 #'
 #' @export
 #' @param input List of classification data.frame's from the function
-#' \code{\link{classification}}
+#' [classification()]
 #' @param varstep Vary step lengths between successive levels relative to
 #' proportional loss of the number of distinct classes.
 #' @param check	If TRUE, remove all redundant levels which are different for
@@ -18,18 +18,17 @@
 #' @param ... Further arguments passed on to hclust.
 #' @param x Input object to print or plot - output from class2tree function.
 #' @return An object of class "classtree" with slots:
-#' \itemize{
-#'  \item phylo - The resulting object, a phylo object
-#'  \item classification - The classification data.frame, with taxa as rows,
+#' 
+#' * phylo - The resulting object, a phylo object
+#' * classification - The classification data.frame, with taxa as rows,
 #'  and different classification levels as columns
-#'  \item distmat - Distance matrix
-#'  \item names - The names of the tips of the phylogeny
-#' }
+#' * distmat - Distance matrix
+#' * names - The names of the tips of the phylogeny
 #'
 #' Note that when you execute the resulting object, you only get the phylo
 #' object. You can get to the other 3 slots by calling them directly, like
 #' output$names, etc.
-#' @details See \code{\link[vegan]{taxa2dist}}. Thanks to Jari Oksanen for
+#' @details See [vegan::taxa2dist()]. Thanks to Jari Oksanen for
 #' making the taxa2dist function and pointing it out, and Clarke & Warwick
 #' (1998, 2001), which taxa2dist was based on.
 #' @examples \dontrun{
@@ -40,7 +39,8 @@
 #' tr <- class2tree(out)
 #' plot(tr)
 #'
-#' spnames <- c('Klattia flava', 'Trollius sibiricus', 'Arachis paraguariensis',
+#' spnames <- c('Klattia flava', 'Trollius sibiricus',
+#'  'Arachis paraguariensis',
 #'  'Tanacetum boreale', 'Gentiana yakushimensis','Sesamum schinzianum',
 #'  'Pilea verrucosa','Tibouchina striphnocalyx','Lycium dasystemum',
 #'  'Berkheya echinacea','Androcymbium villosum',
@@ -64,7 +64,6 @@ class2tree <- function(input, varstep = TRUE, check = TRUE, ...) {
   if (length(unique(names(input))) < length(names(input)))
     stop("Input list of classifications contains duplicates")
 
-  dat <- rbind.fill(lapply(input, class2tree_helper))
   # Get rank and ID list
   rankList <- rbind.fill(lapply(input, get_rank))
   nameList <- rbind.fill(lapply(input, get_name))
@@ -91,18 +90,23 @@ class2tree <- function(input, varstep = TRUE, check = TRUE, ...) {
   # check for incorrect dimensions error
   if (is(taxdis, 'simpleError'))
     stop("Try check=FALSE, but see docs for taxa2dist function in the vegan package for details.")
+  
   out <- as.phylo.hclust(hclust(taxdis, ...))
+  out <- ape::di2multi(out)
+  # Add node labels
+  node_ids <- sort(unique(out$edge[,1]))
+  node_labels <- sapply(phangorn::Descendants(out, node_ids), function(x) {
+    sub_df <- df[out$tip.label[x],]
+    unique(sub_df[,which(sapply(1:ncol(sub_df), function(i) {
+      length(unique(sub_df[,i]))==1
+    }))[1]])
+  })
+  out$node.label <- node_labels
+  
   res <- list(phylo = out, classification = as.data.frame(t(tdf)), 
     distmat = taxdis, names = names(input))
   class(res) <- 'classtree'
   return( res )
-}
-
-class2tree_helper <- function(x){
-  df <- x[-nrow(x), 'name']
-  names(df) <- x[-nrow(x), 'rank']
-  df <- data.frame(t(data.frame(df)), stringsAsFactors = FALSE)
-  data.frame(tip = x[nrow(x), "name"], df, stringsAsFactors = FALSE)
 }
 
 #' @method plot classtree

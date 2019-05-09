@@ -5,10 +5,10 @@ Description: Interacts with a suite of web 'APIs' for taxonomic tasks,
     species names, getting taxonomic hierarchies, fetching downstream and
     upstream taxonomic names, getting taxonomic synonyms, converting
     scientific to common names and vice versa, and more.
-Version: 0.9.6
+Version: 0.9.7
 License: MIT + file LICENSE
 URL: https://github.com/ropensci/taxize (devel),
-        https://ropensci.github.io/taxize-book/ (user manual)
+        https://ropenscilabs.github.io/taxize-book/ (user manual)
 BugReports: https://github.com/ropensci/taxize/issues
 Authors@R: 
     c(person(given = "Scott",
@@ -55,8 +55,11 @@ Authors@R:
       person(given = "Maëlle",
              family = "Salmon",
              role = "ctb"),
-      person(given = "Gaopeng", 
+      person(given = "Gaopeng",
              family = "Li",
+             role = "ctb"),
+      person(given = "Matthias",
+             family = "Grenié",
              role = "ctb"),
       person(given = "rOpenSci",
              role = "fnd",
@@ -71,15 +74,15 @@ Imports: graphics, methods, stats, utils, crul (>= 0.7.0), xml2 (>=
         1.2.0), jsonlite, reshape2, stringr, plyr, foreach, ape, zoo,
         bold (>= 0.8.6), data.table, rredlist (>= 0.5.0), rotl (>=
         3.0.0), ritis (>= 0.7.6), tibble (>= 1.2), worrms (>= 0.3.2),
-        natserv (>= 0.3.0), wikitaxa (>= 0.3.0)
-Suggests: testthat, knitr, vegan, vcr
+        natserv (>= 0.3.0), wikitaxa (>= 0.3.0), phangorn
+Suggests: roxygen2 (>= 6.1.1), testthat, knitr, vegan, vcr
 RoxygenNote: 6.1.1
 X-schema.org-applicationCategory: Taxonomy
 X-schema.org-keywords: taxonomy, biology, nomenclature, JSON, API, web,
         api-client, identifiers, species, names
 X-schema.org-isPartOf: https://ropensci.org
 NeedsCompilation: no
-Packaged: 2019-02-23 18:23:51 UTC; sckott
+Packaged: 2019-05-09 16:18:56 UTC; sckott
 Author: Scott Chamberlain [aut, cre] (<https://orcid.org/0000-0003-1444-9135>),
   Eduard Szoecs [aut],
   Zachary Foster [aut],
@@ -95,7 +98,8 @@ Author: Scott Chamberlain [aut, cre] (<https://orcid.org/0000-0003-1444-9135>),
   Vinh Tran [ctb],
   Maëlle Salmon [ctb],
   Gaopeng Li [ctb],
+  Matthias Grenié [ctb],
   rOpenSci [fnd] (https://ropensci.org/)
 Maintainer: Scott Chamberlain <myrmecocystus@gmail.com>
 Repository: CRAN
-Date/Publication: 2019-02-24 18:00:05 UTC
+Date/Publication: 2019-05-09 17:30:02 UTC

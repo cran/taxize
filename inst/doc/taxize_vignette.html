@@ -479,13 +479,13 @@ NROW(out$`Poa annua`)
 #&gt; 1  NBNSYS0000002544          Poa annua species        accepted
 #&gt; 2  NBNSYS0200001901       Bellis annua species        accepted
 #&gt; 3  NBNSYS0200003392   Triumfetta annua species        accepted
-#&gt; 4  NHMSYS0000456951  Carrichtera annua species        accepted
-#&gt; 5  NBNSYS0200002555        Lonas annua species        accepted
+#&gt; 4  NBNSYS0200002555        Lonas annua species        accepted
+#&gt; 5  NHMSYS0000456951  Carrichtera annua species        accepted
 #&gt; 6  NHMSYS0000461807 Poa labillardierei species        accepted
-#&gt; 7  NBNSYS0200002925      Poa poiformis species        accepted
-#&gt; 8  NBNSYS0200002917          Poa ampla species        accepted
-#&gt; 9  NHMSYS0000461806      Poa imbecilla species        accepted
-#&gt; 10 NHMSYS0000461808      Poa ligularis species        accepted
+#&gt; 7  NHMSYS0000461808      Poa ligularis species        accepted
+#&gt; 8  NHMSYS0000461817     Poa sieberiana species        accepted
+#&gt; 9  NHMSYS0000461805         Poa gunnii species        accepted
+#&gt; 10 NHMSYS0000461801     Poa costiniana species        accepted
 </code></pre>
 
 <h2>Coerce numerics/alphanumerics to taxon IDs</h2>
@@ -572,14 +572,14 @@ NROW(out$`Poa annua`)
 </code></pre>
 
 <pre><code>#&gt;    user  system elapsed 
-#&gt;   0.078   0.002   1.943
+#&gt;   0.072   0.003   1.760
 </code></pre>
 
 <pre><code class="r">system.time( replicate(3, as.gbifid(c(&quot;2704179&quot;,&quot;2435099&quot;,&quot;3171445&quot;), check=FALSE)) )
 </code></pre>
 
 <pre><code>#&gt;    user  system elapsed 
-#&gt;   0.002   0.000   0.002
+#&gt;   0.001   0.000   0.002
 </code></pre>
 
 <h2>What taxa are downstream of my taxon of interest?</h2>
