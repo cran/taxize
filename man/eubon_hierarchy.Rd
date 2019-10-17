@@ -29,6 +29,10 @@ return the responses that have been received so far. The default timeout is
 \description{
 EUBON hierarchy
 }
+\note{
+There is no pagination in this method, so you may or may not be
+getting all the results for a search. Sorry, out of our control
+}
 \examples{
 \dontrun{
 eubon_hierarchy(id = "urn:lsid:marinespecies.org:taxname:126141", 'worms')
@@ -36,10 +40,10 @@ eubon_hierarchy(id = "urn:lsid:marinespecies.org:taxname:274350", 'worms')
 }
 }
 \references{
-\url{http://cybertaxonomy.eu/eu-bon/utis/1.2/doc.html}
+\url{http://cybertaxonomy.eu/eu-bon/utis/1.3/doc.html}
 }
 \seealso{
 Other eubon-methods: \code{\link{eubon_capabilities}},
-  \code{\link{eubon_children}}, \code{\link{eubon}}
+  \code{\link{eubon_children}}, \code{\link{eubon_search}}
 }
 \concept{eubon-methods}

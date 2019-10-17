@@ -270,7 +270,20 @@ tnrs(query = mynames, source = &quot;iPlant_TNRS&quot;)[ , -c(5:7)]
 (tsn &lt;- get_tsn(mynames, accepted = FALSE))
 </code></pre>
 
+<pre><code>══  3 queries  ═══════════════
+✔  Found:  Helianthus annuus ssp. jaegeri
+✔  Found:  Helianthus annuus ssp. lenticularis
+✔  Found:  Helianthus annuus ssp. texanus
+══  Results  ═════════════════
+
+● Total: 3 
+● Found: 3 
+● Not Found: 0
+</code></pre>
+
 <pre><code>[1] &quot;525928&quot; &quot;525929&quot; &quot;525930&quot;
+attr(,&quot;class&quot;)
+[1] &quot;tsn&quot;
 attr(,&quot;match&quot;)
 [1] &quot;found&quot; &quot;found&quot; &quot;found&quot;
 attr(,&quot;multiple_matches&quot;)
@@ -281,8 +294,6 @@ attr(,&quot;uri&quot;)
 [1] &quot;https://www.itis.gov/servlet/SingleRpt/SingleRpt?search_topic=TSN&amp;search_value=525928&quot;
 [2] &quot;https://www.itis.gov/servlet/SingleRpt/SingleRpt?search_topic=TSN&amp;search_value=525929&quot;
 [3] &quot;https://www.itis.gov/servlet/SingleRpt/SingleRpt?search_topic=TSN&amp;search_value=525930&quot;
-attr(,&quot;class&quot;)
-[1] &quot;tsn&quot;
 </code></pre>
 
 <pre><code class="r">lapply(tsn, itis_acceptname)
@@ -309,6 +320,16 @@ attr(,&quot;class&quot;)
 
 <pre><code class="r">specieslist &lt;- c(&quot;Abies procera&quot;,&quot;Pinus contorta&quot;)
 classification(specieslist, db = &#39;itis&#39;)
+</code></pre>
+
+<pre><code>#&gt; ══  2 queries  ═══════════════
+#&gt; ✔  Found:  Abies procera
+#&gt; ✔  Found:  Pinus contorta
+#&gt; ══  Results  ═════════════════
+#&gt; 
+#&gt; ● Total: 2 
+#&gt; ● Found: 2 
+#&gt; ● Not Found: 0
 </code></pre>
 
 <pre><code>#&gt; $`Abies procera`
@@ -349,7 +370,7 @@ classification(specieslist, db = &#39;itis&#39;)
 
 <p>It turns out both species are in the family Pinaceae. You can also get this type of information from the NCBI by doing <code>classification(specieslist, db = &#39;ncbi&#39;)</code>.</p>
 
-<p>Instead of a full classification, you may only want a single name, say a family name for your species of interest. The function *tax_name} is built just for this purpose. As with the <code>classification</code> function you can specify the data source with the <code>db</code> argument, either ITIS or NCBI.</p>
+<p>Instead of a full classification, you may only want a single name, say a family name for your species of interest. The function <code>tax_name</code> is built just for this purpose. As with the <code>classification</code> function you can specify the data source with the <code>db</code> argument, either ITIS or NCBI.</p>
 
 <pre><code class="r">tax_name(query = &quot;Helianthus annuus&quot;, get = &quot;family&quot;, db = &quot;ncbi&quot;)
 </code></pre>
@@ -358,7 +379,7 @@ classification(specieslist, db = &#39;itis&#39;)
 #&gt; 1 ncbi Helianthus annuus Asteraceae
 </code></pre>
 
-<p>I may happen that a data source does not provide information on the queried species, than one could take the result from another source and union the results from the different sources.</p>
+<p>It may happen that a data source does not provide information on the queried species, than one could take the result from another source and union the results from the different sources.</p>
 
 <h2>Interactive name selection</h2>
 
@@ -369,12 +390,19 @@ classification(specieslist, db = &#39;itis&#39;)
 <pre><code class="r">get_uid(sciname = &quot;Pinus&quot;)
 </code></pre>
 
-<pre><code>#&gt;   status     rank    division scientificname commonname    uid genus
+<pre><code>#&gt; ══  1 queries  ═══════════════
+#&gt;   status     rank    division scientificname commonname    uid genus
 #&gt; 1 active subgenus seed plants          Pinus hard pines 139271      
 #&gt; 2 active    genus seed plants          Pinus              3337      
 #&gt;   species subsp modificationdate
 #&gt; 1               2017/06/14 00:00
 #&gt; 2               2016/03/25 00:00
+#&gt; ✔  Found:  Pinus
+#&gt; ══  Results  ═════════════════
+#&gt; 
+#&gt; ● Total: 1 
+#&gt; ● Found: 1 
+#&gt; ● Not Found: 0
 </code></pre>
 
 <pre><code>#&gt; [1] &quot;139271&quot;
@@ -396,7 +424,20 @@ classification(specieslist, db = &#39;itis&#39;)
 get_tsn(searchterm = splist, searchtype = &quot;scientific&quot;)
 </code></pre>
 
+<pre><code>#&gt; ══  3 queries  ═══════════════
+#&gt; ✔  Found:  annona cherimola
+#&gt; ✔  Found:  annona muricata
+#&gt; ✔  Found:  quercus robur
+#&gt; ══  Results  ═════════════════
+#&gt; 
+#&gt; ● Total: 3 
+#&gt; ● Found: 3 
+#&gt; ● Not Found: 0
+</code></pre>
+
 <pre><code>#&gt; [1] &quot;506198&quot; &quot;18098&quot;  &quot;19405&quot; 
+#&gt; attr(,&quot;class&quot;)
+#&gt; [1] &quot;tsn&quot;
 #&gt; attr(,&quot;match&quot;)
 #&gt; [1] &quot;found&quot; &quot;found&quot; &quot;found&quot;
 #&gt; attr(,&quot;multiple_matches&quot;)
@@ -406,9 +447,7 @@ get_tsn(searchterm = splist, searchtype = &quot;scientific&quot;)
 #&gt; attr(,&quot;uri&quot;)
 #&gt; [1] &quot;https://www.itis.gov/servlet/SingleRpt/SingleRpt?search_topic=TSN&amp;search_value=506198&quot;
 #&gt; [2] &quot;https://www.itis.gov/servlet/SingleRpt/SingleRpt?search_topic=TSN&amp;search_value=18098&quot; 
-#&gt; [3] &quot;https://www.itis.gov/servlet/SingleRpt/SingleRpt?search_topic=TSN&amp;search_value=19405&quot; 
-#&gt; attr(,&quot;class&quot;)
-#&gt; [1] &quot;tsn&quot;
+#&gt; [3] &quot;https://www.itis.gov/servlet/SingleRpt/SingleRpt?search_topic=TSN&amp;search_value=19405&quot;
 </code></pre>
 
 <p>There are functions for many other sources</p>
@@ -425,6 +464,16 @@ get_tsn(searchterm = splist, searchtype = &quot;scientific&quot;)
 <p>Sometimes with these functions you get a lot of data back. In these cases you may want to limit your choices. Soon we will incorporate the ability to filter using <code>regex</code> to limit matches, but for now, we have a new parameter, <code>rows</code>, which lets you select certain rows. For example, you can select the first row of each given name, which means there is no interactive component:</p>
 
 <pre><code class="r">get_nbnid(c(&quot;Zootoca vivipara&quot;,&quot;Pinus contorta&quot;), rows = 1)
+</code></pre>
+
+<pre><code>#&gt; ══  2 queries  ═══════════════
+#&gt; ✔  Found:  Zootoca vivipara
+#&gt; ✔  Found:  Pinus contorta
+#&gt; ══  Results  ═════════════════
+#&gt; 
+#&gt; ● Total: 2 
+#&gt; ● Found: 2 
+#&gt; ● Not Found: 0
 </code></pre>
 
 <pre><code>#&gt; [1] &quot;NHMSYS0001706186&quot; &quot;NBNSYS0000004786&quot;
@@ -444,6 +493,16 @@ get_tsn(searchterm = splist, searchtype = &quot;scientific&quot;)
 <p>Or you can select a range of rows</p>
 
 <pre><code class="r">get_nbnid(c(&quot;Zootoca vivipara&quot;,&quot;Pinus contorta&quot;), rows = 1:3)
+</code></pre>
+
+<pre><code>#&gt; ══  2 queries  ═══════════════
+#&gt; ✔  Found:  Zootoca vivipara
+#&gt; ✔  Found:  Pinus contorta
+#&gt; ══  Results  ═════════════════
+#&gt; 
+#&gt; ● Total: 2 
+#&gt; ● Found: 2 
+#&gt; ● Not Found: 0
 </code></pre>
 
 <pre><code>#&gt; [1] &quot;NHMSYS0001706186&quot; &quot;NBNSYS0000004786&quot;
@@ -481,11 +540,11 @@ NROW(out$`Poa annua`)
 #&gt; 3  NBNSYS0200003392   Triumfetta annua species        accepted
 #&gt; 4  NBNSYS0200002555        Lonas annua species        accepted
 #&gt; 5  NHMSYS0000456951  Carrichtera annua species        accepted
-#&gt; 6  NHMSYS0000461807 Poa labillardierei species        accepted
-#&gt; 7  NHMSYS0000461808      Poa ligularis species        accepted
+#&gt; 6  NHMSYS0000461801     Poa costiniana species        accepted
+#&gt; 7  NHMSYS0000461805         Poa gunnii species        accepted
 #&gt; 8  NHMSYS0000461817     Poa sieberiana species        accepted
-#&gt; 9  NHMSYS0000461805         Poa gunnii species        accepted
-#&gt; 10 NHMSYS0000461801     Poa costiniana species        accepted
+#&gt; 9  NHMSYS0000461808      Poa ligularis species        accepted
+#&gt; 10 NHMSYS0000461807 Poa labillardierei species        accepted
 </code></pre>
 
 <h2>Coerce numerics/alphanumerics to taxon IDs</h2>
@@ -497,10 +556,17 @@ NROW(out$`Poa annua`)
 <pre><code class="r">as.gbifid(get_gbifid(&quot;Poa annua&quot;)) # already a uid, returns the same
 </code></pre>
 
-<pre><code>#&gt;    gbifid             scientificname    rank   status matchtype
+<pre><code>#&gt; ══  1 queries  ═══════════════
+#&gt;    gbifid             scientificname    rank   status matchtype
 #&gt; 1 2704179               Poa annua L. species ACCEPTED     EXACT
 #&gt; 2 8422205 Poa annua Cham. &amp; Schltdl. species  SYNONYM     EXACT
 #&gt; 3 7730008           Poa annua Steud. species DOUBTFUL     EXACT
+#&gt; ✔  Found:  Poa annua
+#&gt; ══  Results  ═════════════════
+#&gt; 
+#&gt; ● Total: 1 
+#&gt; ● Found: 1 
+#&gt; ● Not Found: 0
 </code></pre>
 
 <pre><code>#&gt; [1] &quot;2704179&quot;
@@ -513,7 +579,7 @@ NROW(out$`Poa annua`)
 #&gt; attr(,&quot;pattern_match&quot;)
 #&gt; [1] FALSE
 #&gt; attr(,&quot;uri&quot;)
-#&gt; [1] &quot;http://www.gbif.org/species/2704179&quot;
+#&gt; [1] &quot;https://www.gbif.org/species/2704179&quot;
 </code></pre>
 
 <pre><code class="r">as.gbifid(2704179) # numeric
@@ -572,14 +638,14 @@ NROW(out$`Poa annua`)
 </code></pre>
 
 <pre><code>#&gt;    user  system elapsed 
-#&gt;   0.072   0.003   1.760
+#&gt;   0.054   0.002   2.055
 </code></pre>
 
 <pre><code class="r">system.time( replicate(3, as.gbifid(c(&quot;2704179&quot;,&quot;2435099&quot;,&quot;3171445&quot;), check=FALSE)) )
 </code></pre>
 
 <pre><code>#&gt;    user  system elapsed 
-#&gt;   0.001   0.000   0.002
+#&gt;   0.002   0.000   0.002
 </code></pre>
 
 <h2>What taxa are downstream of my taxon of interest?</h2>
@@ -750,11 +816,54 @@ B2 &lt;- &quot;gammarus&quot;
 B3 &lt;- &quot;gammaridae&quot;
 
 A_clas &lt;- classification(A, db = &#39;ncbi&#39;)
-B1_clas &lt;- classification(B1, db = &#39;ncbi&#39;)
-B2_clas &lt;- classification(B2, db = &#39;ncbi&#39;)
-B3_clas &lt;- classification(B3, db = &#39;ncbi&#39;)
+</code></pre>
 
-B1[match(A, B1)]
+<pre><code>#&gt; ══  1 queries  ═══════════════
+#&gt; ✔  Found:  gammarus+roeseli
+#&gt; ══  Results  ═════════════════
+#&gt; 
+#&gt; ● Total: 1 
+#&gt; ● Found: 1 
+#&gt; ● Not Found: 0
+</code></pre>
+
+<pre><code class="r">B1_clas &lt;- classification(B1, db = &#39;ncbi&#39;)
+</code></pre>
+
+<pre><code>#&gt; ══  1 queries  ═══════════════
+#&gt; ✔  Found:  gammarus+roeseli
+#&gt; ══  Results  ═════════════════
+#&gt; 
+#&gt; ● Total: 1 
+#&gt; ● Found: 1 
+#&gt; ● Not Found: 0
+</code></pre>
+
+<pre><code class="r">B2_clas &lt;- classification(B2, db = &#39;ncbi&#39;)
+</code></pre>
+
+<pre><code>#&gt; ══  1 queries  ═══════════════
+#&gt; ✔  Found:  gammarus
+#&gt; ══  Results  ═════════════════
+#&gt; 
+#&gt; ● Total: 1 
+#&gt; ● Found: 1 
+#&gt; ● Not Found: 0
+</code></pre>
+
+<pre><code class="r">B3_clas &lt;- classification(B3, db = &#39;ncbi&#39;)
+</code></pre>
+
+<pre><code>#&gt; ══  1 queries  ═══════════════
+#&gt; ✔  Found:  gammaridae
+#&gt; ══  Results  ═════════════════
+#&gt; 
+#&gt; ● Total: 1 
+#&gt; ● Found: 1 
+#&gt; ● Not Found: 0
+</code></pre>
+
+<pre><code class="r">B1[match(A, B1)]
 </code></pre>
 
 <pre><code>#&gt; [1] &quot;gammarus roeseli&quot;

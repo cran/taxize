@@ -18,10 +18,10 @@ eubon_capabilities()
 }
 }
 \references{
-\url{http://cybertaxonomy.eu/eu-bon/utis/1.2/doc.html}
+\url{http://cybertaxonomy.eu/eu-bon/utis/1.3/doc.html}
 }
 \seealso{
 Other eubon-methods: \code{\link{eubon_children}},
-  \code{\link{eubon_hierarchy}}, \code{\link{eubon}}
+  \code{\link{eubon_hierarchy}}, \code{\link{eubon_search}}
 }
 \concept{eubon-methods}

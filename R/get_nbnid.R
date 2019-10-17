@@ -111,7 +111,8 @@ get_nbnid <- function(name, ask = TRUE, messages = TRUE, rec_only = FALSE,
   for (i in seq_along(name)) {
     direct <- FALSE
     mssg(messages, "\nRetrieving data for taxon '", name[i], "'\n")
-    df <- nbn_search(q = name[i], rows = 500, ...)$data
+    df <- nbn_search(q = name[i], rows = 500, fq = "idxtype:TAXON",
+      ...)$data
     if (is.null(df) || length(df) == 0) df <- data.frame(NULL)
     mm <- NROW(df) > 1
 
@@ -267,12 +268,12 @@ as.data.frame.nbnid <- function(x, ...) {
 }
 
 make_nbnid <- function(x, check=TRUE) {
-  make_generic(x, 'https://species.nbnatlas.org/species/%s', "nbnid", check)
+  make_generic(x, 'https://species-ws.nbnatlas.org/species/%s', "nbnid", check)
 }
 
 check_nbnid <- function(x){
   url <- "https://species-ws.nbnatlas.org/species/"
-  res <- tax_GET(paste0(url, x))
+  res <- tax_GET_nocheck(paste0(url, x))
   if (res$status_code == 200) TRUE else FALSE
 }
 

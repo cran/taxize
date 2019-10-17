@@ -82,7 +82,7 @@ class2tree <- function(input, varstep = TRUE, check = TRUE, ...) {
   taxdis <- tryCatch(taxa2dist(df, varstep = varstep, check = check),
                      error = function(e) e)
 
-  tdf = t(df)
+  tdf <- t(df)
   for (i in 1:ncol(tdf)){
     tdf[,i][duplicated(tdf[,i])] <- NA
   }
@@ -97,9 +97,14 @@ class2tree <- function(input, varstep = TRUE, check = TRUE, ...) {
   node_ids <- sort(unique(out$edge[,1]))
   node_labels <- sapply(phangorn::Descendants(out, node_ids), function(x) {
     sub_df <- df[out$tip.label[x],]
-    unique(sub_df[,which(sapply(1:ncol(sub_df), function(i) {
+    node_col_i <- which(sapply(1:ncol(sub_df), function(i) {
       length(unique(sub_df[,i]))==1
-    }))[1]])
+    }))[1]
+    if (is.na(node_col_i)) {
+      NA_character_
+    } else {
+      unique(sub_df[,node_col_i])
+    }
   })
   out$node.label <- node_labels
   

@@ -83,7 +83,21 @@ mynames <- c("Helianthus annuus ssp. jaegeri", "Helianthus annuus ssp. lenticula
 ```
 
 ```
+══  3 queries  ═══════════════
+✔  Found:  Helianthus annuus ssp. jaegeri
+✔  Found:  Helianthus annuus ssp. lenticularis
+✔  Found:  Helianthus annuus ssp. texanus
+══  Results  ═════════════════
+
+● Total: 3 
+● Found: 3 
+● Not Found: 0
+```
+
+```
 [1] "525928" "525929" "525930"
+attr(,"class")
+[1] "tsn"
 attr(,"match")
 [1] "found" "found" "found"
 attr(,"multiple_matches")
@@ -94,8 +108,6 @@ attr(,"uri")
 [1] "https://www.itis.gov/servlet/SingleRpt/SingleRpt?search_topic=TSN&search_value=525928"
 [2] "https://www.itis.gov/servlet/SingleRpt/SingleRpt?search_topic=TSN&search_value=525929"
 [3] "https://www.itis.gov/servlet/SingleRpt/SingleRpt?search_topic=TSN&search_value=525930"
-attr(,"class")
-[1] "tsn"
 ```
 
 ```r
@@ -126,6 +138,17 @@ A number of data sources in taxize provide the capability to retrieve higher tax
 ```r
 specieslist <- c("Abies procera","Pinus contorta")
 classification(specieslist, db = 'itis')
+```
+
+```
+#> ══  2 queries  ═══════════════
+#> ✔  Found:  Abies procera
+#> ✔  Found:  Pinus contorta
+#> ══  Results  ═════════════════
+#> 
+#> ● Total: 2 
+#> ● Found: 2 
+#> ● Not Found: 0
 ```
 
 ```
@@ -167,7 +190,7 @@ classification(specieslist, db = 'itis')
 
 It turns out both species are in the family Pinaceae. You can also get this type of information from the NCBI by doing `classification(specieslist, db = 'ncbi')`.
 
-Instead of a full classification, you may only want a single name, say a family name for your species of interest. The function *tax_name} is built just for this purpose. As with the `classification` function you can specify the data source with the `db` argument, either ITIS or NCBI.
+Instead of a full classification, you may only want a single name, say a family name for your species of interest. The function `tax_name` is built just for this purpose. As with the `classification` function you can specify the data source with the `db` argument, either ITIS or NCBI.
 
 
 ```r
@@ -179,7 +202,7 @@ tax_name(query = "Helianthus annuus", get = "family", db = "ncbi")
 #> 1 ncbi Helianthus annuus Asteraceae
 ```
 
-I may happen that a data source does not provide information on the queried species, than one could take the result from another source and union the results from the different sources.
+It may happen that a data source does not provide information on the queried species, than one could take the result from another source and union the results from the different sources.
 
 ## Interactive name selection
 
@@ -193,12 +216,19 @@ get_uid(sciname = "Pinus")
 ```
 
 ```
+#> ══  1 queries  ═══════════════
 #>   status     rank    division scientificname commonname    uid genus
 #> 1 active subgenus seed plants          Pinus hard pines 139271      
 #> 2 active    genus seed plants          Pinus              3337      
 #>   species subsp modificationdate
 #> 1               2017/06/14 00:00
 #> 2               2016/03/25 00:00
+#> ✔  Found:  Pinus
+#> ══  Results  ═════════════════
+#> 
+#> ● Total: 1 
+#> ● Found: 1 
+#> ● Not Found: 0
 ```
 
 ```
@@ -224,7 +254,21 @@ get_tsn(searchterm = splist, searchtype = "scientific")
 ```
 
 ```
+#> ══  3 queries  ═══════════════
+#> ✔  Found:  annona cherimola
+#> ✔  Found:  annona muricata
+#> ✔  Found:  quercus robur
+#> ══  Results  ═════════════════
+#> 
+#> ● Total: 3 
+#> ● Found: 3 
+#> ● Not Found: 0
+```
+
+```
 #> [1] "506198" "18098"  "19405" 
+#> attr(,"class")
+#> [1] "tsn"
 #> attr(,"match")
 #> [1] "found" "found" "found"
 #> attr(,"multiple_matches")
@@ -234,9 +278,7 @@ get_tsn(searchterm = splist, searchtype = "scientific")
 #> attr(,"uri")
 #> [1] "https://www.itis.gov/servlet/SingleRpt/SingleRpt?search_topic=TSN&search_value=506198"
 #> [2] "https://www.itis.gov/servlet/SingleRpt/SingleRpt?search_topic=TSN&search_value=18098" 
-#> [3] "https://www.itis.gov/servlet/SingleRpt/SingleRpt?search_topic=TSN&search_value=19405" 
-#> attr(,"class")
-#> [1] "tsn"
+#> [3] "https://www.itis.gov/servlet/SingleRpt/SingleRpt?search_topic=TSN&search_value=19405"
 ```
 
 There are functions for many other sources
@@ -253,6 +295,17 @@ Sometimes with these functions you get a lot of data back. In these cases you ma
 
 ```r
 get_nbnid(c("Zootoca vivipara","Pinus contorta"), rows = 1)
+```
+
+```
+#> ══  2 queries  ═══════════════
+#> ✔  Found:  Zootoca vivipara
+#> ✔  Found:  Pinus contorta
+#> ══  Results  ═════════════════
+#> 
+#> ● Total: 2 
+#> ● Found: 2 
+#> ● Not Found: 0
 ```
 
 ```
@@ -275,6 +328,17 @@ Or you can select a range of rows
 
 ```r
 get_nbnid(c("Zootoca vivipara","Pinus contorta"), rows = 1:3)
+```
+
+```
+#> ══  2 queries  ═══════════════
+#> ✔  Found:  Zootoca vivipara
+#> ✔  Found:  Pinus contorta
+#> ══  Results  ═════════════════
+#> 
+#> ● Total: 2 
+#> ● Found: 2 
+#> ● Not Found: 0
 ```
 
 ```
@@ -319,11 +383,11 @@ get_nbnid_("Poa annua", rows = 1:10)
 #> 3  NBNSYS0200003392   Triumfetta annua species        accepted
 #> 4  NBNSYS0200002555        Lonas annua species        accepted
 #> 5  NHMSYS0000456951  Carrichtera annua species        accepted
-#> 6  NHMSYS0000461807 Poa labillardierei species        accepted
-#> 7  NHMSYS0000461808      Poa ligularis species        accepted
+#> 6  NHMSYS0000461801     Poa costiniana species        accepted
+#> 7  NHMSYS0000461805         Poa gunnii species        accepted
 #> 8  NHMSYS0000461817     Poa sieberiana species        accepted
-#> 9  NHMSYS0000461805         Poa gunnii species        accepted
-#> 10 NHMSYS0000461801     Poa costiniana species        accepted
+#> 9  NHMSYS0000461808      Poa ligularis species        accepted
+#> 10 NHMSYS0000461807 Poa labillardierei species        accepted
 ```
 
 ## Coerce numerics/alphanumerics to taxon IDs
@@ -338,10 +402,17 @@ as.gbifid(get_gbifid("Poa annua")) # already a uid, returns the same
 ```
 
 ```
+#> ══  1 queries  ═══════════════
 #>    gbifid             scientificname    rank   status matchtype
 #> 1 2704179               Poa annua L. species ACCEPTED     EXACT
 #> 2 8422205 Poa annua Cham. & Schltdl. species  SYNONYM     EXACT
 #> 3 7730008           Poa annua Steud. species DOUBTFUL     EXACT
+#> ✔  Found:  Poa annua
+#> ══  Results  ═════════════════
+#> 
+#> ● Total: 1 
+#> ● Found: 1 
+#> ● Not Found: 0
 ```
 
 ```
@@ -355,7 +426,7 @@ as.gbifid(get_gbifid("Poa annua")) # already a uid, returns the same
 #> attr(,"pattern_match")
 #> [1] FALSE
 #> attr(,"uri")
-#> [1] "http://www.gbif.org/species/2704179"
+#> [1] "https://www.gbif.org/species/2704179"
 ```
 
 ```r
@@ -423,7 +494,7 @@ system.time( replicate(3, as.gbifid(c("2704179","2435099","3171445"), check=TRUE
 
 ```
 #>    user  system elapsed 
-#>   0.072   0.003   1.760
+#>   0.054   0.002   2.055
 ```
 
 ```r
@@ -432,7 +503,7 @@ system.time( replicate(3, as.gbifid(c("2704179","2435099","3171445"), check=FALS
 
 ```
 #>    user  system elapsed 
-#>   0.001   0.000   0.002
+#>   0.002   0.000   0.002
 ```
 
 ## What taxa are downstream of my taxon of interest?
@@ -623,10 +694,61 @@ B2 <- "gammarus"
 B3 <- "gammaridae"
 
 A_clas <- classification(A, db = 'ncbi')
-B1_clas <- classification(B1, db = 'ncbi')
-B2_clas <- classification(B2, db = 'ncbi')
-B3_clas <- classification(B3, db = 'ncbi')
+```
 
+```
+#> ══  1 queries  ═══════════════
+#> ✔  Found:  gammarus+roeseli
+#> ══  Results  ═════════════════
+#> 
+#> ● Total: 1 
+#> ● Found: 1 
+#> ● Not Found: 0
+```
+
+```r
+B1_clas <- classification(B1, db = 'ncbi')
+```
+
+```
+#> ══  1 queries  ═══════════════
+#> ✔  Found:  gammarus+roeseli
+#> ══  Results  ═════════════════
+#> 
+#> ● Total: 1 
+#> ● Found: 1 
+#> ● Not Found: 0
+```
+
+```r
+B2_clas <- classification(B2, db = 'ncbi')
+```
+
+```
+#> ══  1 queries  ═══════════════
+#> ✔  Found:  gammarus
+#> ══  Results  ═════════════════
+#> 
+#> ● Total: 1 
+#> ● Found: 1 
+#> ● Not Found: 0
+```
+
+```r
+B3_clas <- classification(B3, db = 'ncbi')
+```
+
+```
+#> ══  1 queries  ═══════════════
+#> ✔  Found:  gammaridae
+#> ══  Results  ═════════════════
+#> 
+#> ● Total: 1 
+#> ● Found: 1 
+#> ● Not Found: 0
+```
+
+```r
 B1[match(A, B1)]
 ```
 
