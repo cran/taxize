@@ -23,6 +23,10 @@
 #'
 #' @section Authentication:
 #' See [taxize-authentication] for help on authentication
+#' 
+#' @section HTTP version for NCBI requests:
+#' We hard code `http_version = 2L` to use HTTP/1.1 in HTTP requests to
+#' the Entrez API. See `curl::curl_symbols('CURL_HTTP_VERSION')` 
 #'
 #' @author Scott Chamberlain
 #' @examples \dontrun{
@@ -82,6 +86,7 @@ sci_from_comm <- function(nn, db, simplify, itisby, ...) {
 #' @export
 comm2sci.tsn <- function(commnames, db='ncbi', itisby='search',
                          simplify=TRUE, ...) {
+  warn_db(list(db = db), "itis")
   temp <- lapply(commnames, c2s_itis_, simplify = simplify, ...)
   stats::setNames(temp, commnames)
 }
@@ -89,6 +94,7 @@ comm2sci.tsn <- function(commnames, db='ncbi', itisby='search',
 #' @export
 comm2sci.uid <- function(commnames, db='ncbi', itisby='search',
                          simplify=TRUE, ...) {
+  warn_db(list(db = db), "ncbi")
   temp <- lapply(commnames, c2s_ncbi, simplify = simplify, ...)
   stats::setNames(temp, commnames)
 }
@@ -136,7 +142,7 @@ c2s_ncbi <- function(x, simplify, ...) {
   key <- getkey(NULL, "ENTREZ_KEY")
   query <- tc(list(db = "taxonomy", ID = x, api_key = key))
   cli <- crul::HttpClient$new(url = ncbi_base(),
-    headers = tx_ual, opts = list(...))
+    headers = tx_ual, opts = list(http_version = 2L, ...))
   res <- cli$get("entrez/eutils/efetch.fcgi", query = query)
   if (!res$success()) return(character())
   tt <- res$parse("UTF-8")

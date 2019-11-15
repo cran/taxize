@@ -5,9 +5,10 @@ Description: Interacts with a suite of web 'APIs' for taxonomic tasks,
     species names, getting taxonomic hierarchies, fetching downstream and
     upstream taxonomic names, getting taxonomic synonyms, converting
     scientific to common names and vice versa, and more.
-Version: 0.9.9
+Version: 0.9.91
 License: MIT + file LICENSE
-URL: https://github.com/ropensci/taxize (devel), https://taxize.dev
+URL: https://docs.ropensci.org/taxize (website),
+        https://github.com/ropensci/taxize (devel), https://taxize.dev
         (user manual)
 BugReports: https://github.com/ropensci/taxize/issues
 Authors@R: 
@@ -65,7 +66,7 @@ Authors@R:
              role = "fnd",
              comment = "https://ropensci.org/"))
 LazyLoad: yes
-LazyData: yes
+LazyData: true
 VignetteBuilder: knitr
 Encoding: UTF-8
 Language: en-US
@@ -83,7 +84,7 @@ X-schema.org-keywords: taxonomy, biology, nomenclature, JSON, API, web,
         api-client, identifiers, species, names
 X-schema.org-isPartOf: https://ropensci.org
 NeedsCompilation: no
-Packaged: 2019-10-17 20:12:24 UTC; sckott
+Packaged: 2019-11-15 00:11:30 UTC; sckott
 Author: Scott Chamberlain [aut, cre] (<https://orcid.org/0000-0003-1444-9135>),
   Eduard Szoecs [aut],
   Zachary Foster [aut],
@@ -103,4 +104,4 @@ Author: Scott Chamberlain [aut, cre] (<https://orcid.org/0000-0003-1444-9135>),
   rOpenSci [fnd] (https://ropensci.org/)
 Maintainer: Scott Chamberlain <myrmecocystus@gmail.com>
 Repository: CRAN
-Date/Publication: 2019-10-17 21:10:02 UTC
+Date/Publication: 2019-11-15 11:40:02 UTC

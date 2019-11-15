@@ -41,9 +41,12 @@
 #' @section Authentication:
 #' See [taxize-authentication()] for help on authentication. 
 #' We strongly recommend getting an API key
+#' 
+#' @section HTTP version:
+#' We hard code `http_version = 2L` to use HTTP/1.1 in HTTP requests to
+#' the Entrez API. See `curl::curl_symbols('CURL_HTTP_VERSION')` 
 #'
-#' @examples
-#' \dontrun{
+#' @examples \dontrun{
 #' ncbi_children(name="Satyrium") #Satyrium is the name of two different genera
 #' ncbi_children(name="Satyrium", ancestor="Eumaeini") # A genus of butterflies
 #' ncbi_children(name="Satyrium", ancestor="Orchidaceae") # A genus of orchids
@@ -62,7 +65,7 @@ ncbi_children <- function(name = NULL, id = NULL, start = 0, max_return = 1000,
   # Constants -----------------------------------------------------------------
   ambiguous_regex <- paste(
      sep = "|", "unclassified", "environmental", "uncultured", "unknown",
-     "unidentified", "candidate", "sp\\.", "s\\.l\\.", "sensu lato", "clone",
+     "unidentified", "candidate", "\\ssp\\.", "s\\.l\\.", "sensu lato", "clone",
      "miscellaneous", "candidatus", "affinis", "aff\\.", "incertae sedis",
      "mixed", "samples", "libaries")
   # Argument validation -------------------------------------------------------
@@ -83,6 +86,8 @@ ncbi_children <- function(name = NULL, id = NULL, start = 0, max_return = 1000,
     ancestor <- vapply(id_taxonomy,
                        function(x) ifelse(nrow(x) > 1, x$name[nrow(x) - 1], 
                         as.character(NA)), character(1))
+    # set id to NULL because we're using name now
+    id <- NULL
   } else if (is.null(ancestor)) {
     ancestor <- rep(NA, length(name))
   }
@@ -107,7 +112,8 @@ ncbi_children <- function(name = NULL, id = NULL, start = 0, max_return = 1000,
       args$term <- gsub("\\+", " ", args$term)
       
       # Search ncbi for children - - - - - - - - - - - - - - - - - - - - - - - 
-      cli <- crul::HttpClient$new(ncbi_base(), headers = tx_ual, opts = list(...))
+      cli <- crul::HttpClient$new(ncbi_base(), headers = tx_ual,
+        opts = list(http_version = 2L, ...))
       rr <- cli$get('entrez/eutils/esearch.fcgi', query = args)
       rr$raise_for_status()
       raw_results <- rr$parse("UTF-8")
@@ -129,7 +135,8 @@ ncbi_children <- function(name = NULL, id = NULL, start = 0, max_return = 1000,
       args$term <- gsub("\\+", " ", args$term)
       
       # Search ncbi for children - - - - - - - - - - - - - - - - - - - - - - - 
-      cli <- crul::HttpClient$new(ncbi_base(), headers = tx_ual, opts = list(...))
+      cli <- crul::HttpClient$new(ncbi_base(), headers = tx_ual,
+        opts = list(http_version = 2L, ...))
       rr <- cli$get('entrez/eutils/elink.fcgi', query = args)
       rr$raise_for_status()
       raw_results <- rr$parse("UTF-8")

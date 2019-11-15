@@ -22,6 +22,11 @@
 #' [ritis::hierarchy_down()], [ncbi_children()], or [worrms::wm_children()].
 #' See those functions for what parameters can be passed on.
 #'
+#' @section ncbi:
+#' note that with `db = "ncbi"`, we set `ambiguous = TRUE`; that is, children
+#' taxa with words like "unclassified", "unknown", "uncultured", "sp." are
+#' NOT removed
+#'
 #' @return A named list of data.frames with the children names of every
 #' supplied taxa. You get an NA if there was no match in the database.
 #'
@@ -161,6 +166,7 @@ process_children_ids <- function(input, db, fxn, ...){
 #' @export
 #' @rdname children
 children.tsn <- function(x, db = NULL, ...) {
+  warn_db(list(db = db), "itis")
   fun <- function(y){
     # return NA if NA is supplied
     if (is.na(y)) {
@@ -178,7 +184,8 @@ children.tsn <- function(x, db = NULL, ...) {
 
 #' @export
 #' @rdname children
-children.colid <- function(x,  db = NULL, ...) {
+children.colid <- function(x, db = NULL, ...) {
+  warn_db(list(db = db), "col")
   fun <- function(y){
     # return NA if NA is supplied
     if (is.na(y)) {
@@ -209,6 +216,7 @@ df2dt2tbl <- function(x) {
 #' @export
 #' @rdname children
 children.wormsid <- function(x, db = NULL, ...) {
+  warn_db(list(db = db), "worms")
   fun <- function(y){
     # return NA if NA is supplied
     if (is.na(y)) {
@@ -257,6 +265,7 @@ children.ids <- function(x, db = NULL, ...) {
 #' @export
 #' @rdname children
 children.uid <- function(x, db = NULL, ...) {
+  warn_db(list(db = db), "uid")
   out <- if (is.na(x)) {
     stats::setNames(list(ncbi_blank), x)
   } else {

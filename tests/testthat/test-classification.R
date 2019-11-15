@@ -121,7 +121,7 @@ test_that("rbind and cbind work correctly", {
   skip_on_cran() # uses secrets
   vcr::use_cassette("classification_cbind_rbind", {
     out <- get_ids(names = c("Puma concolor", "Accipiter striatus"),
-                   db = 'ncbi', messages = FALSE)
+                   db = 'ncbi', messages = FALSE, suppress = TRUE)
     cl <- classification(out)
   })
 
@@ -150,6 +150,7 @@ test_that("works on a variety of names", {
 })
 
 test_that("queries with no results fail well", {
+  skip_on_cran()
   vcr::use_cassette("classification_no_results", {
     aa <- classification(x = "foobar", db = "itis", messages = FALSE)
     bb <- classification(get_tsn("foobar", messages = FALSE), messages = FALSE)
@@ -188,7 +189,7 @@ test_that("rows parameter, when used, works", {
     b <- classification("Asdfafsfd", db = 'itis', rows = 1, messages = FALSE)
     d <- classification("Asdfafsfd", db = 'gbif', rows = 1, messages = FALSE)
     e <- classification("Asdfafsfd", db = 'eol', rows = 1, messages = FALSE)
-    f <- classification("Asdfafsfd", db = 'col', rows = 1, messages = FALSE)
+    f <- sw(classification("Asdfafsfd", db = 'col', rows = 1, messages = FALSE))
     g <- classification("Asdfafsfd", db = 'tropicos', rows = 1, messages = FALSE)
     h <- classification("Asdfafsfd", db = 'nbn', rows = 1, messages = FALSE)
   })
@@ -200,4 +201,13 @@ test_that("rows parameter, when used, works", {
   expect_is(f, "classification")
   expect_is(g, "classification")
   expect_is(h, "classification")
+})
+
+test_that("warn on mismatch 'db'", {
+  skip_on_cran()
+  vcr::use_cassette("classification_warn_on_db_mismatch", {
+    expect_warning(
+      classification(
+        get_uid("Chironomus riparius", messages = FALSE), db = "itis"))
+  })
 })

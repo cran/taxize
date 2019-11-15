@@ -68,6 +68,10 @@
 #' an ID that does not exist they'll return a 500 HTTP error, which is
 #' not an appropriate error; it's probably that that ID does not exist 
 #' in their database, but we can't know for sure. Isn't that fun?
+#' 
+#' @section HTTP version for NCBI requests:
+#' We hard code `http_version = 2L` to use HTTP/1.1 in HTTP requests to
+#' the Entrez API. See `curl::curl_symbols('CURL_HTTP_VERSION')` 
 #'
 #' @examples \dontrun{
 #' # Plug in taxon IDs
@@ -315,6 +319,7 @@ process_ids <- function(input, db, fxn, ...){
 #' @export
 #' @rdname classification
 classification.tsn <- function(id, return_id = TRUE, ...) {
+  warn_db(list(...), "itis")
   fun <- function(x) {
     # return NA if NA is supplied
     if (is.na(x)) {
@@ -341,6 +346,7 @@ classification.tsn <- function(id, return_id = TRUE, ...) {
 #' @export
 #' @rdname classification
 classification.uid <- function(id, callopts = list(), return_id = TRUE, ...) {
+  warn_db(list(...), "ncbi")
   fun <- function(x, callopts){
     key <- getkey(NULL, service="entrez")
     # return NA if NA is supplied
@@ -348,7 +354,8 @@ classification.uid <- function(id, callopts = list(), return_id = TRUE, ...) {
       out <- NA
     } else {
       query <- tc(list(db = "taxonomy", ID = x, api_key = key))
-      cli <- crul::HttpClient$new(url = ncbi_base(), opts = callopts)
+      cli <- crul::HttpClient$new(url = ncbi_base(),
+        opts = c(http_version = 2L, callopts))
       res <- cli$get("entrez/eutils/efetch.fcgi", query = query)
       res$raise_for_status()
       tt <- res$parse("UTF-8")
@@ -388,6 +395,7 @@ classification.uid <- function(id, callopts = list(), return_id = TRUE, ...) {
 #' @export
 #' @rdname classification
 classification.eolid <- function(id, callopts = list(), return_id = TRUE, ...) {
+  warn_db(list(...), "eol")
   common_names = synonyms = NULL
   fun <- function(x){
     if (is.na(x)) {
@@ -430,6 +438,7 @@ classification.eolid <- function(id, callopts = list(), return_id = TRUE, ...) {
 #' @rdname classification
 classification.colid <- function(id, start = NULL, checklist = NULL,
                                  callopts = list(), return_id = TRUE, ...) {
+  warn_db(list(...), "col")
   fun <- function(x, checklist, start, callopts){
     # return NA if NA is supplied
     if (is.na(x)) {
@@ -471,6 +480,7 @@ search_col_classification_df <- function(x) {
 #' @export
 #' @rdname classification
 classification.tpsid <- function(id, callopts = list(), return_id = TRUE, ...) {
+  warn_db(list(...), "tropicos")
   fun <- function(x, callopts){
     if (is.na(x)) {
       out <- NA
@@ -503,6 +513,7 @@ classification.tpsid <- function(id, callopts = list(), return_id = TRUE, ...) {
 classification.gbifid <- function(id, callopts = list(),
   return_id = TRUE, ...) {
 
+  warn_db(list(...), "gbif")
   fun <- function(x, callopts){
     if (is.na(x)) {
       out <- NA
@@ -535,6 +546,7 @@ classification.gbifid <- function(id, callopts = list(),
 classification.nbnid <- function(id, callopts = list(),
   return_id = TRUE, ...) {
 
+  warn_db(list(...), "nbn")
   fun <- function(x, callopts){
     if (is.na(x)) {
       out <- NA
@@ -563,6 +575,7 @@ classification.nbnid <- function(id, callopts = list(),
 classification.tolid <- function(id, callopts = list(),
   return_id = TRUE, ...) {
 
+  warn_db(list(...), "tol")
   fun <- function(x, callopts) {
     if (is.na(x)) {
       out <- NA
@@ -598,6 +611,7 @@ classification.tolid <- function(id, callopts = list(),
 classification.wormsid <- function(id, callopts = list(),
   return_id = TRUE, ...) {
 
+  warn_db(list(...), "worms")
   fun <- function(x, ...){
     if (is.na(x)) {
       out <- NA
@@ -625,6 +639,7 @@ classification.wormsid <- function(id, callopts = list(),
 classification.natservid <- function(id, callopts = list(),
   return_id = TRUE, ...) {
 
+  warn_db(list(...), "natserv")
   fun <- function(x, callopts) {
     if (is.na(x)) {
       out <- NA
@@ -662,6 +677,7 @@ classification.natservid <- function(id, callopts = list(),
 classification.boldid <- function(id, callopts = list(),
   return_id = TRUE, ...) {
 
+  warn_db(list(...), "bold")
   fun <- function(x, callopts) {
     if (is.na(x)) {
       out <- NA
@@ -687,6 +703,7 @@ classification.boldid <- function(id, callopts = list(),
 #' @export
 #' @rdname classification
 classification.wiki <- function(id, callopts = list(), return_id = TRUE, ...) {
+  warn_db(list(...), "wiki")
   fun <- function(x, wiki_site = "species", wiki = "en", callopts) {
     if (is.na(x)) {
       out <- NA
@@ -721,6 +738,7 @@ classification.wiki <- function(id, callopts = list(), return_id = TRUE, ...) {
 #' @export
 #' @rdname classification
 classification.pow <- function(id, callopts = list(), return_id = TRUE, ...) {
+  warn_db(list(...), "pow")
   fun <- function(x, callopts) {
     if (is.na(x)) {
       out <- NA

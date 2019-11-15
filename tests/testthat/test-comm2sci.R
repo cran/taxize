@@ -37,6 +37,8 @@ test_that("comm2sci returns the correct values and classes", {
 })
 
 test_that("comm2sci fails well", {
+  skip_on_cran()
+
   expect_error(comm2sci(5), "commnames must be of class character")
   expect_error(comm2sci(list()), "commnames must be of class character")
   expect_error(comm2sci(mtcars), "commnames must be of class character")
@@ -49,4 +51,13 @@ test_that("comm2sci fails well", {
 
   # no results if itisby is not a valid value, doesn't error though
   expect_equal(length(comm2sci('bear', db='itis', itisby = "asdff")[[1]]), 0)
+})
+
+test_that("warn on mismatch 'db'", {
+  skip_on_cran()
+  vcr::use_cassette("children_warn_on_db_mismatch", {
+    expect_warning(
+      children(
+        get_uid("Chironomus riparius", messages = FALSE), db = "itis"))
+  })
 })

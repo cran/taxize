@@ -13,6 +13,10 @@
 #' See those functions for what parameters can be passed on.
 #'
 #' @return A named list of data.frames, named by the input taxonomic ids
+#' 
+#' @section HTTP version for NCBI requests:
+#' We hard code `http_version = 2L` to use HTTP/1.1 in HTTP requests to
+#' the Entrez API. See `curl::curl_symbols('CURL_HTTP_VERSION')` 
 #'
 #' @examples \dontrun{
 #' # ITIS
@@ -68,6 +72,7 @@ process_idn_ids <- function(input, db) {
 #' @export
 #' @rdname id2name
 id2name.tolid <- function(x, ...) {
+  warn_db(list(...), "tol")
   fun <- function(y) {
     if (is.na(y)) NA_character_ else tol_id2name(as.numeric(y))
   }
@@ -93,6 +98,7 @@ itis_id2name <- function(x, ...) {
 #' @export
 #' @rdname id2name
 id2name.tsn <- function(x, ...) {
+  warn_db(list(...), "itis")
   fun <- function(y) {
     if (is.na(y)) NA_character_ else itis_id2name(y, ...)
   }
@@ -108,7 +114,7 @@ id2name.tsn <- function(x, ...) {
 ncbi_id2name <- function(x, ...) {
   key <- getkey(NULL, "ENTREZ_KEY")
   cli <- crul::HttpClient$new(url = ncbi_base(), headers = tx_ual,
-    opts = list(...))
+    opts = list(http_version = 2L, ...))
   args <- tc(list(db = "taxonomy", id = x, api_key = key))
   res <- cli$get("entrez/eutils/esummary.fcgi", query = args)
   res$raise_for_status()
@@ -127,6 +133,7 @@ ncbi_id2name <- function(x, ...) {
 #' @export
 #' @rdname id2name
 id2name.uid <- function(x, ...) {
+  warn_db(list(...), "ncbi")
   fun <- function(y, ...) {
     if (is.na(y)) NA_character_ else ncbi_id2name(y, ...)
   }
@@ -150,6 +157,7 @@ worms_id2name <- function(x, ...) {
 #' @export
 #' @rdname id2name
 id2name.wormsid <- function(x, ...) {
+  warn_db(list(...), "worms")
   fun <- function(y) {
     if (is.na(y)) NA_character_ else worms_id2name(y, ...)
   }
@@ -173,6 +181,7 @@ gbif_id2name <- function(x, ...) {
 #' @export
 #' @rdname id2name
 id2name.gbifid <- function(x, ...) {
+  warn_db(list(...), "gbif")
   fun <- function(y) {
     if (is.na(y)) NA_character_ else gbif_id2name(y, ...)
   }
@@ -196,6 +205,7 @@ col_id2name <- function(x, ...) {
 #' @export
 #' @rdname id2name
 id2name.colid <- function(x, ...) {
+  warn_db(list(...), "col")
   fun <- function(y) {
     if (is.na(y)) NA_character_ else col_id2name(y, ...)
   }
@@ -219,6 +229,7 @@ bold_id2name <- function(x, ...) {
 #' @export
 #' @rdname id2name
 id2name.boldid <- function(x, ...) {
+  warn_db(list(...), "bold")
   fun <- function(y) {
     if (is.na(y)) NA_character_ else bold_id2name(y, ...)
   }

@@ -21,6 +21,10 @@
 #' @section Authentication:
 #' See [taxize-authentication] for help on authentication
 #' 
+#' @section HTTP version for NCBI requests:
+#' We hard code `http_version = 2L` to use HTTP/1.1 in HTTP requests to
+#' the Entrez API. See `curl::curl_symbols('CURL_HTTP_VERSION')` 
+#' 
 #' @return List of character vectors, named by input taxon name,
 #' or taxon ID. `character(0)` on no match
 #'
@@ -67,6 +71,7 @@ sci2comm.default <- function(scinames, db='ncbi', simplify=TRUE, ...) {
 #' @export
 #' @rdname sci2comm
 sci2comm.uid <- function(id, ...) {
+  warn_db(list(...), "ncbi")
   out <- lapply(id, function(x) ncbi_foo(x, ...))
   names(out) <- id
   return(out)
@@ -75,6 +80,7 @@ sci2comm.uid <- function(id, ...) {
 #' @export
 #' @rdname sci2comm
 sci2comm.tsn <- function(id, simplify=TRUE, ...) {
+  warn_db(list(...), "itis")
   out <- lapply(id, function(x) itis_foo(x, simplify, ...))
   names(out) <- id
   return(out)
@@ -83,6 +89,7 @@ sci2comm.tsn <- function(id, simplify=TRUE, ...) {
 #' @export
 #' @rdname sci2comm
 sci2comm.wormsid <- function(id, simplify=TRUE, ...) {
+  warn_db(list(...), "worms")
   out <- lapply(id, function(x) worms_foo(x, simplify, ...))
   names(out) <- id
   return(out)
@@ -91,7 +98,7 @@ sci2comm.wormsid <- function(id, simplify=TRUE, ...) {
 #' @export
 #' @rdname sci2comm
 sci2comm.iucn <- function(id, simplify=TRUE, ...) {
-  #out <- lapply(id, function(x) iucn_foo(x, simplify, ...))
+  warn_db(list(...), "iucn")
   out <- vector("list", length(id))
   for (i in seq_along(id)) {
     out[[i]] <- iucn_foo(attr(id, "name")[i], simplify, ...)
@@ -176,7 +183,7 @@ ncbi_foo <- function(x, ...){
   key <- getkey(NULL, "ENTREZ_KEY")
   query <- tc(list(db = "taxonomy", ID = x, api_key = key))
   cli <- crul::HttpClient$new(url = ncbi_base(), headers = tx_ual,
-    opts = list(...))
+    opts = list(http_version = 2L, ...))
   res <- cli$get("entrez/eutils/efetch.fcgi", query = query)
   if (!res$success()) return(character(0))
   tt <- res$parse("UTF-8")
