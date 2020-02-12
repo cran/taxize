@@ -6,7 +6,6 @@
 \alias{classification.tsn}
 \alias{classification.uid}
 \alias{classification.eolid}
-\alias{classification.colid}
 \alias{classification.tpsid}
 \alias{classification.gbifid}
 \alias{classification.nbnid}
@@ -25,46 +24,38 @@
 \usage{
 classification(...)
 
-\method{classification}{default}(x, db = NULL, callopts = list(),
-  return_id = TRUE, rows = NA, ...)
+\method{classification}{default}(
+  x,
+  db = NULL,
+  callopts = list(),
+  return_id = TRUE,
+  rows = NA,
+  ...
+)
 
 \method{classification}{tsn}(id, return_id = TRUE, ...)
 
-\method{classification}{uid}(id, callopts = list(), return_id = TRUE,
-  ...)
+\method{classification}{uid}(id, callopts = list(), return_id = TRUE, ...)
 
-\method{classification}{eolid}(id, callopts = list(), return_id = TRUE,
-  ...)
+\method{classification}{eolid}(id, callopts = list(), return_id = TRUE, ...)
 
-\method{classification}{colid}(id, start = NULL, checklist = NULL,
-  callopts = list(), return_id = TRUE, ...)
+\method{classification}{tpsid}(id, callopts = list(), return_id = TRUE, ...)
 
-\method{classification}{tpsid}(id, callopts = list(), return_id = TRUE,
-  ...)
+\method{classification}{gbifid}(id, callopts = list(), return_id = TRUE, ...)
 
-\method{classification}{gbifid}(id, callopts = list(),
-  return_id = TRUE, ...)
+\method{classification}{nbnid}(id, callopts = list(), return_id = TRUE, ...)
 
-\method{classification}{nbnid}(id, callopts = list(), return_id = TRUE,
-  ...)
+\method{classification}{tolid}(id, callopts = list(), return_id = TRUE, ...)
 
-\method{classification}{tolid}(id, callopts = list(), return_id = TRUE,
-  ...)
+\method{classification}{wormsid}(id, callopts = list(), return_id = TRUE, ...)
 
-\method{classification}{wormsid}(id, callopts = list(),
-  return_id = TRUE, ...)
+\method{classification}{natservid}(id, callopts = list(), return_id = TRUE, ...)
 
-\method{classification}{natservid}(id, callopts = list(),
-  return_id = TRUE, ...)
+\method{classification}{boldid}(id, callopts = list(), return_id = TRUE, ...)
 
-\method{classification}{boldid}(id, callopts = list(),
-  return_id = TRUE, ...)
+\method{classification}{wiki}(id, callopts = list(), return_id = TRUE, ...)
 
-\method{classification}{wiki}(id, callopts = list(), return_id = TRUE,
-  ...)
-
-\method{classification}{pow}(id, callopts = list(), return_id = TRUE,
-  ...)
+\method{classification}{pow}(id, callopts = list(), return_id = TRUE, ...)
 
 \method{classification}{ids}(id, ...)
 
@@ -78,7 +69,7 @@ classification(...)
 }
 \arguments{
 \item{...}{For \code{classification}: other arguments passed to \code{\link[=get_tsn]{get_tsn()}},
-\code{\link[=get_uid]{get_uid()}}, \code{\link[=get_eolid]{get_eolid()}}, \code{\link[=get_colid]{get_colid()}}, \code{\link[=get_tpsid]{get_tpsid()}}, \code{\link[=get_gbifid]{get_gbifid()}},
+\code{\link[=get_uid]{get_uid()}}, \code{\link[=get_eolid]{get_eolid()}}, \code{\link[=get_tpsid]{get_tpsid()}}, \code{\link[=get_gbifid]{get_gbifid()}},
 \code{\link[=get_wormsid]{get_wormsid()}}, \code{\link[=get_natservid]{get_natservid()}}, \code{\link[=get_wormsid]{get_wormsid()}}, \code{\link[=get_wiki]{get_wiki()}},
 \code{\link[=get_pow]{get_pow()}}. For \code{rbind.classification} and \code{cbind.classification}: one or
 more objects of class \code{classification}}
@@ -87,7 +78,7 @@ more objects of class \code{classification}}
 to query. For \code{db = "eol"}, EOL expects you to pass it a taxon id, called
 \code{eolid} in the output of \code{\link[=get_eolid]{get_eolid()}}.}
 
-\item{db}{character; database to query. either \code{ncbi}, \code{itis}, \code{eol}, \code{col},
+\item{db}{character; database to query. either \code{ncbi}, \code{itis}, \code{eol},
 \code{tropicos}, \code{gbif}, \code{nbn}, \code{worms}, \code{natserv}, \code{bold}, \code{wiki}, or \code{pow}.
 Note that each taxonomic data source has, their own identifiers, so that
 if you provide the wrong \code{db} value for the identifier you could get a
@@ -107,18 +98,9 @@ all rows are considered. Note that this parameter is ignored if you pass
 in a taxonomic id instead of a name of class character.}
 
 \item{id}{character; identifiers, returned by \code{\link[=get_tsn]{get_tsn()}}, \code{\link[=get_uid]{get_uid()}},
-\code{\link[=get_eolid]{get_eolid()}}, \code{\link[=get_colid]{get_colid()}}, \code{\link[=get_tpsid]{get_tpsid()}}, \code{\link[=get_gbifid]{get_gbifid()}}, \code{\link[=get_tolid]{get_tolid()}},
+\code{\link[=get_eolid]{get_eolid()}}, \code{\link[=get_tpsid]{get_tpsid()}}, \code{\link[=get_gbifid]{get_gbifid()}}, \code{\link[=get_tolid]{get_tolid()}},
 \code{\link[=get_wormsid]{get_wormsid()}}, \code{\link[=get_natservid]{get_natservid()}}, \code{\link[=get_wormsid]{get_wormsid()}}, \code{\link[=get_wiki]{get_wiki()}},
 \code{\link[=get_pow]{get_pow()}}}
-
-\item{start}{The first record to return. If omitted, the results are
-returned from the first record (start=0). This is useful if the total
-number of results is larger than the maximum number of results returned by
-a single Web service query (currently the maximum number of results returned
-by a single query is 500 for terse queries and 50 for full queries).}
-
-\item{checklist}{character; The year of the checklist to query, if you want
-a specific year's checklist instead of the lastest as default (numeric).}
 }
 \value{
 A named list of data.frames with the taxonomic classification of
@@ -128,7 +110,7 @@ every supplied taxa.
 Retrieve the taxonomic hierarchy for a given taxon ID.
 }
 \details{
-If IDs are supplied directly (not from the \code{get_*} functions)
+If IDs are supplied directly (not from the \verb{get_*} functions)
 you must specify the type of ID. There is a timeout of 1/3 seconds between
 queries to NCBI.
 
@@ -210,20 +192,17 @@ classification(c("Chironomus riparius", "aaa vva"), db = 'itis')
 classification(c("Chironomus riparius", "aaa vva"), db = 'itis',
   messages=FALSE)
 classification(c("Chironomus riparius", "aaa vva"), db = 'eol')
-classification(c("Chironomus riparius", "aaa vva"), db = 'col')
 classification("Alopias vulpinus", db = 'nbn')
 classification('Gadus morhua', db = 'worms')
 classification('Aquila chrysaetos', db = 'natserv')
 classification('Gadus morhua', db = 'natserv')
 classification('Pomatomus saltatrix', db = 'natserv')
 classification('Aquila chrysaetos', db = 'natserv')
-classification(c("Chironomus riparius", "aaa vva"), db = 'col',
-  messages=FALSE)
 classification(c("Chironomus riparius", "asdfasdfsfdfsd"), db = 'gbif')
 classification("Chironomus", db = 'tol')
 classification("Poa annua", db = 'tropicos')
 
-# Use methods for get_uid, get_tsn, get_eolid, get_colid, get_tpsid
+# Use methods for get_uid, get_tsn, get_eolid, get_tpsid
 classification(get_uid(c("Chironomus riparius", "Puma concolor")))
 
 classification(get_uid(c("Chironomus riparius", "aaa vva")))
@@ -231,7 +210,6 @@ classification(get_tsn(c("Chironomus riparius", "aaa vva")))
 classification(get_tsn(c("Chironomus riparius", "aaa vva"),
   messages = FALSE))
 classification(get_eolid(c("Chironomus riparius", "aaa vva")))
-classification(get_colid(c("Chironomus riparius", "aaa vva")))
 classification(get_tpsid(c("Poa annua", "aaa vva")))
 classification(get_gbifid(c("Poa annua", "Bison bison")))
 
@@ -247,20 +225,13 @@ rbind(cl)
 
 # Many names to get_ids
 (out <- get_ids(names=c("Puma concolor","Accipiter striatus"),
-  db = c('ncbi','itis','col')))
+  db = c('ncbi','itis')))
 (cl <- classification(out))
 rbind(cl)
 ## cbind with so many names results in some messy data
 cbind(cl)
 ## so you can turn off return_id
 cbind( classification(out, return_id=FALSE) )
-
-# rbind and cbind on class classification (from a
-# call to get_colid, get_tsn, etc. other than get_ids)
-(cl_col <- classification(
-  get_colid(c("Puma concolor","Accipiter striatus"))))
-rbind(cl_col)
-cbind(cl_col)
 
 (cl_uid <- classification(get_uid(c("Puma concolor",
   "Accipiter striatus")), return_id=FALSE))
@@ -306,7 +277,7 @@ classification('Poa annua', db = 'tropicos', rows=6)
 }
 }
 \seealso{
-\code{\link[=get_tsn]{get_tsn()}}, \code{\link[=get_uid]{get_uid()}}, \code{\link[=get_eolid]{get_eolid()}}, \code{\link[=get_colid]{get_colid()}},
+\code{\link[=get_tsn]{get_tsn()}}, \code{\link[=get_uid]{get_uid()}}, \code{\link[=get_eolid]{get_eolid()}},
 \code{\link[=get_tpsid]{get_tpsid()}}, \code{\link[=get_gbifid]{get_gbifid()}}, \code{\link[=get_wormsid]{get_wormsid()}}, \code{\link[=get_natservid]{get_natservid()}},
 \code{\link[=get_boldid]{get_boldid()}}, \code{\link[=get_wiki]{get_wiki()}}, \code{\link[=get_pow]{get_pow()}}
 }

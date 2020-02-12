@@ -65,8 +65,8 @@ class2tree <- function(input, varstep = TRUE, check = TRUE, ...) {
     stop("Input list of classifications contains duplicates")
 
   # Get rank and ID list
-  rankList <- rbind.fill(lapply(input, get_rank))
-  nameList <- rbind.fill(lapply(input, get_name))
+  rankList <- dt2df(lapply(input, get_rank), idcol = FALSE)
+  nameList <- dt2df(lapply(input, get_name), idcol = FALSE)
 
   # Create taxonomy matrix
   df <- taxonomy_table_creator(nameList,rankList)
@@ -324,7 +324,9 @@ taxonomy_table_creator <- function(nameList,rankList){
                                 fixed = TRUE))
 
     ### convert into long format
-    mTaxonDf <- suppressWarnings(melt(taxonDf,id = "tip"))
+    # mTaxonDf <- suppressWarnings(melt(taxonDf,id = "tip"))
+    mTaxonDf <- setDF(suppressWarnings(data.table::melt(as.data.table(taxonDf),
+      id = "tip")))
 
     ### get rank names and corresponding IDs
     splitCol <- data.frame(do.call('rbind',

@@ -5,7 +5,7 @@ Description: Interacts with a suite of web 'APIs' for taxonomic tasks,
     species names, getting taxonomic hierarchies, fetching downstream and
     upstream taxonomic names, getting taxonomic synonyms, converting
     scientific to common names and vice versa, and more.
-Version: 0.9.91
+Version: 0.9.92
 License: MIT + file LICENSE
 URL: https://docs.ropensci.org/taxize (website),
         https://github.com/ropensci/taxize (devel), https://taxize.dev
@@ -72,19 +72,18 @@ Encoding: UTF-8
 Language: en-US
 Depends: R(>= 3.2.1)
 Imports: graphics, methods, stats, utils, crul (>= 0.7.0), xml2 (>=
-        1.2.0), jsonlite, reshape2, stringr, plyr, foreach, ape, zoo,
-        bold (>= 0.8.6), data.table, rredlist (>= 0.5.0), rotl (>=
-        3.0.0), ritis (>= 0.7.6), tibble (>= 1.2), worrms (>= 0.4.0),
-        natserv (>= 0.3.0), wikitaxa (>= 0.3.0), R6, crayon, cli,
-        phangorn
-Suggests: roxygen2 (>= 6.1.1), testthat, knitr, vegan, vcr
-RoxygenNote: 6.1.1
+        1.2.0), jsonlite, foreach, ape, zoo, data.table, tibble (>=
+        1.2), bold (>= 0.8.6), rredlist (>= 0.5.0), rotl (>= 3.0.0),
+        ritis (>= 0.7.6), worrms (>= 0.4.0), natserv (>= 0.3.0),
+        wikitaxa (>= 0.3.0), R6, crayon, cli, phangorn
+Suggests: testthat, knitr, rmarkdown, vegan, vcr
+RoxygenNote: 7.0.2
 X-schema.org-applicationCategory: Taxonomy
 X-schema.org-keywords: taxonomy, biology, nomenclature, JSON, API, web,
         api-client, identifiers, species, names
 X-schema.org-isPartOf: https://ropensci.org
 NeedsCompilation: no
-Packaged: 2019-11-15 00:11:30 UTC; sckott
+Packaged: 2020-02-11 20:45:06 UTC; sckott
 Author: Scott Chamberlain [aut, cre] (<https://orcid.org/0000-0003-1444-9135>),
   Eduard Szoecs [aut],
   Zachary Foster [aut],
@@ -104,4 +103,4 @@ Author: Scott Chamberlain [aut, cre] (<https://orcid.org/0000-0003-1444-9135>),
   rOpenSci [fnd] (https://ropensci.org/)
 Maintainer: Scott Chamberlain <myrmecocystus@gmail.com>
 Repository: CRAN
-Date/Publication: 2019-11-15 11:40:02 UTC
+Date/Publication: 2020-02-12 05:10:03 UTC

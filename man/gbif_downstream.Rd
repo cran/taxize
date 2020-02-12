@@ -4,8 +4,14 @@
 \alias{gbif_downstream}
 \title{Retrieve all taxa names downstream in hierarchy for GBIF}
 \usage{
-gbif_downstream(key, downto, intermediate = FALSE, limit = 100,
-  start = NULL, ...)
+gbif_downstream(
+  key,
+  downto,
+  intermediate = FALSE,
+  limit = 100,
+  start = NULL,
+  ...
+)
 }
 \arguments{
 \item{key}{A taxonomic serial number.}
@@ -59,7 +65,8 @@ gbif_downstream(key = 7799978, downto="species")
 gbif_downstream(key = 7799978, downto="species", intermediate=TRUE)
 
 # names that don't have canonicalname entries for some results
-key <- get_gbifid("Myosotis")
+# Myosotis: key 2925668
+key <- 2925668
 res <- gbif_downstream(key, downto = "species")
 res2 <- downstream(key, db = "gbif", downto = "species")
 }

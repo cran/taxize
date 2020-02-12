@@ -32,7 +32,6 @@
 #' IUCN Red List \tab iucn \tab FALSE \cr
 #' Tropicos (from Missouri Botanical Garden) \tab tp \tab FALSE \cr
 #' Theplantlist.org \tab tpl \tab FALSE \cr
-#' Catalogue of Life \tab col \tab FALSE \cr
 #' National Center for Biotechnology Information \tab ncbi \tab FALSE \cr
 #' CANADENSYS Vascan name search API \tab vascan \tab FALSE \cr
 #' International Plant Names Index (IPNI) \tab ipni \tab FALSE \cr
@@ -53,13 +52,11 @@
 #' in this package. They are available from a different package called **taxizesoap**.
 #' See the GitHub repo for how to install <https://github.com/ropensci/taxizesoap>
 #' 
-#' @section Catalogue of Life (COL) Rate limiting:
-#' COL introduced rate limiting recently (writing this on 2019-11-14),
-#' but we've no information on what the rate limits are. If you do run into
-#' this you'll see an error like "Error: Too Many Requests (HTTP 429)",
-#' you'll need to time your requests to avoid the rate limiting, for
-#' example, by putting `Sys.sleep()` in between simultaneous requests.
-#' This affects any functions that work with COL data.
+#' @section Catalogue of Life (COL):
+#' COL introduced rate limiting recently in 2019 - which has made the API
+#' essentially unusable - CoL+ is coming soon and we'll incorporate it here
+#' when it's stable. See https://github.com/ropensci/colpluz for the
+#' R implementation for CoL+
 #'
 #' @importFrom graphics plot
 #' @importFrom methods as is
@@ -69,11 +66,8 @@
 #' @importFrom utils URLencode citation download.file read.delim write.table tail
 #' @importFrom ape read.tree as.phylo.hclust plot.phylo
 #' @importFrom jsonlite fromJSON toJSON
-#' @importFrom data.table rbindlist setDF transpose
+#' @importFrom data.table rbindlist setDF transpose melt dcast as.data.table
 #' @importFrom foreach foreach %do%
-#' @importFrom stringr str_extract str_split str_replace str_replace_all
-#' @importFrom plyr failwith rbind.fill llply ldply ddply l_ply summarise colwise .
-#' @importFrom reshape2 melt dcast
 #' @importFrom xml2 xml_text xml_find_first xml_find_all xml_children read_xml
 #' xml_name xml_ns as_list
 #' @importFrom R6 R6Class
@@ -198,12 +192,35 @@ NULL
 #' @keywords data
 NULL
 
+#' WORMS ranks
+#'
+#' Created using `worrms::wm_ranks_id(-1)` on 2020-02-11.
+#'
+#' Present in taxize in the case where WORMS does not
+#' return rank names - with this dataset we can fill
+#' in rank information as long as rank ids are returned
+#'
+#' @format A data frame with 494 rows and 3 variables:
+#'
+#'   * `id`: rank id
+#'   * `rank`: rank name
+#'
+#' @name worrms_ranks
+#' @docType data
+#' @keywords data
+NULL
+
 #' Defunct functions in taxize
 #'
 #' The following functions are now defunct (no longer available):
-#' * [col_classification()]: See`classification()`()]
-#' * [eol_hierarchy()]: See`classification()`()]
-#' * [tp_classification()]: See`classification()`()]
+#' * All COL functions are defunct: `as.colid, `col_children`,
+#' `col_classification`, `col_downstream`, `col_search`, `get_colid`,
+#' `get_colid_`, `as.data.frame.colid`, `children.colid`,
+#' `classification.colid`, `downstream.colid`, `id2name.colid`,
+#' `lowest_common.colid`, `synonyms.colid`, `upstream.colid`
+#' * `col_classification()`: See`classification()`
+#' * `eol_hierarchy()`: See`classification()`
+#' * `tp_classification()`: See`classification()`
 #' * [tpl_search()]: Use the \pkg{Taxonstand} functions `TPL` or `TPLck` directly.
 #' * [get_seqs()]: This function changed name to`ncbi_getbyname()`()].
 #' * [get_genes()]: This function changed name to`ncbi_getbyid()`()].
