@@ -43,11 +43,12 @@ ncbi_downstream <- function(id, downto, intermediate = FALSE, ...) {
   should_be('intermediate', intermediate, 'logical')
 
   downto <- tolower(downto)
-  poss_ranks <- unique(do.call(c, sapply(rank_ref$ranks, strsplit, split = ",",
-                                         USE.NAMES = FALSE)))
+  poss_ranks <- unique(do.call(c,
+    sapply(taxize_ds$rank_ref$ranks, strsplit, split = ",",
+      USE.NAMES = FALSE)))
   downto <- match.arg(downto, choices = poss_ranks)
-  torank <- sapply(rank_ref[which_rank(downto), "ranks"],
-                   function(x) strsplit(x, ",")[[1]][[1]], USE.NAMES = FALSE)
+  torank <- sapply(taxize_ds$rank_ref[which_rank(downto), "ranks"],
+    function(x) strsplit(x, ",")[[1]][[1]], USE.NAMES = FALSE)
 
   stop_ <- "not"
   notout <- data.frame(rank = "", stringsAsFactors = FALSE)
@@ -58,6 +59,7 @@ ncbi_downstream <- function(id, downto, intermediate = FALSE, ...) {
     iter <- iter + 1
     tt <- dt2df(lapply(id, function(x) ncbi_children(id = x, ...)[[1]]))
     tt$.id <- NULL
+    tt <- remove_self_ids(tt, id)
     tt <- rename(tt, c('childtaxa_rank' = 'rank'))
     tt <- prune_too_low(tt, downto, ignore_no_rank = TRUE)
 
@@ -85,10 +87,14 @@ ncbi_downstream <- function(id, downto, intermediate = FALSE, ...) {
     if (intermediate) intermed[[iter]] <- intermed[[iter]]
   } # end while loop
 
-  tmp <- dt2df(out, idcol = FALSE)
+  tmp <- unique(dt2df(out, idcol = FALSE))
   if (intermediate) {
     list(target = tmp, intermediate = intermed)
   } else {
     tmp
   }
+}
+
+remove_self_ids <- function(x, id) {
+  x[!as.character(x$childtaxa_id) %in% as.character(id), ]
 }

@@ -3,7 +3,7 @@ taxize
 
 
 
-
+[![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 [![cran checks](https://cranchecks.info/badges/worst/taxize)](https://cranchecks.info/pkgs/taxize)
 [![Build Status](https://travis-ci.org/ropensci/taxize.svg?branch=master)](https://travis-ci.org/ropensci/taxize)
 [![Build status](https://ci.appveyor.com/api/projects/status/6mgc02mkd8j4sq3g/branch/master)](https://ci.appveyor.com/project/sckott/taxize-175/branch/master)
@@ -15,13 +15,9 @@ taxize
 
 The taxize book => <https://taxize.dev>
 
-The functions in the package that hit a specific API have a prefix and suffix separated by an underscore. They follow the format of `service_whatitdoes`.  For example, `gnr_resolve` uses the Global Names Resolver API to resolve species names.  General functions in the package that don't hit a specific API don't have two words separated by an underscore, e.g., `classification`.
+The functions in the package that work with a specific API have a prefix and suffix separated by an underscore. They follow the format of `service_whatitdoes`.  For example, `gnr_resolve` uses the Global Names Resolver API to resolve species names.  General functions in the package that don't hit a specific API don't have two words separated by an underscore, e.g., `classification`.
 
-You need API keys for Encyclopedia of Life (EOL), Tropicos, IUCN, and NatureServe.
-
-## SOAP
-
-Note that a few data sources require SOAP web services, which are difficult to support in R across all operating systems. These include: Pan-European Species directories Infrastructure and Mycobank. Data sources that use SOAP web services have been moved to `taxizesoap` at <https://github.com/ropensci/taxizesoap>.
+You need API keys for Tropicos, IUCN, and NatureServe.
 
 ## Currently implemented in `taxize`
 
@@ -47,18 +43,18 @@ Note that a few data sources require SOAP web services, which are difficult to s
 	<td style="text-align:left;">Encylopedia of Life</td>
 	<td style="text-align:left;"><code>eol</code></td>
 	<td style="text-align:left;"><a href="https://eol.org/docs/what-is-eol/data-services">link</a></td>
-	<td style="text-align:left;"><a href="https://eol.org/docs/what-is-eol/data-services">link</a></td>
+	<td style="text-align:left;">none</td>
 </tr>
 <tr>
 	<td style="text-align:left;">Taxonomic Name Resolution Service</td>
 	<td style="text-align:left;"><code>tnrs</code></td>
-	<td style="text-align:left;">"api.phylotastic.org/tnrs"</td>
+	<td style="text-align:left;">none</td>
 	<td style="text-align:left;">none</td>
 </tr>
 <tr>
 	<td style="text-align:left;">Integrated Taxonomic Information Service</td>
 	<td style="text-align:left;"><code>itis</code></td>
-	<td style="text-align:left;"><a href="http://www.itis.gov/ws_description.html">link</a></td>
+	<td style="text-align:left;"><a href="https://www.itis.gov/ws_description.html">link</a></td>
 	<td style="text-align:left;">none</td>
 </tr>
 <tr>
@@ -76,8 +72,8 @@ Note that a few data sources require SOAP web services, which are difficult to s
 <tr>
 	<td style="text-align:left;">IUCN Red List</td>
 	<td style="text-align:left;"><code>iucn</code></td>
-	<td style="text-align:left;"><a href="http://apiv3.iucnredlist.org/api/v3/docs">link</a></td>
-	<td style="text-align:left;"><a href="http://apiv3.iucnredlist.org/api/v3/token">link</a></td>
+	<td style="text-align:left;"><a href="https://apiv3.iucnredlist.org/api/v3/docs">link</a></td>
+	<td style="text-align:left;"><a href="https://apiv3.iucnredlist.org/api/v3/token">link</a></td>
 </tr>
 <tr>
 	<td style="text-align:left;">Tropicos</td>
@@ -100,7 +96,7 @@ Note that a few data sources require SOAP web services, which are difficult to s
 <tr>
 	<td style="text-align:left;">CANADENSYS Vascan name search API</td>
 	<td style="text-align:left;"><code>vascan</code></td>
-	<td style="text-align:left;"><a href="http://data.canadensys.net/vascan/api">link</a></td>
+	<td style="text-align:left;"><a href="https://data.canadensys.net/vascan/api">link</a></td>
 	<td style="text-align:left;">none</td>
 </tr>
 <tr>
@@ -130,7 +126,7 @@ Note that a few data sources require SOAP web services, which are difficult to s
 <tr>
 	<td style="text-align:left;">EU BON</td>
 	<td style="text-align:left;"><code>eubon</code></td>
-	<td style="text-align:left;"><a href="http://cybertaxonomy.eu/eubon-utis/doc.html">link</a></td>
+	<td style="text-align:left;"><a href="https://cybertaxonomy.eu/eubon-utis/doc.html">link</a></td>
 	<td style="text-align:left;">none</td>
 </tr>
 <tr>
@@ -148,7 +144,7 @@ Note that a few data sources require SOAP web services, which are difficult to s
 <tr>
 	<td style="text-align:left;">World Register of Marine Species (WoRMS)</td>
 	<td style="text-align:left;"><code>worms</code></td>
-	<td style="text-align:left;"><a href="http://www.marinespecies.org/aphia.php?p=webservice">link</a></td>
+	<td style="text-align:left;"><a href="https://www.marinespecies.org/aphia.php?p=webservice">link</a></td>
 	<td style="text-align:left;">none</td>
 </tr>
 <tr>
@@ -367,6 +363,13 @@ synonyms("Acer drummondii", db="itis")
 #> ● Total: 1 
 #> ● Found: 1 
 #> ● Not Found: 0
+#> ══  1 queries  ═══════════════
+#> ✔  Found:  Acer drummondii
+#> ══  Results  ═════════════════
+#> 
+#> ● Total: 1 
+#> ● Found: 1 
+#> ● Not Found: 0
 #> $`Acer drummondii`
 #>   sub_tsn                    acc_name acc_tsn                    acc_author
 #> 1  183671 Acer rubrum var. drummondii  526853 (Hook. & Arn. ex Nutt.) Sarg.
@@ -534,6 +537,15 @@ lowest_common(spp, db = "ncbi")
 #> ● Total: 3 
 #> ● Found: 3 
 #> ● Not Found: 0
+#> ══  3 queries  ═══════════════
+#> ✔  Found:  Sus+scrofa
+#> ✔  Found:  Homo+sapiens
+#> ✔  Found:  Nycticebus+coucang
+#> ══  Results  ═════════════════
+#> 
+#> ● Total: 3 
+#> ● Found: 3 
+#> ● Not Found: 0
 #>             name        rank      id
 #> 21 Boreoeutheria below-class 1437010
 ```
@@ -596,7 +608,7 @@ out <- as.uid(c(315567, 3339, 9696))
 
 ## Screencast
 
-<a href="https://vimeo.com/92883063"><img src="tools/screencast.png" width="400"></a>
+<a href="https://vimeo.com/92883063"><img src="man/figures/screencast.png" width="400"></a>
 
 
 ## Contributing
@@ -605,43 +617,9 @@ See our [CONTRIBUTING](https://github.com/ropensci/taxize/blob/master/.github/CO
 
 ## Contributors
 
-Alphebetical
+Collected via GitHub Issues: honors all contributors in alphabetical order. Code contributors are in bold.
 
-### Code Contributors
-
-+ [Zebulun Arendsee](https://github.com/arendsee)
-+ [Ignasi Bartomeus](https://github.com/ibartomeus)
-+ [John Baumgartner](https://github.com/johnbaums)
-+ [Carl Boettiger](https://github.com/cboettig)
-+ [Joseph Brown](https://github.com/josephwb)
-+ [Scott Chamberlain](https://github.com/sckott)
-+ [Anirvan Chatterjee](https://github.com/anirvan)
-+ [Zachary Foster](https://github.com/zachary-foster)
-+ [Matthias Grenié](https://github.com/Rekyt)
-+ [Patrick Hausmann](https://github.com/patperu)
-+ [Oliver Keyes](https://github.com/Ironholds)
-+ [David LeBauer](https://github.com/dlebauer)
-+ [Philippe Marchand](https://github.com/pmarchand1)
-+ [Ben Marwick](https://github.com/benmarwick)
-+ [Francois Michonneau](https://github.com/fmichonneau)
-+ [James O'Donnell](https://github.com/jimmyodonnell)
-+ [Jari Oksanen](https://github.com/jarioksa)
-+ [Karthik Ram](https://github.com/karthik)
-+ [raredd](https://github.com/raredd)
-+ [Alexey Shiklomanov](https://github.com/ashiklom)
-+ [Eduard Szöcs](https://github.com/EDiLD)
-+ [Vinh Tran](https://github.com/trvinh)
-+ [Bastian Greshake Tzovaras](https://github.com/gedankenstuecke)
-+ [Luis Villanueva](https://github.com/ljvillanueva)
-+ [Jakub Wilk](https://github.com/jwilk)
-
-### All Contributors! 
-
-Collected via GitHub Issues - this list honors all contributions, whether code or not.
-
-Alphebetical
-
-[afkoeppel](https://github.com/afkoeppel) - [ahhurlbert](https://github.com/ahhurlbert) - [albnd](https://github.com/albnd) - [Alectoria](https://github.com/Alectoria) - [andzandz11](https://github.com/andzandz11) - [antagomir](https://github.com/antagomir) - [arendsee](https://github.com/arendsee) - [ArielGreiner](https://github.com/ArielGreiner) - [arw36](https://github.com/arw36) - [ashenkin](https://github.com/ashenkin) - [ashiklom](https://github.com/ashiklom) - [benjaminschwetz](https://github.com/benjaminschwetz) - [benmarwick](https://github.com/benmarwick) - [bomeara](https://github.com/bomeara) - [bw4sz](https://github.com/bw4sz) - [cboettig](https://github.com/cboettig) - [cdeterman](https://github.com/cdeterman) - [ChrKoenig](https://github.com/ChrKoenig) - [chuckrp](https://github.com/chuckrp) - [clarson2191](https://github.com/clarson2191) - [claudenozeres](https://github.com/claudenozeres) - [cmzambranat](https://github.com/cmzambranat) - [cparsania](https://github.com/cparsania) - [daattali](https://github.com/daattali) - [DanielGMead](https://github.com/DanielGMead) - [DarrenObbard](https://github.com/DarrenObbard) - [davharris](https://github.com/davharris) - [davidvilanova](https://github.com/davidvilanova) - [diogoprov](https://github.com/diogoprov) - [dlebauer](https://github.com/dlebauer) - [dlenz1](https://github.com/dlenz1) - [dschlaep](https://github.com/dschlaep) - [EDiLD](https://github.com/EDiLD) - [edwbaker](https://github.com/edwbaker) - [emhart](https://github.com/emhart) - [eregenyi](https://github.com/eregenyi) - [fdschneider](https://github.com/fdschneider) - [fgabriel1891](https://github.com/fgabriel1891) - [fischhoff](https://github.com/fischhoff) - [fmichonneau](https://github.com/fmichonneau) - [fozy81](https://github.com/fozy81) - [gedankenstuecke](https://github.com/gedankenstuecke) - [GISKid](https://github.com/GISKid) - [git-og](https://github.com/git-og) - [glaroc](https://github.com/glaroc) - [gpli](https://github.com/gpli) - [gustavobio](https://github.com/gustavobio) - [hlapp](https://github.com/hlapp) - [ibartomeus](https://github.com/ibartomeus) - [Ironholds](https://github.com/Ironholds) - [jangorecki](https://github.com/jangorecki) - [jarioksa](https://github.com/jarioksa) - [jebyrnes](https://github.com/jebyrnes) - [jimmyodonnell](https://github.com/jimmyodonnell) - [johnbaums](https://github.com/johnbaums) - [jonmcalder](https://github.com/jonmcalder) - [josephwb](https://github.com/josephwb) - [jsgosnell](https://github.com/jsgosnell) - [jwilk](https://github.com/jwilk) - [kamapu](https://github.com/kamapu) - [karthik](https://github.com/karthik) - [katrinleinweber](https://github.com/katrinleinweber) - [KevCaz](https://github.com/KevCaz) - [kgturner](https://github.com/kgturner) - [kmeverson](https://github.com/kmeverson) - [Koalha](https://github.com/Koalha) - [ljvillanueva](https://github.com/ljvillanueva) - [maelle](https://github.com/maelle) - [Markus2015](https://github.com/Markus2015) - [mcsiple](https://github.com/mcsiple) - [MikkoVihtakari](https://github.com/MikkoVihtakari) - [millerjef](https://github.com/millerjef) - [miriamgrace](https://github.com/miriamgrace) - [MK212](https://github.com/MK212) - [mpnelsen](https://github.com/mpnelsen) - [MUSEZOOLVERT](https://github.com/MUSEZOOLVERT) - [nate-d-olson](https://github.com/nate-d-olson) - [nmatzke](https://github.com/nmatzke) - [npch](https://github.com/npch) - [paternogbc](https://github.com/paternogbc) - [patperu](https://github.com/patperu) - [pederengelstad](https://github.com/pederengelstad) - [philippi](https://github.com/philippi) - [pmarchand1](https://github.com/pmarchand1) - [PrincessPi314](https://github.com/PrincessPi314) - [pssguy](https://github.com/pssguy) - [raredd](https://github.com/raredd) - [rec3141](https://github.com/rec3141) - [Rekyt](https://github.com/Rekyt) - [RodgerG](https://github.com/RodgerG) - [rossmounce](https://github.com/rossmounce) - [sariya](https://github.com/sariya) - [scelmendorf](https://github.com/scelmendorf) - [sckott](https://github.com/sckott) - [SimonGoring](https://github.com/SimonGoring) - [snsheth](https://github.com/snsheth) - [snubian](https://github.com/snubian) - [Squiercg](https://github.com/Squiercg) - [taddallas](https://github.com/taddallas) - [tdjames1](https://github.com/tdjames1) - [tmkurobe](https://github.com/tmkurobe) - [toczydlowski](https://github.com/toczydlowski) - [tpaulson1](https://github.com/tpaulson1) - [tpoisot](https://github.com/tpoisot) - [vijaybarve](https://github.com/vijaybarve) - [wcornwell](https://github.com/wcornwell) - [willpearse](https://github.com/willpearse) - [wpetry](https://github.com/wpetry) - [yhg926](https://github.com/yhg926) - [zachary-foster](https://github.com/zachary-foster)
+[afkoeppel](https://github.com/afkoeppel) - [afredstonhermann](https://github.com/afredstonhermann) - [ahhurlbert](https://github.com/ahhurlbert) - [albnd](https://github.com/albnd) - [Alectoria](https://github.com/Alectoria) - [andzandz11](https://github.com/andzandz11) - **[anirvan](https://github.com/anirvan)** - [antagomir](https://github.com/antagomir) - **[arendsee](https://github.com/arendsee)** - [ArielGreiner](https://github.com/ArielGreiner) - [arw36](https://github.com/arw36) - [ashenkin](https://github.com/ashenkin) - **[ashiklom](https://github.com/ashiklom)** - [benjaminschwetz](https://github.com/benjaminschwetz) - **[benmarwick](https://github.com/benmarwick)** - [bienflorencia](https://github.com/bienflorencia) - [binkySallly](https://github.com/binkySallly) - [bomeara](https://github.com/bomeara) - [BridgettCollis](https://github.com/BridgettCollis) - [bw4sz](https://github.com/bw4sz) - **[cboettig](https://github.com/cboettig)** - [cdeterman](https://github.com/cdeterman) - [ChrKoenig](https://github.com/ChrKoenig) - [chuckrp](https://github.com/chuckrp) - [clarson2191](https://github.com/clarson2191) - [claudenozeres](https://github.com/claudenozeres) - [cmzambranat](https://github.com/cmzambranat) - [cparsania](https://github.com/cparsania) - [daattali](https://github.com/daattali) - [DanielGMead](https://github.com/DanielGMead) - [DarrenObbard](https://github.com/DarrenObbard) - [davharris](https://github.com/davharris) - [davidvilanova](https://github.com/davidvilanova) - [diogoprov](https://github.com/diogoprov) - **[dlebauer](https://github.com/dlebauer)** - [dlenz1](https://github.com/dlenz1) - [dougwyu](https://github.com/dougwyu) - [dschlaep](https://github.com/dschlaep) - **[EDiLD](https://github.com/EDiLD)** - [edwbaker](https://github.com/edwbaker) - [emhart](https://github.com/emhart) - [eregenyi](https://github.com/eregenyi) - [fdschneider](https://github.com/fdschneider) - [fgabriel1891](https://github.com/fgabriel1891) - [fischhoff](https://github.com/fischhoff) - **[fmichonneau](https://github.com/fmichonneau)** - **[fozy81](https://github.com/fozy81)** - **[gedankenstuecke](https://github.com/gedankenstuecke)** - [gimoya](https://github.com/gimoya) - [GISKid](https://github.com/GISKid) - [git-og](https://github.com/git-og) - [glaroc](https://github.com/glaroc) - **[gpli](https://github.com/gpli)** - [gustavobio](https://github.com/gustavobio) - [hlapp](https://github.com/hlapp) - **[ibartomeus](https://github.com/ibartomeus)** - **[Ironholds](https://github.com/Ironholds)** - [jabard89](https://github.com/jabard89) - [jangorecki](https://github.com/jangorecki) - **[jarioksa](https://github.com/jarioksa)** - [jebyrnes](https://github.com/jebyrnes) - **[jeroen](https://github.com/jeroen)** - **[jimmyodonnell](https://github.com/jimmyodonnell)** - [joelnitta](https://github.com/joelnitta) - [johnbaums](https://github.com/johnbaums) - [jonmcalder](https://github.com/jonmcalder) - [jordancasey](https://github.com/jordancasey) - **[josephwb](https://github.com/josephwb)** - [jsgosnell](https://github.com/jsgosnell) - [JulietteLgls](https://github.com/JulietteLgls) - **[jwilk](https://github.com/jwilk)** - [kamapu](https://github.com/kamapu) - **[karthik](https://github.com/karthik)** - **[katrinleinweber](https://github.com/katrinleinweber)** - [KevCaz](https://github.com/KevCaz) - [kgturner](https://github.com/kgturner) - [kmeverson](https://github.com/kmeverson) - [Koalha](https://github.com/Koalha) - **[ljvillanueva](https://github.com/ljvillanueva)** - **[maelle](https://github.com/maelle)** - [Markus2015](https://github.com/Markus2015) - [matutosi](https://github.com/matutosi) - [mcsiple](https://github.com/mcsiple) - [MikkoVihtakari](https://github.com/MikkoVihtakari) - [millerjef](https://github.com/millerjef) - [miriamgrace](https://github.com/miriamgrace) - [MK212](https://github.com/MK212) - [mpnelsen](https://github.com/mpnelsen) - [MUSEZOOLVERT](https://github.com/MUSEZOOLVERT) - [nate-d-olson](https://github.com/nate-d-olson) - [nmatzke](https://github.com/nmatzke) - [npch](https://github.com/npch) - [ocstringham](https://github.com/ocstringham) - [p-neves](https://github.com/p-neves) - [p-schaefer](https://github.com/p-schaefer) - [padpadpadpad](https://github.com/padpadpadpad) - [paternogbc](https://github.com/paternogbc) - **[patperu](https://github.com/patperu)** - [pederengelstad](https://github.com/pederengelstad) - [philippi](https://github.com/philippi) - [Phylloxera](https://github.com/Phylloxera) - **[pmarchand1](https://github.com/pmarchand1)** - [pozsgaig](https://github.com/pozsgaig) - [PrincessPi314](https://github.com/PrincessPi314) - [pssguy](https://github.com/pssguy) - **[raredd](https://github.com/raredd)** - [rec3141](https://github.com/rec3141) - **[Rekyt](https://github.com/Rekyt)** - [RodgerG](https://github.com/RodgerG) - [rossmounce](https://github.com/rossmounce) - [sariya](https://github.com/sariya) - [sastoudt](https://github.com/sastoudt) - [scelmendorf](https://github.com/scelmendorf) - **[sckott](https://github.com/sckott)** - [SimonGoring](https://github.com/SimonGoring) - [snsheth](https://github.com/snsheth) - [snubian](https://github.com/snubian) - [Squiercg](https://github.com/Squiercg) - [sunray1](https://github.com/sunray1) - **[taddallas](https://github.com/taddallas)** - [tdjames1](https://github.com/tdjames1) - [tmkurobe](https://github.com/tmkurobe) - [toczydlowski](https://github.com/toczydlowski) - [tpaulson1](https://github.com/tpaulson1) - [tpoisot](https://github.com/tpoisot) - **[TrashBirdEcology](https://github.com/TrashBirdEcology)** - **[trvinh](https://github.com/trvinh)** - **[vijaybarve](https://github.com/vijaybarve)** - [wcornwell](https://github.com/wcornwell) - [willpearse](https://github.com/willpearse) - [wpetry](https://github.com/wpetry) - [yhg926](https://github.com/yhg926) - **[zachary-foster](https://github.com/zachary-foster)**
 
 ## Road map
 

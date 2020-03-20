@@ -3,14 +3,11 @@
 \name{key_helpers}
 \alias{key_helpers}
 \alias{use_tropicos}
-\alias{use_eol}
 \alias{use_entrez}
 \alias{use_iucn}
 \title{Helpers to set up authentication for the different providers.}
 \usage{
 use_tropicos()
-
-use_eol()
 
 use_entrez()
 
@@ -28,14 +25,6 @@ Key helpers
 Browses to Tropicos API key request URL and provides instruction on how to
 store the key. After filling the form you will get the key soon, but
 not immediately.
-}
-
-\section{\code{use_eol()}}{
-
-Browse EOL to help make an API key request and provides instruction on how
-to store the key. There's no direct URL to request a key, one first needs
-to log in or register and then to generate a key from one's Preferences
-page.
 }
 
 \section{\code{use_entrez()}}{

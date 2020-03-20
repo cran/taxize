@@ -9,7 +9,7 @@
 #' Note that each taxonomic data source has, their own identifiers, so that
 #' if you provide the wrong `db` value for the identifier you could get a
 #' result, but it will likely be wrong (not what you were expecting). If using
-#' ncbi, eol, and/or tropicos, we recommend getting an API key; see
+#' ncbi, and/or tropicos, we recommend getting an API key; see
 #' [taxize-authentication]
 #' @param id character; identifiers, returned by [get_tsn()], [get_uid()],
 #' [get_eolid()], [get_tpsid()], [get_gbifid()], [get_tolid()],
@@ -28,6 +28,10 @@
 #' @param rows (numeric) Any number from 1 to infinity. If the default NA,
 #' all rows are considered. Note that this parameter is ignored if you pass
 #' in a taxonomic id instead of a name of class character.
+#' @param batch_size (numeric) For NCBI queries, specify the number of IDs to
+#'   lookup for each query.
+#' @param max_tries (numeric) For NCBI queries, the number of times a particular
+#'   query will be attempted, assuming the first does not work.
 #'
 #' @return A named list of data.frames with the taxonomic classification of
 #'    every supplied taxa.
@@ -185,6 +189,25 @@
 #' classification('Poa annua', db = 'tropicos', rows=1:4)
 #' classification('Poa annua', db = 'tropicos', rows=1)
 #' classification('Poa annua', db = 'tropicos', rows=6)
+#' 
+#' # Queries of many IDs are processed in batches for NCBI
+#' ids <- c("13083", "2650392", "1547764", "230054", "353934", "656984", 
+#' "271789", "126272", "184644", "73213", "662816", "1161803", "1239353", 
+#' "59420", "665675", "866969", "1091219", "1431218", "1471898", 
+#' "864321", "251768", "2486276", "2068772", "1825808", "2006532", 
+#' "128287", "1195738", "1084683", "1886461", "508296", "377247", 
+#' "1489665", "329325", "219243", "1176946", "339893", "197933", 
+#' "174510", "1704048", "212897", "154842", "1239280", "260135", 
+#' "405735", "1566412", "2083462", "651348", "983204", "165380", 
+#' "2338856", "2068760", "167262", "34229", "1213340", "478939", 
+#' "1933585", "49951", "1277794", "1671089", "1502538", "362355", 
+#' "746473", "242879", "158219", "313664", "2093188", "1541232", 
+#' "584742", "1331091", "147639", "284492", "75642", "1412882", 
+#' "391782", "1406855", "434506", "2053357", "217315", "1444328", 
+#' "329249", "2294004", "84942", "324458", "538247", "69452", "49170", 
+#' "1993845", "261646", "127633", "228146", "1420004", "1629772", 
+#' "577055", "697062", "231660", "648380", "554953", "746496", "2602969")
+#' result <- classification(ids, db = 'ncbi')
 #' }
 #'
 #' @examples \dontrun{
@@ -207,9 +230,9 @@ classification.default <- function(x, db = NULL, callopts = list(),
       stats::setNames(classification(id, return_id = return_id, ...), x)
     },
     ncbi = {
-      id <- process_ids(x, db, get_uid, rows = rows, ...)
+      id <- process_ids(x, db, get_uid, rows = rows)
       stats::setNames(classification(id, callopts = callopts,
-        return_id = return_id, ...), x)
+        return_id = return_id), x)
     },
     eol = {
       id <- process_ids(x, db, get_eolid, rows = rows, ...)
@@ -320,49 +343,84 @@ classification.tsn <- function(id, return_id = TRUE, ...) {
 
 #' @export
 #' @rdname classification
-classification.uid <- function(id, callopts = list(), return_id = TRUE, ...) {
+classification.uid <- function(id, callopts = list(), return_id = TRUE,
+  batch_size = 50, max_tries = 3, ...) {
+
   warn_db(list(...), "ncbi")
-  fun <- function(x, callopts){
+  fun <- function(x, callopts) {
     key <- getkey(NULL, service="entrez")
-    # return NA if NA is supplied
-    if (is.na(x)) {
-      out <- NA
-    } else {
-      query <- tc(list(db = "taxonomy", ID = x, api_key = key))
+    
+    query_ncbi <- function(ids) {
+      query <- tc(list(db = "taxonomy", ID = paste0(ids, collapse = ','),
+        api_key = key))
       cli <- crul::HttpClient$new(url = ncbi_base(),
         opts = c(http_version = 2L, callopts))
-      res <- cli$get("entrez/eutils/efetch.fcgi", query = query)
-      res$raise_for_status()
-      tt <- res$parse("UTF-8")
-      ttp <- xml2::read_xml(tt)
-      out <- data.frame(
-        name = xml_text_all(ttp,
-          "//TaxaSet/Taxon/LineageEx/Taxon/ScientificName"),
-        rank = xml_text_all(ttp, "//TaxaSet/Taxon/LineageEx/Taxon/Rank"),
-        id = xml_text_all(ttp, "//TaxaSet/Taxon/LineageEx/Taxon/TaxId"),
-        stringsAsFactors = FALSE)
-      parent_id <- xml_text_all(ttp, "//TaxaSet/Taxon/ParentTaxId") %||% ""
-      # Is not directly below root and no lineage info
-      if (NROW(out) == 0 && parent_id != "1") {
-        out <- NA
-      } else {
-        out <- rbind(out,
-          data.frame(
-            name = xml_text_all(ttp, "//TaxaSet/Taxon/ScientificName"),
-            rank = xml_text_all(ttp, "//TaxaSet/Taxon/Rank"),
-            id = xml_text_all(ttp, "//TaxaSet/Taxon/TaxId"),
-            stringsAsFactors = FALSE))
-        # Optionally return tsn of lineage
-        if (!return_id) out <- out[, c('name', 'rank')]
-        out$rank <- tolower(out$rank)
-        return(out)
+      success <- FALSE
+      tries <- 1
+      while (success == FALSE && tries <= max_tries) {
+        res <- cli$get("entrez/eutils/efetch.fcgi", query = query)
+        res$raise_for_status()
+        tt <- res$parse("UTF-8")
+        ttp <- xml2::read_xml(tt)
+        out <- lapply(xml2::xml_find_all(ttp, '//TaxaSet/Taxon'),
+          function(tax_node) {
+          lin <- data.frame(
+            name = xml_text_all(tax_node,
+              ".//LineageEx/Taxon/ScientificName"),
+            rank = xml_text_all(tax_node, ".//LineageEx/Taxon/Rank"),
+            id = xml_text_all(tax_node, ".//LineageEx/Taxon/TaxId"),
+            stringsAsFactors = FALSE)
+          targ_tax <- data.frame(
+            name = xml_text_all(tax_node, "./ScientificName"),
+            rank = xml_text_all(tax_node, "./Rank"),
+            id = xml_text_all(tax_node, "./TaxId"),
+            stringsAsFactors = FALSE)
+          rbind(lin, targ_tax)
+        })
+        # Is not directly below root and no lineage info
+        parent_id <- xml_text_all(ttp, "//TaxaSet/Taxon/ParentTaxId") %||% ""
+        out[vapply(out, NROW, numeric(1)) == 0 & parent_id != "1"] <- NA
+        # Add NA where the taxon ID was not found
+        names(out) <- xml_text(xml2::xml_find_all(ttp,
+          '//TaxaSet/Taxon/TaxId'))
+        out <- unname(out[ids])
+        success <- ! grepl(tt, pattern = 'error', ignore.case = TRUE)
+        tries <- tries + 1
+        # NCBI limits requests to three per second without key or 10 per
+        # second with key
+        ncbi_rate_limit_pause(key)
+        # Wait longer if query failed
+        if (success == FALSE) {
+          Sys.sleep(1)
+        }
       }
+      # Return NA if cannot get information
+      if (!success) {
+        out <- rep(list(NA), length(ids))
+        warning(call. = FALSE, 'Giving up on query after ',
+          max_tries, ' tries. NAs will be returned.')
+      }
+      return(out)
     }
-    # NCBI limits requests to three per second
-    if (is.null(key)) Sys.sleep(0.34)
+    # return NA if NA is supplied
+    out <- rep(list(NA), length(x))
+    out[! is.na(x)] <- query_ncbi(x[! is.na(x)])
+    # Optionally return taxon id of lineage taxa
+    if (!return_id) {
+      out[! is.na(out)] <- lapply(out[! is.na(out)],
+        function(o) o[, c('name', 'rank')])
+    }
+    # Return ranks in all lower case
+    out[! is.na(out)] <- lapply(out[! is.na(out)], function(o) {
+      o$rank <- tolower(o$rank)
+      return(o)
+    })
     return(out)
   }
-  out <- lapply(id, fun, callopts = callopts)
+  id <- as.character(id) # force to character
+  id_chunks <- split(id, ceiling(seq_along(id)/batch_size))
+  out <- lapply(id_chunks, fun, callopts = callopts)
+  out <- unlist(out, recursive = FALSE)
   names(out) <- id
   structure(out, class = 'classification', db = 'ncbi')
 }
@@ -376,7 +434,6 @@ classification.eolid <- function(id, callopts = list(), return_id = TRUE, ...) {
     if (is.na(x)) {
       out <- NA
     } else {
-      key <- getkey(NULL, "EOL_KEY")
       args <- tc(list(common_names = common_names, synonyms = synonyms))
       cli <- crul::HttpClient$new(url = 'https://eol.org', opts = callopts)
       tt <- cli$get(file.path('api/hierarchy_entries/1.0', paste0(x, ".json")),
@@ -460,6 +517,8 @@ classification.gbifid <- function(id, callopts = list(),
         df <- data.frame(name = nms$V1, rank = nms$.id, id = keys,
           stringsAsFactors = FALSE)
         df$rank <- tolower(df$rank)
+        # sort to make sure ranks are in correct descending order
+        df <- df[order(vapply(df$rank, which_rank, 1)), ]
         # Optionally return id of lineage
         if (!return_id) df[, c('name', 'rank')] else df
       }

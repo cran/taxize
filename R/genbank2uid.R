@@ -5,7 +5,7 @@
 #' @param batch_size The number of queries to submit at a time.
 #' @param key (character) NCBI Entrez API key. optional. See Details.
 #' @param ... Curl args passed on to [crul::HttpClient]
-#' @details See <http://www.ncbi.nlm.nih.gov/Sitemap/sequenceIDs.html> for
+#' @details See <https://www.ncbi.nlm.nih.gov/Sitemap/sequenceIDs.html> for
 #' help on why there are two identifiers, and the difference between them.
 #' 
 #' @section Authentication:
@@ -88,7 +88,7 @@ genbank2uid <- function(id, batch_size = 100, key = NULL, ...) {
     result <- data.frame(id = taxon_ids, name = titles,
                          stringsAsFactors = FALSE)
     # NCBI limits requests to three per second when no key
-    if (is.null(key)) Sys.sleep(0.33)
+    ncbi_rate_limit_pause(key)
     return(result)
   }
   # Run each batch and combine

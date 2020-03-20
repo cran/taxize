@@ -1,12 +1,13 @@
 context("class2tree")
 
 spnames <- c("Klattia flava", "Trollius sibiricus", "Arachis paraguariensis",
- "Tanacetum boreale", "Gentiana yakushimensis", "Sesamum schinzianum",
- "Pilea verrucosa", "Tibouchina striphnocalyx", "Lycium dasystemum",
- "Berkheya echinacea", "Androcymbium villosum",
- "Helianthus annuus", "Madia elegans", "Lupinus albicaulis",
- "Pinus lambertiana", "Haloarcula amylolytica JCM 13557",
- "Halomonas sp. 'Soap Lake #6'")
+             "Tanacetum boreale", "Gentiana yakushimensis", "Sesamum schinzianum",
+             "Pilea verrucosa", "Tibouchina striphnocalyx", "Lycium dasystemum",
+             "Berkheya echinacea", "Androcymbium villosum",
+             "Helianthus annuus", "Madia elegans", "Lupinus albicaulis",
+             "Pinus lambertiana", "Haloarcula amylolytica JCM 13557",
+             "Halomonas sp. 'Soap Lake #6'")
+
 dupnames <- c("Mus musculus", "Escherichia coli",
               "Haloferax denitrificans", "Mus musculus")
 

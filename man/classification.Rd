@@ -35,7 +35,14 @@ classification(...)
 
 \method{classification}{tsn}(id, return_id = TRUE, ...)
 
-\method{classification}{uid}(id, callopts = list(), return_id = TRUE, ...)
+\method{classification}{uid}(
+  id,
+  callopts = list(),
+  return_id = TRUE,
+  batch_size = 50,
+  max_tries = 3,
+  ...
+)
 
 \method{classification}{eolid}(id, callopts = list(), return_id = TRUE, ...)
 
@@ -83,7 +90,7 @@ to query. For \code{db = "eol"}, EOL expects you to pass it a taxon id, called
 Note that each taxonomic data source has, their own identifiers, so that
 if you provide the wrong \code{db} value for the identifier you could get a
 result, but it will likely be wrong (not what you were expecting). If using
-ncbi, eol, and/or tropicos, we recommend getting an API key; see
+ncbi, and/or tropicos, we recommend getting an API key; see
 \link{taxize-authentication}}
 
 \item{callopts}{Curl options passed on to \link[crul:verb-GET]{crul::verb-GET}}
@@ -101,6 +108,12 @@ in a taxonomic id instead of a name of class character.}
 \code{\link[=get_eolid]{get_eolid()}}, \code{\link[=get_tpsid]{get_tpsid()}}, \code{\link[=get_gbifid]{get_gbifid()}}, \code{\link[=get_tolid]{get_tolid()}},
 \code{\link[=get_wormsid]{get_wormsid()}}, \code{\link[=get_natservid]{get_natservid()}}, \code{\link[=get_wormsid]{get_wormsid()}}, \code{\link[=get_wiki]{get_wiki()}},
 \code{\link[=get_pow]{get_pow()}}}
+
+\item{batch_size}{(numeric) For NCBI queries, specify the number of IDs to
+lookup for each query.}
+
+\item{max_tries}{(numeric) For NCBI queries, the number of times a particular
+query will be attempted, assuming the first does not work.}
 }
 \value{
 A named list of data.frames with the taxonomic classification of
@@ -269,6 +282,25 @@ classification('Poa annua', db = 'tropicos')
 classification('Poa annua', db = 'tropicos', rows=1:4)
 classification('Poa annua', db = 'tropicos', rows=1)
 classification('Poa annua', db = 'tropicos', rows=6)
+
+# Queries of many IDs are processed in batches for NCBI
+ids <- c("13083", "2650392", "1547764", "230054", "353934", "656984", 
+"271789", "126272", "184644", "73213", "662816", "1161803", "1239353", 
+"59420", "665675", "866969", "1091219", "1431218", "1471898", 
+"864321", "251768", "2486276", "2068772", "1825808", "2006532", 
+"128287", "1195738", "1084683", "1886461", "508296", "377247", 
+"1489665", "329325", "219243", "1176946", "339893", "197933", 
+"174510", "1704048", "212897", "154842", "1239280", "260135", 
+"405735", "1566412", "2083462", "651348", "983204", "165380", 
+"2338856", "2068760", "167262", "34229", "1213340", "478939", 
+"1933585", "49951", "1277794", "1671089", "1502538", "362355", 
+"746473", "242879", "158219", "313664", "2093188", "1541232", 
+"584742", "1331091", "147639", "284492", "75642", "1412882", 
+"391782", "1406855", "434506", "2053357", "217315", "1444328", 
+"329249", "2294004", "84942", "324458", "538247", "69452", "49170", 
+"1993845", "261646", "127633", "228146", "1420004", "1629772", 
+"577055", "697062", "231660", "648380", "554953", "746496", "2602969")
+result <- classification(ids, db = 'ncbi')
 }
 
 \dontrun{

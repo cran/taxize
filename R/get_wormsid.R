@@ -8,7 +8,7 @@
 #' `taxon_state` object (see [taxon-state])
 #' @param searchtype character; One of 'scientific' or 'common', or any unique
 #' abbreviation
-#' @param marine_only logical; marine only? default: ‘TRUE (only used
+#' @param marine_only logical; marine only? default: `TRUE` (only used
 #' when `searchtype="scientific"`); passed on to [worrms::wm_records_name()]
 #' @param fuzzy logical; fuzzy search. default: `NULL` (`TRUE` for
 #' `searchtype="scientific"` and `FALSE` for `searchtype="common"` to match
@@ -298,7 +298,10 @@ as.data.frame.wormsid <- function(x, ...){
              stringsAsFactors = FALSE)
 }
 
-make_worms <- function(x, check=TRUE) make_generic(x, 'http://www.marinespecies.org/aphia.php?p=taxdetails&id=%s', "wormsid", check)
+make_worms <- function(x, check=TRUE) {
+  make_generic(x, 'https://www.marinespecies.org/aphia.php?p=taxdetails&id=%s',
+    "wormsid", check)
+}
 
 check_wormsid <- function(x){
   tt <- worrms::wm_record(as.numeric(x))

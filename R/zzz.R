@@ -115,7 +115,7 @@ filt <- function(df, rank, z) {
     df
   } else {
     if (!is.null(z)) {
-      mtch <- grep(sprintf("%s", tolower(z)), tolower(df[,rank]))
+      mtch <- grep(sprintf("^%s$", tolower(z)), tolower(df[,rank]))
       if (length(mtch) != 0) {
         df[mtch, ]
       } else {
@@ -168,12 +168,18 @@ pop <- function(x, nms) {
 }
 
 assert <- function(x, y) {
-  if (!is.null(x)) {
+  if (!is.null(x) && !is_na(x)) {
     if (!inherits(x, y)) {
       stop(deparse(substitute(x)), " must be of class ",
            paste0(y, collapse = ", "), call. = FALSE)
     }
   }
+}
+
+is_na <- function(x) {
+  if (is.list(x)) return(FALSE)
+  if (is.environment(x)) return(FALSE)
+  return(all(is.na(x)))
 }
 
 assert_state <- function(x, y) {
@@ -264,3 +270,13 @@ warn_db <- function(x, type) {
 
 strextract <- function(str, pattern) regmatches(str, regexpr(pattern, str))
 strexec <- function(str, pattern) regmatches(str, regexec(pattern, str))
+
+
+ncbi_rate_limit_pause <- function(key) {
+  # NCBI limits requests to three per second when no key and ten per second with key
+  if (is.null(key)) {
+    Sys.sleep(0.334)
+  } else {
+    Sys.sleep(0.101)
+  }
+}

@@ -11,9 +11,6 @@
 #' @param ask logical; should get_eolid be run in interactive mode?
 #' If TRUE and more than one ID is found for the species, the user is asked for
 #' input. If FALSE NA is returned for multiple matches.
-#' @param key API key. passed on to [eol_search()] and
-#' `[eol_pages()] internally. We recommend getting an API key;
-#' see [taxize-authentication]
 #' @param ... Further args passed on to [eol_search()]
 #' @param messages logical; If `TRUE` the actual taxon queried is printed
 #' on the console.
@@ -32,9 +29,6 @@
 #' @param check logical; Check if ID matches any existing on the DB, only
 #' used in [as.eolid()]
 #' @template getreturn
-#'
-#' @section Authentication:
-#' See [taxize-authentication] for help on authentication
 #'
 #' @family taxonomic-ids
 #' @seealso [classification()]
@@ -81,7 +75,8 @@
 #' get_eolid("Satyrium")
 #' get_eolid("Satyrium", rank = "genus")
 #' get_eolid("Satyrium", data_source = "INAT")
-#' get_eolid("Satyrium", rank = "genus", data_source = "North Pacific")
+#' get_eolid("Satyrium", rank = "genus",
+#'   data_source = "North Pacific Species List")
 #'
 #' # Convert a eolid without class information to a eolid class
 #' # already a eolid, returns the same
@@ -115,7 +110,7 @@
 #' get_eolid_(c("asdfadfasd", "Pinus contorta"))
 #' }
 
-get_eolid <- function(sciname, ask = TRUE, messages = TRUE, key = NULL,
+get_eolid <- function(sciname, ask = TRUE, messages = TRUE,
   rows = NA, rank = NULL, data_source = NULL, ...) {
 
   assert(sciname, c("character", "taxon_state"))
@@ -143,7 +138,7 @@ get_eolid <- function(sciname, ask = TRUE, messages = TRUE, key = NULL,
   for (i in seq_along(sciname)) {
     direct <- FALSE
     mssg(messages, "\nRetrieving data for taxon '", sciname[i], "'\n")
-    tmp <- eol_search(terms = sciname[i], key = key, ...)
+    tmp <- eol_search(terms = sciname[i], ...)
     datasource <- NA_character_
     if (all(is.na(tmp))) {
       mssg(messages, m_not_found_sp_altclass)
@@ -161,7 +156,7 @@ get_eolid <- function(sciname, ask = TRUE, messages = TRUE, key = NULL,
         id <- NA_character_
       } else {
         dfs <- lapply(pageids, function(x) {
-          y <- tryCatch(eol_pages(x, key = key), error = function(e) e)
+          y <- tryCatch(eol_pages(x), error = function(e) e)
           if (is(y, "error")) NULL else y$scinames
         })
         names(dfs) <- pageids
@@ -213,6 +208,15 @@ get_eolid <- function(sciname, ask = TRUE, messages = TRUE, key = NULL,
       page_id <- df$pageid
       datasource <- df$source
       att <- "found"
+    }
+
+    if (length(id) == 0 || all(is.na(id))) {
+      mssg(messages, m_not_found_sp_altclass)
+      id <- NA_character_
+      page_id <- NA_character_
+      datasource <- NA_character_
+      mm <- FALSE
+      att <- "not found"
     }
 
     if (length(id) > 1) {
@@ -351,15 +355,15 @@ as.data.frame.eolid <- function(x, ...){
 }
 
 make_eolid <- function(x, check=TRUE) {
-  tmp <- make_generic(x, 'http://eol.org/pages/%s/overview', "eolid", check)
+  tmp <- make_generic(x, 'https://eol.org/pages/%s/overview', "eolid", check)
   if (!check) {
-    attr(tmp, "uri") <- NULL
+    attr(tmp, "uri") <- NA_character_
   } else {
     z <- get_eol_pageid(x)
     if (!is.na(z)) {
-      attr(tmp, "uri") <- sprintf('http://eol.org/pages/%s/overview', z)
+      attr(tmp, "uri") <- sprintf('https://eol.org/pages/%s/overview', z)
     } else {
-      attr(tmp, "uri") <- NULL
+      attr(tmp, "uri") <- NA_character_
     }
   }
   tmp
@@ -383,14 +387,14 @@ get_eol_pageid <- function(x) {
 
 #' @export
 #' @rdname get_eolid
-get_eolid_ <- function(sciname, messages = TRUE, key = NULL, rows = NA, ...){
+get_eolid_ <- function(sciname, messages = TRUE, rows = NA, ...) {
   stats::setNames(lapply(sciname, get_eolid_help, messages = messages,
-                  key = key, rows = rows, ...), sciname)
+                  rows = rows, ...), sciname)
 }
 
-get_eolid_help <- function(sciname, messages, key, rows, ...){
+get_eolid_help <- function(sciname, messages, rows, ...) {
   mssg(messages, "\nRetrieving data for taxon '", sciname, "'\n")
-  tmp <- eol_search(terms = sciname, key, ...)
+  tmp <- eol_search(terms = sciname, ...)
 
   if (all(is.na(tmp))) {
     NULL
@@ -400,7 +404,7 @@ get_eolid_help <- function(sciname, messages, key, rows, ...){
       NULL
     } else {
       dfs <- lapply(pageids, function(x) {
-        y <- tryCatch(eol_pages(x, key = key), error = function(e) e)
+        y <- tryCatch(eol_pages(x), error = function(e) e)
         if (inherits(y, "error")) NULL else y$scinames
       })
       names(dfs) <- pageids
