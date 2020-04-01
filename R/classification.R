@@ -80,7 +80,7 @@
 #' classification('Helianthus', db = 'pow')
 #' classification('Asteraceae', db = 'pow')
 #' classification("ELEMENT_GLOBAL.2.134717", db = 'natserv')
-#' classification(c(2704179, 2441176), db = 'gbif')
+#' classification(c(2704179, 6162875, 8286319), db = 'gbif')
 #' classification(25509881, db = 'tropicos')
 #' classification("NBNSYS0000004786", db = 'nbn')
 #' classification(as.nbnid("NBNSYS0000004786"), db = 'nbn')
@@ -512,13 +512,26 @@ classification.gbifid <- function(id, callopts = list(),
         NA
       } else {
         cls = c('kingdom','phylum','class', 'order','family','genus','species')
-        nms <- nmdlst2df(out[names(out) %in% cls])
-        keys <- unname(unlist(out[names(out) %in% paste0(cls, "Key")]))
-        df <- data.frame(name = nms$V1, rank = nms$.id, id = keys,
-          stringsAsFactors = FALSE)
+        df1 <- stats::setNames(nmdlst2df(out[names(out) %in% cls]),
+          c("rank", "name"))
+        df2 <- stats::setNames(
+          nmdlst2df(out[names(out) %in% paste0(cls, "Key")]),
+          c(".id", "id"))
+        df2$rank <- sub("Key", "", df2$.id)
+        df2$.id <- NULL
+        df <- merge(df1, df2, by = "rank")
         df$rank <- tolower(df$rank)
         # sort to make sure ranks are in correct descending order
         df <- df[order(vapply(df$rank, which_rank, 1)), ]
+        # column order
+        df <- data.frame(name = df$name, rank = df$rank, id = df$id,
+          stringsAsFactors = FALSE)
+        # check if target taxon is sub-specific
+        if (which_rank(tolower(out$rank)) > 34) {
+          df <- rbind(df,
+            c(out$canonicalName, tolower(out$rank), out$key))
+        }
+        df$id <- as.integer(df$id)
         # Optionally return id of lineage
         if (!return_id) df[, c('name', 'rank')] else df
       }

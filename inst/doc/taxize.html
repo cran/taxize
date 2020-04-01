@@ -12,7 +12,7 @@
 
 <meta name="author" content="Scott Chamberlain" />
 
-<meta name="date" content="2020-02-10" />
+<meta name="date" content="2020-03-31" />
 
 <title>Introduction to taxize</title>
 
@@ -302,7 +302,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">Introduction to taxize</h1>
 <h4 class="author">Scott Chamberlain</h4>
-<h4 class="date">2020-02-10</h4>
+<h4 class="date">2020-03-31</h4>
 
 
 
@@ -553,17 +553,17 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <p>That’s a lot of data, so we can get only certain rows back</p>
 <div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a><span class="kw">get_nbnid_</span>(<span class="st">&quot;Poa annua&quot;</span>, <span class="dt">rows =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">10</span>)</span>
 <span id="cb13-2"><a href="#cb13-2"></a><span class="co">#&gt; $`Poa annua`</span></span>
-<span id="cb13-3"><a href="#cb13-3"></a><span class="co">#&gt;                guid     scientificName    rank taxonomicStatus</span></span>
-<span id="cb13-4"><a href="#cb13-4"></a><span class="co">#&gt; 1  NBNSYS0000002544          Poa annua species        accepted</span></span>
-<span id="cb13-5"><a href="#cb13-5"></a><span class="co">#&gt; 2  NBNSYS0200001901       Bellis annua species        accepted</span></span>
-<span id="cb13-6"><a href="#cb13-6"></a><span class="co">#&gt; 3  NBNSYS0200003392   Triumfetta annua species        accepted</span></span>
-<span id="cb13-7"><a href="#cb13-7"></a><span class="co">#&gt; 4  NBNSYS0200002555        Lonas annua species        accepted</span></span>
-<span id="cb13-8"><a href="#cb13-8"></a><span class="co">#&gt; 5  NHMSYS0000456951  Carrichtera annua species        accepted</span></span>
-<span id="cb13-9"><a href="#cb13-9"></a><span class="co">#&gt; 6  NHMSYS0000461817     Poa sieberiana species        accepted</span></span>
-<span id="cb13-10"><a href="#cb13-10"></a><span class="co">#&gt; 7  NHMSYS0000461808      Poa ligularis species        accepted</span></span>
-<span id="cb13-11"><a href="#cb13-11"></a><span class="co">#&gt; 8  NHMSYS0000461807 Poa labillardierei species        accepted</span></span>
-<span id="cb13-12"><a href="#cb13-12"></a><span class="co">#&gt; 9  NHMSYS0000461805         Poa gunnii species        accepted</span></span>
-<span id="cb13-13"><a href="#cb13-13"></a><span class="co">#&gt; 10 NHMSYS0000461801     Poa costiniana species        accepted</span></span></code></pre></div>
+<span id="cb13-3"><a href="#cb13-3"></a><span class="co">#&gt;                guid    scientificName    rank taxonomicStatus</span></span>
+<span id="cb13-4"><a href="#cb13-4"></a><span class="co">#&gt; 1  NBNSYS0000002544         Poa annua species        accepted</span></span>
+<span id="cb13-5"><a href="#cb13-5"></a><span class="co">#&gt; 2  NBNSYS0200003392  Triumfetta annua species        accepted</span></span>
+<span id="cb13-6"><a href="#cb13-6"></a><span class="co">#&gt; 3  NBNSYS0200001901      Bellis annua species        accepted</span></span>
+<span id="cb13-7"><a href="#cb13-7"></a><span class="co">#&gt; 4  NBNSYS0200002555       Lonas annua species        accepted</span></span>
+<span id="cb13-8"><a href="#cb13-8"></a><span class="co">#&gt; 5  NHMSYS0000456951 Carrichtera annua species        accepted</span></span>
+<span id="cb13-9"><a href="#cb13-9"></a><span class="co">#&gt; 6  NBNSYS0200002925     Poa poiformis species        accepted</span></span>
+<span id="cb13-10"><a href="#cb13-10"></a><span class="co">#&gt; 7  NBNSYS0200002923    Poa leptoclada species        accepted</span></span>
+<span id="cb13-11"><a href="#cb13-11"></a><span class="co">#&gt; 8  NHMSYS0000461817    Poa sieberiana species        accepted</span></span>
+<span id="cb13-12"><a href="#cb13-12"></a><span class="co">#&gt; 9  NHMSYS0000461808     Poa ligularis species        accepted</span></span>
+<span id="cb13-13"><a href="#cb13-13"></a><span class="co">#&gt; 10 NBNSYS0000163602     Poa granitica species        accepted</span></span></code></pre></div>
 </div>
 <div id="coerce-numericsalphanumerics-to-taxon-ids" class="section level2">
 <h2>Coerce numerics/alphanumerics to taxon IDs</h2>
@@ -601,7 +601,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <span id="cb14-30"><a href="#cb14-30"></a><span class="co">#&gt; attr(,&quot;pattern_match&quot;)</span></span>
 <span id="cb14-31"><a href="#cb14-31"></a><span class="co">#&gt; [1] FALSE</span></span>
 <span id="cb14-32"><a href="#cb14-32"></a><span class="co">#&gt; attr(,&quot;uri&quot;)</span></span>
-<span id="cb14-33"><a href="#cb14-33"></a><span class="co">#&gt; [1] &quot;http://www.gbif.org/species/2704179&quot;</span></span>
+<span id="cb14-33"><a href="#cb14-33"></a><span class="co">#&gt; [1] &quot;https://www.gbif.org/species/2704179&quot;</span></span>
 <span id="cb14-34"><a href="#cb14-34"></a><span class="kw">as.gbifid</span>(<span class="st">&quot;2704179&quot;</span>) <span class="co"># character</span></span>
 <span id="cb14-35"><a href="#cb14-35"></a><span class="co">#&gt; [1] &quot;2704179&quot;</span></span>
 <span id="cb14-36"><a href="#cb14-36"></a><span class="co">#&gt; attr(,&quot;class&quot;)</span></span>
@@ -613,7 +613,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <span id="cb14-42"><a href="#cb14-42"></a><span class="co">#&gt; attr(,&quot;pattern_match&quot;)</span></span>
 <span id="cb14-43"><a href="#cb14-43"></a><span class="co">#&gt; [1] FALSE</span></span>
 <span id="cb14-44"><a href="#cb14-44"></a><span class="co">#&gt; attr(,&quot;uri&quot;)</span></span>
-<span id="cb14-45"><a href="#cb14-45"></a><span class="co">#&gt; [1] &quot;http://www.gbif.org/species/2704179&quot;</span></span>
+<span id="cb14-45"><a href="#cb14-45"></a><span class="co">#&gt; [1] &quot;https://www.gbif.org/species/2704179&quot;</span></span>
 <span id="cb14-46"><a href="#cb14-46"></a><span class="kw">as.gbifid</span>(<span class="kw">list</span>(<span class="st">&quot;2704179&quot;</span>,<span class="st">&quot;2435099&quot;</span>,<span class="st">&quot;3171445&quot;</span>)) <span class="co"># list, either numeric or character</span></span>
 <span id="cb14-47"><a href="#cb14-47"></a><span class="co">#&gt; [1] &quot;2704179&quot; &quot;2435099&quot; &quot;3171445&quot;</span></span>
 <span id="cb14-48"><a href="#cb14-48"></a><span class="co">#&gt; attr(,&quot;class&quot;)</span></span>
@@ -625,15 +625,16 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <span id="cb14-54"><a href="#cb14-54"></a><span class="co">#&gt; attr(,&quot;pattern_match&quot;)</span></span>
 <span id="cb14-55"><a href="#cb14-55"></a><span class="co">#&gt; [1] FALSE FALSE FALSE</span></span>
 <span id="cb14-56"><a href="#cb14-56"></a><span class="co">#&gt; attr(,&quot;uri&quot;)</span></span>
-<span id="cb14-57"><a href="#cb14-57"></a><span class="co">#&gt; [1] &quot;http://www.gbif.org/species/2704179&quot; &quot;http://www.gbif.org/species/2435099&quot;</span></span>
-<span id="cb14-58"><a href="#cb14-58"></a><span class="co">#&gt; [3] &quot;http://www.gbif.org/species/3171445&quot;</span></span></code></pre></div>
+<span id="cb14-57"><a href="#cb14-57"></a><span class="co">#&gt; [1] &quot;https://www.gbif.org/species/2704179&quot;</span></span>
+<span id="cb14-58"><a href="#cb14-58"></a><span class="co">#&gt; [2] &quot;https://www.gbif.org/species/2435099&quot;</span></span>
+<span id="cb14-59"><a href="#cb14-59"></a><span class="co">#&gt; [3] &quot;https://www.gbif.org/species/3171445&quot;</span></span></code></pre></div>
 <p>These <code>as.*()</code> functions do a quick check of the web resource to make sure it’s a real ID. However, you can turn this check off, making this coercion much faster:</p>
 <div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a><span class="kw">system.time</span>( <span class="kw">replicate</span>(<span class="dv">3</span>, <span class="kw">as.gbifid</span>(<span class="kw">c</span>(<span class="st">&quot;2704179&quot;</span>,<span class="st">&quot;2435099&quot;</span>,<span class="st">&quot;3171445&quot;</span>), <span class="dt">check=</span><span class="ot">TRUE</span>)) )</span>
 <span id="cb15-2"><a href="#cb15-2"></a><span class="co">#&gt;    user  system elapsed </span></span>
-<span id="cb15-3"><a href="#cb15-3"></a><span class="co">#&gt;   0.077   0.002   4.616</span></span>
+<span id="cb15-3"><a href="#cb15-3"></a><span class="co">#&gt;   0.070   0.002   3.302</span></span>
 <span id="cb15-4"><a href="#cb15-4"></a><span class="kw">system.time</span>( <span class="kw">replicate</span>(<span class="dv">3</span>, <span class="kw">as.gbifid</span>(<span class="kw">c</span>(<span class="st">&quot;2704179&quot;</span>,<span class="st">&quot;2435099&quot;</span>,<span class="st">&quot;3171445&quot;</span>), <span class="dt">check=</span><span class="ot">FALSE</span>)) )</span>
 <span id="cb15-5"><a href="#cb15-5"></a><span class="co">#&gt;    user  system elapsed </span></span>
-<span id="cb15-6"><a href="#cb15-6"></a><span class="co">#&gt;   0.002   0.000   0.002</span></span></code></pre></div>
+<span id="cb15-6"><a href="#cb15-6"></a><span class="co">#&gt;   0.001   0.000   0.001</span></span></code></pre></div>
 </div>
 <div id="what-taxa-are-downstream-of-my-taxon-of-interest" class="section level2">
 <h2>What taxa are downstream of my taxon of interest?</h2>
