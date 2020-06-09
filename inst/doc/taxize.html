@@ -12,7 +12,7 @@
 
 <meta name="author" content="Scott Chamberlain" />
 
-<meta name="date" content="2020-03-31" />
+<meta name="date" content="2020-06-08" />
 
 <title>Introduction to taxize</title>
 
@@ -302,7 +302,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">Introduction to taxize</h1>
 <h4 class="author">Scott Chamberlain</h4>
-<h4 class="date">2020-03-31</h4>
+<h4 class="date">2020-06-08</h4>
 
 
 
@@ -317,7 +317,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <div id="resolve-taxonomic-name" class="section level2">
 <h2>Resolve taxonomic name</h2>
 <p>This is a common task in biology. We often have a list of species names and we want to know a) if we have the most up to date names, b) if our names are spelled correctly, and c) the scientific name for a common name. One way to resolve names is via the Global Names Resolver (GNR) service provided by the <a href="https://www.eol.org/">Encyclopedia of Life</a>. Here, we are searching for two misspelled names:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>temp &lt;-<span class="st"> </span><span class="kw">gnr_resolve</span>(<span class="dt">names =</span> <span class="kw">c</span>(<span class="st">&quot;Helianthos annus&quot;</span>, <span class="st">&quot;Homo saapiens&quot;</span>))</span>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>temp &lt;-<span class="st"> </span><span class="kw">gnr_resolve</span>(<span class="kw">c</span>(<span class="st">&quot;Helianthos annus&quot;</span>, <span class="st">&quot;Homo saapiens&quot;</span>))</span>
 <span id="cb3-2"><a href="#cb3-2"></a><span class="kw">head</span>(temp)</span>
 <span id="cb3-3"><a href="#cb3-3"></a><span class="co">#&gt; # A tibble: 6 x 5</span></span>
 <span id="cb3-4"><a href="#cb3-4"></a><span class="co">#&gt;   user_supplied_name submitted_name  matched_name     data_source_title    score</span></span>
@@ -331,7 +331,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <p>The correct spellings are <em>Helianthus annuus</em> and <em>Homo sapiens</em>. Another approach uses the Taxonomic Name Resolution Service via the Taxosaurus API developed by iPLant and the Phylotastic organization. In this example, we provide a list of species names, some of which are misspelled, and we’ll call the API with the <em>tnrs</em> function.</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a>mynames &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Helianthus annuus&quot;</span>, <span class="st">&quot;Pinus contort&quot;</span>, <span class="st">&quot;Poa anua&quot;</span>, <span class="st">&quot;Abis magnifica&quot;</span>,</span>
 <span id="cb4-2"><a href="#cb4-2"></a>    <span class="st">&quot;Rosa california&quot;</span>, <span class="st">&quot;Festuca arundinace&quot;</span>, <span class="st">&quot;Sorbus occidentalos&quot;</span>,<span class="st">&quot;Madia sateva&quot;</span>)</span>
-<span id="cb4-3"><a href="#cb4-3"></a><span class="kw">tnrs</span>(<span class="dt">query =</span> mynames, <span class="dt">source =</span> <span class="st">&quot;iPlant_TNRS&quot;</span>)[ , <span class="op">-</span><span class="kw">c</span>(<span class="dv">5</span><span class="op">:</span><span class="dv">7</span>)]</span>
+<span id="cb4-3"><a href="#cb4-3"></a><span class="kw">tnrs</span>(mynames, <span class="dt">source =</span> <span class="st">&quot;iPlant_TNRS&quot;</span>)[ , <span class="op">-</span><span class="kw">c</span>(<span class="dv">5</span><span class="op">:</span><span class="dv">7</span>)]</span>
 <span id="cb4-4"><a href="#cb4-4"></a><span class="co">#&gt;         submittedname        acceptedname    sourceid score</span></span>
 <span id="cb4-5"><a href="#cb4-5"></a><span class="co">#&gt; 1   Helianthus annuus   Helianthus annuus iPlant_TNRS  1.00</span></span>
 <span id="cb4-6"><a href="#cb4-6"></a><span class="co">#&gt; 2       Pinus contort      Pinus contorta iPlant_TNRS  0.98</span></span>
@@ -431,7 +431,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <span id="cb6-44"><a href="#cb6-44"></a><span class="co">#&gt; [1] &quot;itis&quot;</span></span></code></pre></div>
 <p>It turns out both species are in the family Pinaceae. You can also get this type of information from the NCBI by doing <code>classification(specieslist, db = &#39;ncbi&#39;)</code>.</p>
 <p>Instead of a full classification, you may only want a single name, say a family name for your species of interest. The function <code>tax_name</code> is built just for this purpose. As with the <code>classification</code> function you can specify the data source with the <code>db</code> argument, either ITIS or NCBI.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="kw">tax_name</span>(<span class="dt">query =</span> <span class="st">&quot;Helianthus annuus&quot;</span>, <span class="dt">get =</span> <span class="st">&quot;family&quot;</span>, <span class="dt">db =</span> <span class="st">&quot;ncbi&quot;</span>)</span>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="kw">tax_name</span>(<span class="st">&quot;Helianthus annuus&quot;</span>, <span class="dt">get =</span> <span class="st">&quot;family&quot;</span>, <span class="dt">db =</span> <span class="st">&quot;ncbi&quot;</span>)</span>
 <span id="cb7-2"><a href="#cb7-2"></a><span class="co">#&gt; ══  1 queries  ═══════════════</span></span>
 <span id="cb7-3"><a href="#cb7-3"></a><span class="co">#&gt; ✔  Found:  Helianthus+annuus</span></span>
 <span id="cb7-4"><a href="#cb7-4"></a><span class="co">#&gt; ══  Results  ═════════════════</span></span>
@@ -447,31 +447,28 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <h2>Interactive name selection</h2>
 <p>As mentioned most databases use a numeric code to reference a species. A general workflow in taxize is: Retrieve Code for the queried species and then use this code to query more data/information.</p>
 <p>Below are a few examples. When you run these examples in R, you are presented with a command prompt asking for the row that contains the name you would like back; that output is not printed below for brevity. In this example, the search term has many matches. The function returns a data frame of the matches, and asks for the user to input what row number to accept.</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="kw">get_uid</span>(<span class="dt">sciname =</span> <span class="st">&quot;Pinus&quot;</span>)</span>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="kw">get_uid</span>(<span class="st">&quot;Pinus&quot;</span>)</span>
 <span id="cb8-2"><a href="#cb8-2"></a><span class="co">#&gt; ══  1 queries  ═══════════════</span></span>
-<span id="cb8-3"><a href="#cb8-3"></a><span class="co">#&gt;   status     rank    division scientificname commonname    uid genus species</span></span>
-<span id="cb8-4"><a href="#cb8-4"></a><span class="co">#&gt; 1 active subgenus seed plants          Pinus hard pines 139271              </span></span>
-<span id="cb8-5"><a href="#cb8-5"></a><span class="co">#&gt; 2 active    genus seed plants          Pinus              3337              </span></span>
-<span id="cb8-6"><a href="#cb8-6"></a><span class="co">#&gt;   subsp modificationdate</span></span>
-<span id="cb8-7"><a href="#cb8-7"></a><span class="co">#&gt; 1       2017/06/14 00:00</span></span>
-<span id="cb8-8"><a href="#cb8-8"></a><span class="co">#&gt; 2       2016/03/25 00:00</span></span>
-<span id="cb8-9"><a href="#cb8-9"></a><span class="co">#&gt; ══  Results  ═════════════════</span></span>
-<span id="cb8-10"><a href="#cb8-10"></a><span class="co">#&gt; </span></span>
-<span id="cb8-11"><a href="#cb8-11"></a><span class="co">#&gt; ● Total: 1 </span></span>
-<span id="cb8-12"><a href="#cb8-12"></a><span class="co">#&gt; ● Found: 0 </span></span>
-<span id="cb8-13"><a href="#cb8-13"></a><span class="co">#&gt; ● Not Found: 0</span></span>
-<span id="cb8-14"><a href="#cb8-14"></a><span class="co">#&gt; [1] NA</span></span>
-<span id="cb8-15"><a href="#cb8-15"></a><span class="co">#&gt; attr(,&quot;class&quot;)</span></span>
-<span id="cb8-16"><a href="#cb8-16"></a><span class="co">#&gt; [1] &quot;uid&quot;</span></span>
-<span id="cb8-17"><a href="#cb8-17"></a><span class="co">#&gt; attr(,&quot;match&quot;)</span></span>
-<span id="cb8-18"><a href="#cb8-18"></a><span class="co">#&gt; [1] &quot;NA due to user input out of range&quot;</span></span>
-<span id="cb8-19"><a href="#cb8-19"></a><span class="co">#&gt; attr(,&quot;multiple_matches&quot;)</span></span>
-<span id="cb8-20"><a href="#cb8-20"></a><span class="co">#&gt; [1] TRUE</span></span>
-<span id="cb8-21"><a href="#cb8-21"></a><span class="co">#&gt; attr(,&quot;pattern_match&quot;)</span></span>
-<span id="cb8-22"><a href="#cb8-22"></a><span class="co">#&gt; [1] FALSE</span></span></code></pre></div>
+<span id="cb8-3"><a href="#cb8-3"></a><span class="co">#&gt; ✔  Found:  Pinus</span></span>
+<span id="cb8-4"><a href="#cb8-4"></a><span class="co">#&gt; ══  Results  ═════════════════</span></span>
+<span id="cb8-5"><a href="#cb8-5"></a><span class="co">#&gt; </span></span>
+<span id="cb8-6"><a href="#cb8-6"></a><span class="co">#&gt; ● Total: 1 </span></span>
+<span id="cb8-7"><a href="#cb8-7"></a><span class="co">#&gt; ● Found: 1 </span></span>
+<span id="cb8-8"><a href="#cb8-8"></a><span class="co">#&gt; ● Not Found: 0</span></span>
+<span id="cb8-9"><a href="#cb8-9"></a><span class="co">#&gt; [1] &quot;3337&quot;</span></span>
+<span id="cb8-10"><a href="#cb8-10"></a><span class="co">#&gt; attr(,&quot;class&quot;)</span></span>
+<span id="cb8-11"><a href="#cb8-11"></a><span class="co">#&gt; [1] &quot;uid&quot;</span></span>
+<span id="cb8-12"><a href="#cb8-12"></a><span class="co">#&gt; attr(,&quot;match&quot;)</span></span>
+<span id="cb8-13"><a href="#cb8-13"></a><span class="co">#&gt; [1] &quot;found&quot;</span></span>
+<span id="cb8-14"><a href="#cb8-14"></a><span class="co">#&gt; attr(,&quot;multiple_matches&quot;)</span></span>
+<span id="cb8-15"><a href="#cb8-15"></a><span class="co">#&gt; [1] FALSE</span></span>
+<span id="cb8-16"><a href="#cb8-16"></a><span class="co">#&gt; attr(,&quot;pattern_match&quot;)</span></span>
+<span id="cb8-17"><a href="#cb8-17"></a><span class="co">#&gt; [1] FALSE</span></span>
+<span id="cb8-18"><a href="#cb8-18"></a><span class="co">#&gt; attr(,&quot;uri&quot;)</span></span>
+<span id="cb8-19"><a href="#cb8-19"></a><span class="co">#&gt; [1] &quot;https://www.ncbi.nlm.nih.gov/taxonomy/3337&quot;</span></span></code></pre></div>
 <p>In another example, you can pass in a long character vector of taxonomic names (although this one is rather short for demo purposes):</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a>splist &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;annona cherimola&quot;</span>, <span class="st">&#39;annona muricata&#39;</span>, <span class="st">&quot;quercus robur&quot;</span>)</span>
-<span id="cb9-2"><a href="#cb9-2"></a><span class="kw">get_tsn</span>(<span class="dt">searchterm =</span> splist, <span class="dt">searchtype =</span> <span class="st">&quot;scientific&quot;</span>)</span>
+<span id="cb9-2"><a href="#cb9-2"></a><span class="kw">get_tsn</span>(splist, <span class="dt">searchtype =</span> <span class="st">&quot;scientific&quot;</span>)</span>
 <span id="cb9-3"><a href="#cb9-3"></a><span class="co">#&gt; ══  3 queries  ═══════════════</span></span>
 <span id="cb9-4"><a href="#cb9-4"></a><span class="co">#&gt; ✔  Found:  annona cherimola</span></span>
 <span id="cb9-5"><a href="#cb9-5"></a><span class="co">#&gt; ✔  Found:  annona muricata</span></span>
@@ -553,17 +550,17 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <p>That’s a lot of data, so we can get only certain rows back</p>
 <div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a><span class="kw">get_nbnid_</span>(<span class="st">&quot;Poa annua&quot;</span>, <span class="dt">rows =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">10</span>)</span>
 <span id="cb13-2"><a href="#cb13-2"></a><span class="co">#&gt; $`Poa annua`</span></span>
-<span id="cb13-3"><a href="#cb13-3"></a><span class="co">#&gt;                guid    scientificName    rank taxonomicStatus</span></span>
-<span id="cb13-4"><a href="#cb13-4"></a><span class="co">#&gt; 1  NBNSYS0000002544         Poa annua species        accepted</span></span>
-<span id="cb13-5"><a href="#cb13-5"></a><span class="co">#&gt; 2  NBNSYS0200003392  Triumfetta annua species        accepted</span></span>
-<span id="cb13-6"><a href="#cb13-6"></a><span class="co">#&gt; 3  NBNSYS0200001901      Bellis annua species        accepted</span></span>
-<span id="cb13-7"><a href="#cb13-7"></a><span class="co">#&gt; 4  NBNSYS0200002555       Lonas annua species        accepted</span></span>
-<span id="cb13-8"><a href="#cb13-8"></a><span class="co">#&gt; 5  NHMSYS0000456951 Carrichtera annua species        accepted</span></span>
-<span id="cb13-9"><a href="#cb13-9"></a><span class="co">#&gt; 6  NBNSYS0200002925     Poa poiformis species        accepted</span></span>
-<span id="cb13-10"><a href="#cb13-10"></a><span class="co">#&gt; 7  NBNSYS0200002923    Poa leptoclada species        accepted</span></span>
-<span id="cb13-11"><a href="#cb13-11"></a><span class="co">#&gt; 8  NHMSYS0000461817    Poa sieberiana species        accepted</span></span>
-<span id="cb13-12"><a href="#cb13-12"></a><span class="co">#&gt; 9  NHMSYS0000461808     Poa ligularis species        accepted</span></span>
-<span id="cb13-13"><a href="#cb13-13"></a><span class="co">#&gt; 10 NBNSYS0000163602     Poa granitica species        accepted</span></span></code></pre></div>
+<span id="cb13-3"><a href="#cb13-3"></a><span class="co">#&gt;                guid     scientificName    rank taxonomicStatus</span></span>
+<span id="cb13-4"><a href="#cb13-4"></a><span class="co">#&gt; 1  NBNSYS0000002544          Poa annua species        accepted</span></span>
+<span id="cb13-5"><a href="#cb13-5"></a><span class="co">#&gt; 2  NBNSYS0200001901       Bellis annua species        accepted</span></span>
+<span id="cb13-6"><a href="#cb13-6"></a><span class="co">#&gt; 3  NBNSYS0200003392   Triumfetta annua species        accepted</span></span>
+<span id="cb13-7"><a href="#cb13-7"></a><span class="co">#&gt; 4  NBNSYS0200002555        Lonas annua species        accepted</span></span>
+<span id="cb13-8"><a href="#cb13-8"></a><span class="co">#&gt; 5  NHMSYS0000456951  Carrichtera annua species        accepted</span></span>
+<span id="cb13-9"><a href="#cb13-9"></a><span class="co">#&gt; 6  NHMSYS0000461807 Poa labillardierei species        accepted</span></span>
+<span id="cb13-10"><a href="#cb13-10"></a><span class="co">#&gt; 7  NHMSYS0000461808      Poa ligularis species        accepted</span></span>
+<span id="cb13-11"><a href="#cb13-11"></a><span class="co">#&gt; 8  NHMSYS0000461817     Poa sieberiana species        accepted</span></span>
+<span id="cb13-12"><a href="#cb13-12"></a><span class="co">#&gt; 9  NHMSYS0000461805         Poa gunnii species        accepted</span></span>
+<span id="cb13-13"><a href="#cb13-13"></a><span class="co">#&gt; 10 NHMSYS0000461801     Poa costiniana species        accepted</span></span></code></pre></div>
 </div>
 <div id="coerce-numericsalphanumerics-to-taxon-ids" class="section level2">
 <h2>Coerce numerics/alphanumerics to taxon IDs</h2>
@@ -631,10 +628,10 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <p>These <code>as.*()</code> functions do a quick check of the web resource to make sure it’s a real ID. However, you can turn this check off, making this coercion much faster:</p>
 <div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a><span class="kw">system.time</span>( <span class="kw">replicate</span>(<span class="dv">3</span>, <span class="kw">as.gbifid</span>(<span class="kw">c</span>(<span class="st">&quot;2704179&quot;</span>,<span class="st">&quot;2435099&quot;</span>,<span class="st">&quot;3171445&quot;</span>), <span class="dt">check=</span><span class="ot">TRUE</span>)) )</span>
 <span id="cb15-2"><a href="#cb15-2"></a><span class="co">#&gt;    user  system elapsed </span></span>
-<span id="cb15-3"><a href="#cb15-3"></a><span class="co">#&gt;   0.070   0.002   3.302</span></span>
+<span id="cb15-3"><a href="#cb15-3"></a><span class="co">#&gt;   0.062   0.001   2.762</span></span>
 <span id="cb15-4"><a href="#cb15-4"></a><span class="kw">system.time</span>( <span class="kw">replicate</span>(<span class="dv">3</span>, <span class="kw">as.gbifid</span>(<span class="kw">c</span>(<span class="st">&quot;2704179&quot;</span>,<span class="st">&quot;2435099&quot;</span>,<span class="st">&quot;3171445&quot;</span>), <span class="dt">check=</span><span class="ot">FALSE</span>)) )</span>
 <span id="cb15-5"><a href="#cb15-5"></a><span class="co">#&gt;    user  system elapsed </span></span>
-<span id="cb15-6"><a href="#cb15-6"></a><span class="co">#&gt;   0.001   0.000   0.001</span></span></code></pre></div>
+<span id="cb15-6"><a href="#cb15-6"></a><span class="co">#&gt;   0.003   0.000   0.003</span></span></code></pre></div>
 </div>
 <div id="what-taxa-are-downstream-of-my-taxon-of-interest" class="section level2">
 <h2>What taxa are downstream of my taxon of interest?</h2>

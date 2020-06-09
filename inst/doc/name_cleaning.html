@@ -12,7 +12,7 @@
 
 <meta name="author" content="Scott Chamberlain" />
 
-<meta name="date" content="2020-03-31" />
+<meta name="date" content="2020-06-08" />
 
 <title>Strategies for programmatic name cleaning</title>
 
@@ -302,7 +302,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">Strategies for programmatic name cleaning</h1>
 <h4 class="author">Scott Chamberlain</h4>
-<h4 class="date">2020-03-31</h4>
+<h4 class="date">2020-06-08</h4>
 
 
 
@@ -316,7 +316,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <div id="rows-parameter" class="section level3">
 <h3>rows parameter</h3>
 <p>Normally, if you get more than one result, you get a prompt asking you to select which taxon you want.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="kw">get_tsn</span>(<span class="dt">searchterm =</span> <span class="st">&quot;Quercus b&quot;</span>)</span>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="kw">get_tsn</span>(<span class="st">&quot;Quercus b&quot;</span>)</span>
 <span id="cb2-2"><a href="#cb2-2"></a><span class="co">#&gt;       tsn                       target             commonnames    nameusage</span></span>
 <span id="cb2-3"><a href="#cb2-3"></a><span class="co">#&gt; 1   19298             Quercus beebiana                         not accepted</span></span>
 <span id="cb2-4"><a href="#cb2-4"></a><span class="co">#&gt; 2  507263       Quercus berberidifolia               scrub oak     accepted</span></span>
@@ -335,7 +335,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <span id="cb2-17"><a href="#cb2-17"></a><span class="co">#&gt;</span></span>
 <span id="cb2-18"><a href="#cb2-18"></a><span class="co">#&gt; 1:</span></span></code></pre></div>
 <p>Instead, we can use the rows parameter to specify which records we want by number only (not by a name itself). Here, we want the first 3 records:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="kw">get_tsn</span>(<span class="dt">searchterm =</span> <span class="st">&#39;Quercus b&#39;</span>, <span class="dt">rows =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">3</span>)</span>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="kw">get_tsn</span>(<span class="st">&#39;Quercus b&#39;</span>, <span class="dt">rows =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">3</span>)</span>
 <span id="cb3-2"><a href="#cb3-2"></a><span class="co">#&gt;     tsn           target     commonnames    nameusage</span></span>
 <span id="cb3-3"><a href="#cb3-3"></a><span class="co">#&gt; 1 19298 Quercus beebiana                 not accepted</span></span>
 <span id="cb3-4"><a href="#cb3-4"></a><span class="co">#&gt; 2 19300  Quercus bicolor swamp white oak     accepted</span></span>
@@ -348,7 +348,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <span id="cb3-11"><a href="#cb3-11"></a><span class="co">#&gt; 1:</span></span></code></pre></div>
 <p>However, you still get a prompt as there is more than one result.</p>
 <p>Thus, for full programmatic usage, you can specify a single row, if you happen to know which one you want:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="kw">get_tsn</span>(<span class="dt">searchterm =</span> <span class="st">&#39;Quercus b&#39;</span>, <span class="dt">rows =</span> <span class="dv">3</span>)</span>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="kw">get_tsn</span>(<span class="st">&#39;Quercus b&#39;</span>, <span class="dt">rows =</span> <span class="dv">3</span>)</span>
 <span id="cb4-2"><a href="#cb4-2"></a><span class="co">#&gt; ══  1 queries  ═══════════════</span></span>
 <span id="cb4-3"><a href="#cb4-3"></a><span class="co">#&gt; ✔  Found:  Quercus b</span></span>
 <span id="cb4-4"><a href="#cb4-4"></a><span class="co">#&gt; ══  Results  ═════════════════</span></span>
@@ -372,7 +372,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <div id="underscore-methods" class="section level3">
 <h3>underscore methods</h3>
 <p>A better fit for programmatic use are underscore methods. Each <code>get_*()</code> function has a sister method with and trailing underscore, e.g., <code>get_tsn()</code> and <code>get_tsn_()</code>.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="kw">get_tsn_</span>(<span class="dt">searchterm =</span> <span class="st">&quot;Quercus b&quot;</span>)</span>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="kw">get_tsn_</span>(<span class="st">&quot;Quercus b&quot;</span>)</span>
 <span id="cb5-2"><a href="#cb5-2"></a><span class="co">#&gt; $`Quercus b`</span></span>
 <span id="cb5-3"><a href="#cb5-3"></a><span class="co">#&gt; # A tibble: 5 x 4</span></span>
 <span id="cb5-4"><a href="#cb5-4"></a><span class="co">#&gt;   tsn    scientificName         commonNames                           nameUsage</span></span>
@@ -384,13 +384,13 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <span id="cb5-10"><a href="#cb5-10"></a><span class="co">#&gt; 5 507263 Quercus berberidifolia scrub oak                             accepted</span></span></code></pre></div>
 <p>The result is a single data.frame for each taxon queried, which can be processed downstream with whatever logic is required in your workflow.</p>
 <p>You can also combine <code>rows</code> parameter with underscore functions, as a single number of a range of numbers:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="kw">get_tsn_</span>(<span class="dt">searchterm =</span> <span class="st">&quot;Quercus b&quot;</span>, <span class="dt">rows =</span> <span class="dv">1</span>)</span>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="kw">get_tsn_</span>(<span class="st">&quot;Quercus b&quot;</span>, <span class="dt">rows =</span> <span class="dv">1</span>)</span>
 <span id="cb6-2"><a href="#cb6-2"></a><span class="co">#&gt; $`Quercus b`</span></span>
 <span id="cb6-3"><a href="#cb6-3"></a><span class="co">#&gt; # A tibble: 1 x 4</span></span>
 <span id="cb6-4"><a href="#cb6-4"></a><span class="co">#&gt;   tsn   scientificName  commonNames                    nameUsage</span></span>
 <span id="cb6-5"><a href="#cb6-5"></a><span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt;           &lt;chr&gt;                          &lt;chr&gt;    </span></span>
 <span id="cb6-6"><a href="#cb6-6"></a><span class="co">#&gt; 1 19300 Quercus bicolor swamp white oak,chêne bicolore accepted</span></span></code></pre></div>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="kw">get_tsn_</span>(<span class="dt">searchterm =</span> <span class="st">&quot;Quercus b&quot;</span>, <span class="dt">rows =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">2</span>)</span>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="kw">get_tsn_</span>(<span class="st">&quot;Quercus b&quot;</span>, <span class="dt">rows =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">2</span>)</span>
 <span id="cb7-2"><a href="#cb7-2"></a><span class="co">#&gt; $`Quercus b`</span></span>
 <span id="cb7-3"><a href="#cb7-3"></a><span class="co">#&gt; # A tibble: 2 x 4</span></span>
 <span id="cb7-4"><a href="#cb7-4"></a><span class="co">#&gt;   tsn    scientificName    commonNames                           nameUsage</span></span>
@@ -461,24 +461,24 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <p>Some functions in <code>taxize</code> are meant specifically for name cleaning. One of those is <code>gnr_resolve()</code>.</p>
 <p><code>gnr_resolve()</code> doesn’t provide prompts as do <code>get_*()</code> functions, but instead return data.frame’s. So we don’t face the same problem, and can use <code>gnr_resolve()</code> in a programmatic workflow straight away.</p>
 <div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a>spp &lt;-<span class="st"> </span><span class="kw">names_list</span>(<span class="dt">rank =</span> <span class="st">&quot;species&quot;</span>, <span class="dt">size =</span> <span class="dv">10</span>)</span>
-<span id="cb11-2"><a href="#cb11-2"></a><span class="kw">gnr_resolve</span>(<span class="dt">names =</span> spp, <span class="dt">preferred_data_sources =</span> <span class="dv">11</span>)</span>
+<span id="cb11-2"><a href="#cb11-2"></a><span class="kw">gnr_resolve</span>(spp, <span class="dt">preferred_data_sources =</span> <span class="dv">11</span>)</span>
 <span id="cb11-3"><a href="#cb11-3"></a><span class="co">#&gt; # A tibble: 14 x 5</span></span>
-<span id="cb11-4"><a href="#cb11-4"></a><span class="co">#&gt;    user_supplied_name submitted_name   matched_name       data_source_tit… score</span></span>
-<span id="cb11-5"><a href="#cb11-5"></a><span class="co">#&gt;  * &lt;chr&gt;              &lt;chr&gt;            &lt;chr&gt;              &lt;chr&gt;            &lt;dbl&gt;</span></span>
-<span id="cb11-6"><a href="#cb11-6"></a><span class="co">#&gt;  1 Asperula conferta  Asperula confer… Asperula conferta… GBIF Backbone T… 0.988</span></span>
-<span id="cb11-7"><a href="#cb11-7"></a><span class="co">#&gt;  2 Asperula conferta  Asperula confer… Asperula conferta… GBIF Backbone T… 0.988</span></span>
-<span id="cb11-8"><a href="#cb11-8"></a><span class="co">#&gt;  3 Scutellaria titov… Scutellaria tit… Scutellaria titov… GBIF Backbone T… 0.988</span></span>
-<span id="cb11-9"><a href="#cb11-9"></a><span class="co">#&gt;  4 Polypodium prolon… Polypodium prol… Polypodium prolon… GBIF Backbone T… 0.988</span></span>
-<span id="cb11-10"><a href="#cb11-10"></a><span class="co">#&gt;  5 Steinchisma decip… Steinchisma dec… Steinchisma decip… GBIF Backbone T… 0.988</span></span>
-<span id="cb11-11"><a href="#cb11-11"></a><span class="co">#&gt;  6 Hieracium lepidot… Hieracium lepid… Hieracium lepidot… GBIF Backbone T… 0.988</span></span>
-<span id="cb11-12"><a href="#cb11-12"></a><span class="co">#&gt;  7 Neolitsea archbol… Neolitsea archb… Neolitsea archbol… GBIF Backbone T… 0.988</span></span>
-<span id="cb11-13"><a href="#cb11-13"></a><span class="co">#&gt;  8 Biscutella rupest… Biscutella rupe… Biscutella rupest… GBIF Backbone T… 0.988</span></span>
-<span id="cb11-14"><a href="#cb11-14"></a><span class="co">#&gt;  9 Biscutella rupest… Biscutella rupe… Biscutella rupest… GBIF Backbone T… 0.988</span></span>
-<span id="cb11-15"><a href="#cb11-15"></a><span class="co">#&gt; 10 Biscutella rupest… Biscutella rupe… Biscutella rupest… GBIF Backbone T… 0.988</span></span>
-<span id="cb11-16"><a href="#cb11-16"></a><span class="co">#&gt; 11 Lastreopsis hornei Lastreopsis hor… Lastreopsis horne… GBIF Backbone T… 0.988</span></span>
-<span id="cb11-17"><a href="#cb11-17"></a><span class="co">#&gt; 12 Dianthus morisian… Dianthus morisi… Dianthus morisian… GBIF Backbone T… 0.988</span></span>
-<span id="cb11-18"><a href="#cb11-18"></a><span class="co">#&gt; 13 Mesembryanthemum … Mesembryanthemu… Mesembryanthemum … GBIF Backbone T… 0.988</span></span>
-<span id="cb11-19"><a href="#cb11-19"></a><span class="co">#&gt; 14 Mesembryanthemum … Mesembryanthemu… Mesembryanthemum … GBIF Backbone T… 0.988</span></span></code></pre></div>
+<span id="cb11-4"><a href="#cb11-4"></a><span class="co">#&gt;    user_supplied_na… submitted_name   matched_name        data_source_tit… score</span></span>
+<span id="cb11-5"><a href="#cb11-5"></a><span class="co">#&gt;  * &lt;chr&gt;             &lt;chr&gt;            &lt;chr&gt;               &lt;chr&gt;            &lt;dbl&gt;</span></span>
+<span id="cb11-6"><a href="#cb11-6"></a><span class="co">#&gt;  1 Prestonia seeman… Prestonia seema… Prestonia seemanni… GBIF Backbone T… 0.988</span></span>
+<span id="cb11-7"><a href="#cb11-7"></a><span class="co">#&gt;  2 Stephanodaphne p… Stephanodaphne … Stephanodaphne per… GBIF Backbone T… 0.988</span></span>
+<span id="cb11-8"><a href="#cb11-8"></a><span class="co">#&gt;  3 Eriogonum compos… Eriogonum compo… Eriogonum composit… GBIF Backbone T… 0.988</span></span>
+<span id="cb11-9"><a href="#cb11-9"></a><span class="co">#&gt;  4 Eriogonum compos… Eriogonum compo… Eriogonum composit… GBIF Backbone T… 0.988</span></span>
+<span id="cb11-10"><a href="#cb11-10"></a><span class="co">#&gt;  5 Acaulon muticum   Acaulon muticum  Acaulon muticum (H… GBIF Backbone T… 0.988</span></span>
+<span id="cb11-11"><a href="#cb11-11"></a><span class="co">#&gt;  6 Acaulon muticum   Acaulon muticum  Acaulon muticum C.… GBIF Backbone T… 0.988</span></span>
+<span id="cb11-12"><a href="#cb11-12"></a><span class="co">#&gt;  7 Ranunculus subte… Ranunculus subt… Ranunculus subtect… GBIF Backbone T… 0.988</span></span>
+<span id="cb11-13"><a href="#cb11-13"></a><span class="co">#&gt;  8 Leucopogon pogon… Leucopogon pogo… Leucopogon pogonoc… GBIF Backbone T… 0.988</span></span>
+<span id="cb11-14"><a href="#cb11-14"></a><span class="co">#&gt;  9 Leucopogon pogon… Leucopogon pogo… Leucopogon pogonoc… GBIF Backbone T… 0.988</span></span>
+<span id="cb11-15"><a href="#cb11-15"></a><span class="co">#&gt; 10 Calanthe obrenif… Calanthe obreni… Calanthe obrenifor… GBIF Backbone T… 0.988</span></span>
+<span id="cb11-16"><a href="#cb11-16"></a><span class="co">#&gt; 11 Palaquium pierrei Palaquium pierr… Palaquium pierrei … GBIF Backbone T… 0.988</span></span>
+<span id="cb11-17"><a href="#cb11-17"></a><span class="co">#&gt; 12 Lithospermum cus… Lithospermum cu… Lithospermum cuspi… GBIF Backbone T… 0.988</span></span>
+<span id="cb11-18"><a href="#cb11-18"></a><span class="co">#&gt; 13 Evodia lucida     Evodia lucida    Euodia lucida (Miq… GBIF Backbone T… 0.75 </span></span>
+<span id="cb11-19"><a href="#cb11-19"></a><span class="co">#&gt; 14 Evodia lucida     Evodia lucida    Euodia lucida (A.G… GBIF Backbone T… 0.75</span></span></code></pre></div>
 </div>
 <div id="other-functions" class="section level2">
 <h2>Other functions</h2>

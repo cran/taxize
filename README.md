@@ -5,21 +5,19 @@ taxize
 
 [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 [![cran checks](https://cranchecks.info/badges/worst/taxize)](https://cranchecks.info/pkgs/taxize)
-[![Build Status](https://travis-ci.org/ropensci/taxize.svg?branch=master)](https://travis-ci.org/ropensci/taxize)
-[![Build status](https://ci.appveyor.com/api/projects/status/6mgc02mkd8j4sq3g/branch/master)](https://ci.appveyor.com/project/sckott/taxize-175/branch/master)
+[![R-CMD-check](https://github.com/ropensci/taxize/workflows/R-CMD-check/badge.svg)](https://github.com/ropensci/taxize/actions/)
+[![codecov](https://codecov.io/gh/ropensci/taxize/branch/master/graph/badge.svg)](https://codecov.io/gh/ropensci/taxize)
 [![rstudio mirror downloads](https://cranlogs.r-pkg.org/badges/taxize)](https://github.com/metacran/cranlogs.app)
 [![cran version](https://www.r-pkg.org/badges/version/taxize)](https://cran.r-project.org/package=taxize)
 
 
 `taxize` allows users to search over many taxonomic data sources for species names (scientific and common) and download up and downstream taxonomic hierarchical information - among other things.
 
-The taxize book => <https://taxize.dev>
+The taxize book: https://taxize.dev
 
-The functions in the package that work with a specific API have a prefix and suffix separated by an underscore. They follow the format of `service_whatitdoes`.  For example, `gnr_resolve` uses the Global Names Resolver API to resolve species names.  General functions in the package that don't hit a specific API don't have two words separated by an underscore, e.g., `classification`.
+Package documentation: https://docs.ropensci.org/taxize/
 
-You need API keys for Tropicos, IUCN, and NatureServe.
-
-## Currently implemented in `taxize`
+## Data sources currently implemented
 
 <table>
 <colgroup>
@@ -279,7 +277,7 @@ children("Salmo", db = 'ncbi')
 #> 20      1201173               Salmo peristericus        species
 #> 21      1035833                   Salmo ischchan        species
 #> 22       700588                     Salmo labrax        species
-#> 23       602068                    Salmo caspius     subspecies
+#> 23       602068                    Salmo caspius        species
 #> 24       237411              Salmo obtusirostris        species
 #> 25       235141              Salmo platycephalus        species
 #> 26       234793                    Salmo letnica        species
@@ -383,7 +381,7 @@ synonyms("Acer drummondii", db="itis")
 
 
 ```r
-get_ids(names="Salvelinus fontinalis", db = c('itis', 'ncbi'), mesages = FALSE)
+get_ids("Salvelinus fontinalis", db = c('itis', 'ncbi'), mesages = FALSE)
 #> ══  db: itis ═════════════════
 #> ══  1 queries  ═══════════════
 #> ✔  Found:  Salvelinus fontinalis
@@ -436,7 +434,7 @@ You can limit to certain rows when getting ids in any `get_*()` functions
 
 
 ```r
-get_ids(names="Poa annua", db = "gbif", rows=1)
+get_ids("Poa annua", db = "gbif", rows=1)
 #> ══  db: gbif ═════════════════
 #> ══  1 queries  ═══════════════
 #> ✔  Found:  Poa annua
@@ -473,8 +471,8 @@ get_ids_(c("Chironomus riparius", "Pinus contorta"), db = 'nbn', rows=1:3)
 #> $nbn$`Chironomus riparius`
 #>               guid      scientificName    rank taxonomicStatus
 #> 1 NBNSYS0000027573 Chironomus riparius species        accepted
-#> 2 NBNSYS0000023573    Quedius riparius species        accepted
-#> 3 NBNSYS0000007169   Elaphrus riparius species        accepted
+#> 2 NBNSYS0000007169   Elaphrus riparius species        accepted
+#> 3 NBNSYS0000023573    Quedius riparius species        accepted
 #> 
 #> $nbn$`Pinus contorta`
 #>               guid                scientificName    rank taxonomicStatus
@@ -607,6 +605,7 @@ out <- as.uid(c(315567, 3339, 9696))
 ## Contributing
 
 See our [CONTRIBUTING](https://github.com/ropensci/taxize/blob/master/.github/CONTRIBUTING.md) document.
+
 
 ## Road map
 
