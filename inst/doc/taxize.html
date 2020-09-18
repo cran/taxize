@@ -12,10 +12,26 @@
 
 <meta name="author" content="Scott Chamberlain" />
 
-<meta name="date" content="2020-06-08" />
+<meta name="date" content="2020-09-17" />
 
 <title>Introduction to taxize</title>
 
+<script>// Hide empty <a> tag within highlighted CodeBlock for screen reader accessibility (see https://github.com/jgm/pandoc/issues/6352#issuecomment-626106786) -->
+// v0.0.1
+// Written by JooYoung Seo (jooyoung@psu.edu) and Atsushi Yasumoto on June 1st, 2020.
+
+document.addEventListener('DOMContentLoaded', function() {
+  const codeList = document.getElementsByClassName("sourceCode");
+  for (var i = 0; i < codeList.length; i++) {
+    var linkList = codeList[i].getElementsByTagName('a');
+    for (var j = 0; j < linkList.length; j++) {
+      if (linkList[j].innerHTML === "") {
+        linkList[j].setAttribute('aria-hidden', 'true');
+      }
+    }
+  }
+});
+</script>
 
 
 <style type="text/css">code{white-space: pre;}</style>
@@ -302,7 +318,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">Introduction to taxize</h1>
 <h4 class="author">Scott Chamberlain</h4>
-<h4 class="date">2020-06-08</h4>
+<h4 class="date">2020-09-17</h4>
 
 
 
@@ -312,11 +328,11 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <p>First, install and load <code>taxize</code> into the R session.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw">install.packages</span>(<span class="st">&quot;taxize&quot;</span>)</span></code></pre></div>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="kw">library</span>(<span class="st">&quot;taxize&quot;</span>)</span></code></pre></div>
-<p>Advanced users can also download and install the latest development copy from <a href="https://github.com/ropensci/taxize_">GitHub</a>.</p>
+<p>Advanced users can also download and install the latest development copy from GitHub (<a href="https://github.com/ropensci/taxize" class="uri">https://github.com/ropensci/taxize</a>)</p>
 </div>
 <div id="resolve-taxonomic-name" class="section level2">
 <h2>Resolve taxonomic name</h2>
-<p>This is a common task in biology. We often have a list of species names and we want to know a) if we have the most up to date names, b) if our names are spelled correctly, and c) the scientific name for a common name. One way to resolve names is via the Global Names Resolver (GNR) service provided by the <a href="https://www.eol.org/">Encyclopedia of Life</a>. Here, we are searching for two misspelled names:</p>
+<p>This is a common task in biology. We often have a list of species names and we want to know a) if we have the most up to date names, b) if our names are spelled correctly, and c) the scientific name for a common name. One way to resolve names is via the Global Names Resolver (GNR) service provided by the Encyclopedia of Life. Here, we are searching for two misspelled names:</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>temp &lt;-<span class="st"> </span><span class="kw">gnr_resolve</span>(<span class="kw">c</span>(<span class="st">&quot;Helianthos annus&quot;</span>, <span class="st">&quot;Homo saapiens&quot;</span>))</span>
 <span id="cb3-2"><a href="#cb3-2"></a><span class="kw">head</span>(temp)</span>
 <span id="cb3-3"><a href="#cb3-3"></a><span class="co">#&gt; # A tibble: 6 x 5</span></span>
@@ -384,7 +400,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <div id="retrieve-higher-taxonomic-names" class="section level2">
 <h2>Retrieve higher taxonomic names</h2>
 <p>Another task biologists often face is getting higher taxonomic names for a taxa list. Having the higher taxonomy allows you to put into context the relationships of your species list. For example, you may find out that species A and species B are in Family C, which may lead to some interesting insight, as opposed to not knowing that Species A and B are closely related. This also makes it easy to aggregate/standardize data to a specific taxonomic level (e.g., family level) or to match data to other databases with different taxonomic resolution (e.g., trait databases).</p>
-<p>A number of data sources in taxize provide the capability to retrieve higher taxonomic names, but we will highlight two of the more useful ones: <a href="https://www.itis.gov/">Integrated Taxonomic Information System (ITIS)</a> and <a href="https://www.ncbi.nlm.nih.gov/">National Center for Biotechnology Information (NCBI)</a>. First, we’ll search for two species, <em>Abies procera} and </em>Pinus contorta* within ITIS.</p>
+<p>A number of data sources in taxize provide the capability to retrieve higher taxonomic names, but we will highlight two of the more useful ones: Integrated Taxonomic Information System (ITIS) and National Center for Biotechnology Information (NCBI). First, we’ll search for two species, <em>Abies procera} and </em>Pinus contorta* within ITIS.</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a>specieslist &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Abies procera&quot;</span>,<span class="st">&quot;Pinus contorta&quot;</span>)</span>
 <span id="cb6-2"><a href="#cb6-2"></a><span class="kw">classification</span>(specieslist, <span class="dt">db =</span> <span class="st">&#39;itis&#39;</span>)</span>
 <span id="cb6-3"><a href="#cb6-3"></a><span class="co">#&gt; ══  2 queries  ═══════════════</span></span>
@@ -628,30 +644,31 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <p>These <code>as.*()</code> functions do a quick check of the web resource to make sure it’s a real ID. However, you can turn this check off, making this coercion much faster:</p>
 <div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a><span class="kw">system.time</span>( <span class="kw">replicate</span>(<span class="dv">3</span>, <span class="kw">as.gbifid</span>(<span class="kw">c</span>(<span class="st">&quot;2704179&quot;</span>,<span class="st">&quot;2435099&quot;</span>,<span class="st">&quot;3171445&quot;</span>), <span class="dt">check=</span><span class="ot">TRUE</span>)) )</span>
 <span id="cb15-2"><a href="#cb15-2"></a><span class="co">#&gt;    user  system elapsed </span></span>
-<span id="cb15-3"><a href="#cb15-3"></a><span class="co">#&gt;   0.062   0.001   2.762</span></span>
+<span id="cb15-3"><a href="#cb15-3"></a><span class="co">#&gt;   0.092   0.003   4.850</span></span>
 <span id="cb15-4"><a href="#cb15-4"></a><span class="kw">system.time</span>( <span class="kw">replicate</span>(<span class="dv">3</span>, <span class="kw">as.gbifid</span>(<span class="kw">c</span>(<span class="st">&quot;2704179&quot;</span>,<span class="st">&quot;2435099&quot;</span>,<span class="st">&quot;3171445&quot;</span>), <span class="dt">check=</span><span class="ot">FALSE</span>)) )</span>
 <span id="cb15-5"><a href="#cb15-5"></a><span class="co">#&gt;    user  system elapsed </span></span>
-<span id="cb15-6"><a href="#cb15-6"></a><span class="co">#&gt;   0.003   0.000   0.003</span></span></code></pre></div>
+<span id="cb15-6"><a href="#cb15-6"></a><span class="co">#&gt;   0.002   0.000   0.002</span></span></code></pre></div>
 </div>
 <div id="what-taxa-are-downstream-of-my-taxon-of-interest" class="section level2">
 <h2>What taxa are downstream of my taxon of interest?</h2>
-<p>If someone is not a taxonomic specialist on a particular taxon he likely does not know what children taxa are within a family, or within a genus. This task becomes especially unwieldy when there are a large number of taxa downstream. You can of course go to a website like <a href="https://species.wikimedia.org/wiki/Main_Page">Wikispecies</a> or <a href="https://www.eol.org/">Encyclopedia of Life</a> to get downstream names. However, taxize provides an easy way to programatically search for downstream taxa for the <a href="https://www.itis.gov/">Integrated Taxonomic Information System</a>.</p>
+<p>If someone is not a taxonomic specialist on a particular taxon he likely does not know what children taxa are within a family, or within a genus. This task becomes especially unwieldy when there are a large number of taxa downstream. You can of course go to a website like Wikispecies or Encyclopedia of Life to get downstream names. However, taxize provides an easy way to programatically search for downstream taxa for the Integrated Taxonomic Information System.</p>
 <div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a>apis_itis_id &lt;-<span class="st"> </span><span class="dv">154395</span> <span class="co"># id for Apis, fetched beforehand to save time here</span></span>
 <span id="cb16-2"><a href="#cb16-2"></a><span class="kw">downstream</span>(apis_itis_id, <span class="dt">downto =</span> <span class="st">&quot;species&quot;</span>, <span class="dt">db =</span> <span class="st">&quot;itis&quot;</span>)</span>
 <span id="cb16-3"><a href="#cb16-3"></a><span class="co">#&gt; $`154395`</span></span>
-<span id="cb16-4"><a href="#cb16-4"></a><span class="co">#&gt;      tsn parentname parenttsn rankname          taxonname rankid</span></span>
-<span id="cb16-5"><a href="#cb16-5"></a><span class="co">#&gt; 1 154396       Apis    154395  species     Apis mellifera    220</span></span>
-<span id="cb16-6"><a href="#cb16-6"></a><span class="co">#&gt; 2 763550       Apis    154395  species Apis andreniformis    220</span></span>
-<span id="cb16-7"><a href="#cb16-7"></a><span class="co">#&gt; 3 763551       Apis    154395  species        Apis cerana    220</span></span>
-<span id="cb16-8"><a href="#cb16-8"></a><span class="co">#&gt; 4 763552       Apis    154395  species       Apis dorsata    220</span></span>
-<span id="cb16-9"><a href="#cb16-9"></a><span class="co">#&gt; 5 763553       Apis    154395  species        Apis florea    220</span></span>
-<span id="cb16-10"><a href="#cb16-10"></a><span class="co">#&gt; 6 763554       Apis    154395  species Apis koschevnikovi    220</span></span>
-<span id="cb16-11"><a href="#cb16-11"></a><span class="co">#&gt; 7 763555       Apis    154395  species   Apis nigrocincta    220</span></span>
-<span id="cb16-12"><a href="#cb16-12"></a><span class="co">#&gt; </span></span>
-<span id="cb16-13"><a href="#cb16-13"></a><span class="co">#&gt; attr(,&quot;class&quot;)</span></span>
-<span id="cb16-14"><a href="#cb16-14"></a><span class="co">#&gt; [1] &quot;downstream&quot;</span></span>
-<span id="cb16-15"><a href="#cb16-15"></a><span class="co">#&gt; attr(,&quot;db&quot;)</span></span>
-<span id="cb16-16"><a href="#cb16-16"></a><span class="co">#&gt; [1] &quot;itis&quot;</span></span></code></pre></div>
+<span id="cb16-4"><a href="#cb16-4"></a><span class="co">#&gt;       tsn parentname parenttsn rankname          taxonname rankid</span></span>
+<span id="cb16-5"><a href="#cb16-5"></a><span class="co">#&gt; 1 1128092       Apis    154395  species     Apis laboriosa    220</span></span>
+<span id="cb16-6"><a href="#cb16-6"></a><span class="co">#&gt; 2  154396       Apis    154395  species     Apis mellifera    220</span></span>
+<span id="cb16-7"><a href="#cb16-7"></a><span class="co">#&gt; 3  763550       Apis    154395  species Apis andreniformis    220</span></span>
+<span id="cb16-8"><a href="#cb16-8"></a><span class="co">#&gt; 4  763551       Apis    154395  species        Apis cerana    220</span></span>
+<span id="cb16-9"><a href="#cb16-9"></a><span class="co">#&gt; 5  763552       Apis    154395  species       Apis dorsata    220</span></span>
+<span id="cb16-10"><a href="#cb16-10"></a><span class="co">#&gt; 6  763553       Apis    154395  species        Apis florea    220</span></span>
+<span id="cb16-11"><a href="#cb16-11"></a><span class="co">#&gt; 7  763554       Apis    154395  species Apis koschevnikovi    220</span></span>
+<span id="cb16-12"><a href="#cb16-12"></a><span class="co">#&gt; 8  763555       Apis    154395  species   Apis nigrocincta    220</span></span>
+<span id="cb16-13"><a href="#cb16-13"></a><span class="co">#&gt; </span></span>
+<span id="cb16-14"><a href="#cb16-14"></a><span class="co">#&gt; attr(,&quot;class&quot;)</span></span>
+<span id="cb16-15"><a href="#cb16-15"></a><span class="co">#&gt; [1] &quot;downstream&quot;</span></span>
+<span id="cb16-16"><a href="#cb16-16"></a><span class="co">#&gt; attr(,&quot;db&quot;)</span></span>
+<span id="cb16-17"><a href="#cb16-17"></a><span class="co">#&gt; [1] &quot;itis&quot;</span></span></code></pre></div>
 </div>
 <div id="direct-children" class="section level2">
 <h2>Direct children</h2>

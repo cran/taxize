@@ -50,7 +50,7 @@
 #'
 #' If the source above has a `TRUE` in the `SOAP?` column, it is not available
 #' in this package. They are available from a different package called **taxizesoap**.
-#' See the GitHub repo for how to install <https://github.com/ropensci/taxizesoap>
+#' See the GitHub repo for how to install https://github.com/ropensci/taxizesoap
 #' 
 #' @section Catalogue of Life (COL):
 #' COL introduced rate limiting recently in 2019 - which has made the API
@@ -90,7 +90,7 @@ NULL
 
 #' Lookup-table for IDs of taxonomic ranks
 #'
-#' data.frame of 43 rows, with 2 columns:
+#' data.frame of 46 rows, with 2 columns:
 #' * rankid - a numeric rank id, consecutive
 #' * ranks - a comma separated vector of names that are considered
 #'  equal to one another within the row
@@ -102,8 +102,23 @@ NULL
 #' sources \pkg{taxize} that we don't have in `rank_ref` dataset.
 #'
 #' Let us know if you disagree with the ordering of ranks.
+#' 
+#' Note that `rankid` 280 are essentially "genetic variants"; placed just above
+#' 'unspecified' to denote they're not without rank, but they're not
+#' really taxonomic ranks either. As far as I know there's no way 
+#' to delineate among these "genetic variant" types.
 #'
 #' @name rank_ref
+#' @docType data
+#' @keywords data
+NULL
+
+#' Lookup-table for IDs of taxonomic ranks (WoRMS)
+#'
+#' Same as `rank_ref` but specifically for WoRMS, where section/subsection
+#' ranks are put between family/order rather than between species/genus.
+#'
+#' @name rank_ref_zoo
 #' @docType data
 #' @keywords data
 NULL
@@ -121,7 +136,7 @@ NULL
 #'   * `genus` genus name
 #'   * `species` specific epithet name
 #' 
-#' @source <http://www.theplantlist.org>
+#' @source http://www.theplantlist.org
 #' @name theplantlist
 #' @docType data
 #' @keywords data
@@ -150,7 +165,7 @@ NULL
 #' are accepted from `family` column, with the new name from `synonym`
 #' if applicable
 #' 
-#' @source <http://www.mobot.org/MOBOT/research/APweb/>
+#' @source http://www.mobot.org/MOBOT/research/APweb/
 #' @name apg_families
 #' @docType data
 #' @keywords data
@@ -178,7 +193,7 @@ NULL
 #' are accepted from `order` column, with the new name from `synonym`
 #' if applicable
 #' 
-#' @source <http://www.mobot.org/MOBOT/research/APweb/>
+#' @source http://www.mobot.org/MOBOT/research/APweb/
 #' @name apg_orders
 #' @docType data
 #' @keywords data
