@@ -1,3 +1,11 @@
+taxize 0.9.100
+=============
+
+Minor release to fix failing tests on CRAN.
+
+Zachary Foster is now the maintainer of `taxize`.
+
+
 taxize 0.9.99
 =============
 
@@ -633,7 +641,7 @@ taxize 0.7.6
 ### MINOR IMPROVEMENTS
 
 * Changed defunct messages in `eol_invasive()` and `gisd_invasive()`
-to point to new location in the [originr](https://github.com/ropensci/originr)
+to point to new location in the [originr](https://github.com/ropensci-archive/originr)
 package. Also, cleaned out code in those functions as not avail.
 anymore (#494)
 * Access to IUCN taxonomy information is now provided through the newish

@@ -10,7 +10,7 @@
 #' @param ... Further args passed on to [crul::HttpClient].
 #' @return a list with slots for metadata (`meta`) with list of response
 #' attributes, and data (`data`) with a data.frame of results
-#' @author Scott Chamberlain, \email{myrmecocystus@@gmail.com}
+#' @author Scott Chamberlain, 
 #' @references http://powo.science.kew.org/
 #' @family pow
 #' @examples \dontrun{
@@ -102,7 +102,9 @@ pow_GET <- function(url, args, ...){
   tt <- cli$get(query = argsnull(args))
   tt$raise_for_status()
   json <- jsonlite::fromJSON(tt$parse("UTF-8"))
-  list(meta = pop(json, "results"), data = json$results)
+  meta <- pop(json, "results")
+  meta$message <- NULL
+  list(meta = meta, data = json$results)
 }
 
 pow_base <- function() "http://www.plantsoftheworldonline.org"
