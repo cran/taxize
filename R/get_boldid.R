@@ -297,18 +297,18 @@ as.boldid.boldid <- function(x, check=TRUE) x
 #' @export
 #' @rdname get_boldid
 as.boldid.character <- function(x, check=TRUE) {
-  if (length(x) == 1) 
-    make_boldid(x, check) 
-  else 
+  if (length(x) == 1)
+    make_boldid(x, check)
+  else
     collapse(x, make_boldid, "boldid", check=check)
 }
 
 #' @export
 #' @rdname get_boldid
 as.boldid.list <- function(x, check=TRUE) {
-  if (length(x) == 1) 
-    make_boldid(x, check) 
-  else 
+  if (length(x) == 1)
+    make_boldid(x, check)
+  else
     collapse(x, make_boldid, "boldid", check=check)
 }
 
@@ -343,6 +343,10 @@ make_boldid <- function(x, check=TRUE) {
 }
 
 check_boldid <- function(x){
+
+  if(!requireNamespace("bold", quietly = TRUE))
+      stop("package 'bold' is reauireed but not available")
+
   tryid <- bold_tax_id(x)
   !identical("noresults", names(tryid)[2])
 }
@@ -360,7 +364,7 @@ get_boldid_ <- function(sci, messages = TRUE, fuzzy = FALSE,
 
 get_boldid_help <- function(sci, messages, fuzzy, dataTypes,
   includeTree, rows, ...){
-  
+
   mssg(messages, "\nRetrieving data for taxon '", sci, "'\n")
   df <- bold_search(name = sci, fuzzy = fuzzy, dataTypes = dataTypes,
     includeTree = includeTree)

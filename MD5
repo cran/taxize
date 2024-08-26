@@ -1,12 +1,12 @@
-802f064be4931afeea4cbe95d0991c35 *DESCRIPTION
+f241d209f0cb55463e78e54c4bd34ef6 *DESCRIPTION
 35bd8606c71dfbfad3ad27387e177ad4 *LICENSE
-3b12101fc5adac1a1a94c2046b4b4f74 *NAMESPACE
+a055db4e48d977f5868f1690102525da *NAMESPACE
 f7d5cb01cbcf2533b81be250187217c6 *NEWS.md
 049f2ace89f111b8c72c8ae2f811b25d *R/aaa.R
 132770bef14e4bdc8b3227d9288a0f05 *R/apg.R
 65b9cf6213ff9e75cb74e87865c2332f *R/apg_lookup.R
 e331e5a37df81d74b7e92c704de1f8d6 *R/bold_downstream.R
-95b3b19b346f665e525a8c399d87f305 *R/bold_search.R
+9541f6547a1ce74568970cfd7b02a8ef *R/bold_search.R
 79616dfa98b69ed7f8cf9e4a465389dc *R/children.R
 f3f12d23edbfc9ab4996466828cc54d1 *R/class2tree.R
 87c72d88e28c58dd0044df4a39f8ab18 *R/classification.R
@@ -31,7 +31,7 @@ e05f61549b9d8dcc4df01d8ea9ac862a *R/gbif_name_usage.R
 e010aa7112d9c9d34b37108dd6ce0ec6 *R/gbif_parse.R
 00e9e09ce6b8b1f81f2dc931fe66259a *R/genbank2uid.R
 ac1b7bc92f5277bfd77e0ee5b76fe63d *R/get-id-details.R
-e817e6d0c4b61a6813188884cce7157f *R/get_boldid.R
+362e53017d9ce196b8eb515eebd3ee62 *R/get_boldid.R
 c762ec67533b0dab9c432777c5b41ba1 *R/get_eolid.R
 5034e9153211492161c9f2c50a7b0753 *R/get_gbifid.R
 84f3110fedd0df2fd507fd2c49c555da *R/get_ids.R
