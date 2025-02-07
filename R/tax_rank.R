@@ -51,8 +51,11 @@ tax_rank.default <- function(sci_id, db = NULL, rows = NA, x = NULL, ...) {
 tax_rank.character <- function(sci_id, db = NULL, rows = NA, x = NULL, ...) {
   nstop(db)
   stopifnot(length(db) == 1)
-  pchk(x, "sci_id")
-  if (!is.null(x)) sci_id <- x
+  if (!is.null(x)) {
+    lifecycle::deprecate_warn(when = "v0.9.97", what = "tax_rank(x)", with = "tax_rank(sci_id)")
+    sci_id <- x
+  }
+  
   switch(
     db,
     bold = stats::setNames(tax_rank_(process_ids(sci_id, db, get_boldid,
@@ -93,7 +96,7 @@ tax_rank_ <- function(id, ...) {
     } else {
       if (NROW(res[[1]]) > 0) {
         tt <- res[[1]]
-        out <- tt[nrow(tt), "rank"][[1]]
+        out <- tt[tt$id == x, "rank"][[1]]
         if (length(out) == 0) NA_character_ else tolower(out)
       } else {
         NA_character_

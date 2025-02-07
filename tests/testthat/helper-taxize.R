@@ -10,7 +10,8 @@ invisible(vcr::vcr_configure(
     "<<entrez_api_token>>" = Sys.getenv("ENTREZ_KEY"),
     "<<tropicos_api_token>>" = Sys.getenv("TROPICOS_KEY"),
     "<<natureserve_api_token>>" = Sys.getenv("NATURE_SERVE_KEY")
-  )
+  ),
+  record = 'once'
 ))
 vcr::check_cassette_names()
 
@@ -18,8 +19,7 @@ vcr::check_cassette_names()
 taxize_options(TRUE, quiet = TRUE)
 
 has_internet <- function() {
-  z <- try(suppressWarnings(readLines('https://www.google.com', n = 1)),
-    silent = TRUE)
+  z <- try(suppressWarnings(readLines('https://www.google.com', n = 1)), silent = TRUE)
   !inherits(z, "try-error")
 }
 
@@ -29,3 +29,4 @@ skip_if_net_down <- function() {
   }
   testthat::skip("no internet")
 }
+

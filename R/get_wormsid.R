@@ -103,7 +103,6 @@
 #' get_wormsid_("Plat", rows=1)
 #' get_wormsid_("Plat", rows=1:2)
 #' get_wormsid_("Plat", rows=1:75)
-#' # get_wormsid_(c("asdfadfasd","Plat"), rows=1:5)
 #' }
 get_wormsid <- function(sci_com, searchtype = "scientific", marine_only = TRUE,
   fuzzy = NULL, accepted = FALSE, ask = TRUE, messages = TRUE,
@@ -115,9 +114,12 @@ get_wormsid <- function(sci_com, searchtype = "scientific", marine_only = TRUE,
   assert(fuzzy, "logical")
   assert(accepted, "logical")
   assert(ask, "logical")
-  assert(messages, "logical")
   assert_rows(rows)
-  pchk(query, "sci_com")
+  if (!is.null(query)) {
+    lifecycle::deprecate_warn(when = "v0.9.97", what = "get_wormsid(query)", with = "get_wormsid(sci_com)")
+    sci_com <- query
+  }
+  
 
   if (inherits(sci_com, "character")) {
     tstate <- taxon_state$new(class = "wormsid", names = sci_com)
@@ -206,7 +208,7 @@ get_wormsid <- function(sci_com, searchtype = "scientific", marine_only = TRUE,
 
           # prompt
           message("\n\n")
-          print(wmdf)
+          message(paste0(utils::capture.output(wmdf), collapse = "\n"))
           message("\nMore than one WORMS ID found for taxon '", sci_com[i], "'!\n
                   Enter rownumber of taxon (other inputs will return 'NA'):\n") # prompt
           take <- scan(n = 1, quiet = TRUE, what = 'raw')
@@ -318,7 +320,10 @@ get_wormsid_ <- function(sci_com, messages = TRUE, searchtype = "scientific",
   marine_only = TRUE, fuzzy = NULL, accepted = TRUE, rows = NA, query = NULL,
   ...) {
 
-  pchk(query, "sci_com")
+  if (!is.null(query)) {
+    lifecycle::deprecate_warn(when = "v0.9.97", what = "get_wormsid_(query)", with = "get_wormsid_(sci_com)")
+    sci_com <- query
+  }
   stats::setNames(
     lapply(sci_com, get_wormsid_help, messages = messages,
            searchtype = searchtype, marine_only = marine_only, fuzzy = fuzzy,
@@ -356,7 +361,7 @@ worms_worker <- function(x, expr, rows, marine_only, fuzzy, ...) {
     class(rows) %in% c('numeric', 'integer') &&
     rows[length(rows)] <= 50
   ) {
-    expr(x, marine_only = marine_only, fuzzy = fuzzy, ...)
+    try_df(expr(x, marine_only = marine_only, fuzzy = fuzzy, ...))
   } else if (
     all(!is.na(rows)) &&
     class(rows) %in% c('numeric', 'integer') &&

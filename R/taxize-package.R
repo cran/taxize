@@ -66,16 +66,13 @@
 #' @importFrom ape read.tree as.phylo.hclust plot.phylo
 #' @importFrom jsonlite fromJSON toJSON
 #' @importFrom data.table rbindlist setDF transpose melt dcast as.data.table
-#' @importFrom foreach foreach %do%
 #' @importFrom xml2 xml_text xml_find_first xml_find_all xml_children read_xml
 #' xml_name xml_ns as_list
 #' @importFrom R6 R6Class
 #' @importFrom crayon style
 #' @importFrom cli symbol cat_line rule
-#' @importFrom conditionz ConditionKeeper
 #' @name taxize-package
 #' @aliases taxize
-#' @docType package
 #' @author Scott Chamberlain 
 #' @author Eduard Szoecs \email{eduardszoecs@@gmail.com}
 #' @author Zachary Foster \email{zacharyfoster1989@@gmail.com}
@@ -282,7 +279,6 @@ NULL
 #'  `phylomatic` in the package \pkg{brranching}
 #' * [phylomatic_format()]: This function is defunct. See
 #'  `phylomatic_names` in the package \pkg{brranching}
-#' * [iucn_summary_id()]: This function is defunct. Use [iucn_summary()]
 #' * [eubon()]: This function is defunct. Use [eubon_search()]
 #' * [tnrs()]: This function is defunct. Was too unreliable
 #' * [tnrs_sources()]: This function is defunct. Was too unreliable

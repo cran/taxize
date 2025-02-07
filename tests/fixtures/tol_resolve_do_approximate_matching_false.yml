@@ -15,7 +15,7 @@ http_interactions:
       reason: OK
       message: 'Success: (200) OK'
     headers:
-      date: Wed, 28 Oct 2020 18:17:42 GMT
+      date: Wed, 29 Jan 2025 19:13:40 GMT
       server: waitress
       access-control-allow-credentials: 'true'
       access-control-allow-origin: '*'
@@ -23,12 +23,12 @@ http_interactions:
       cache-control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0
       content-length: '525'
       content-type: application/json;
-      expires: Wed, 28 Oct 2020 18:17:42 GMT
+      expires: Wed, 29 Jan 2025 19:13:40 GMT
       pragma: no-cache
       vary: Accept-Encoding
       x-powered-by: otc-tol-ws
     body:
-      encoding: UTF-8
+      encoding: ''
       file: no
       string: |-
         {
@@ -47,14 +47,14 @@ http_interactions:
          "taxonomy": {
           "author": "open tree of life project",
           "name": "ott",
-          "source": "ott3.2draft9",
-          "version": "3.2",
-          "weburl": "https://tree.opentreeoflife.org/about/taxonomy-version/ott3.2"
+          "source": "ott3.7draft2",
+          "version": "3.7",
+          "weburl": "https://tree.opentreeoflife.org/about/taxonomy-version/ott3.7"
          },
          "unambiguous_names": [],
          "unmatched_names": [
           "Nautilas"
          ]
         }
-  recorded_at: 2020-10-28 18:17:42 GMT
-  recorded_with: vcr/0.5.4, webmockr/0.7.0
+  recorded_at: 2025-01-29 19:13:40 GMT
+  recorded_with: vcr/1.6.0.91, webmockr/1.0.0

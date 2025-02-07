@@ -1,6 +1,5 @@
 #' Get the BOLD (Barcode of Life) code for a search term.
 #'
-#' @importFrom bold bold_tax_name bold_tax_id
 #' @export
 #' @param sci character; A vector of scientific names. Or,
 #' a `taxon_state` object (see [taxon-state])
@@ -123,7 +122,11 @@ get_boldid <- function(sci, fuzzy = FALSE, dataTypes = 'basic',
   assert(division, "character")
   assert(parent, "character")
   assert_rows(rows)
-  pchk(searchterm, "sci")
+  if (!is.null(searchterm)) {
+    lifecycle::deprecate_warn(when = "v0.9.97", what = "get_boldid(searchterm)", with = "get_boldid(sci)")
+    sci <- searchterm
+  }
+  
 
   if (inherits(sci, "character")) {
     tstate <- taxon_state$new(class = "boldid", names = sci)
@@ -238,7 +241,7 @@ get_boldid <- function(sci, fuzzy = FALSE, dataTypes = 'basic',
             if (length(boldid) > 1 || NROW(bold_df) > 1) {
               # prompt
               message("\n\n")
-              print(bold_df)
+              message(paste0(utils::capture.output(bold_df), collapse = "\n"))
               message("\nMore than one TSN found for taxon '", sci[i], "'!\n
             Enter rownumber of taxon (other inputs will return 'NA'):\n") # prompt
               take <- scan(n = 1, quiet = TRUE, what = 'raw')
@@ -297,18 +300,18 @@ as.boldid.boldid <- function(x, check=TRUE) x
 #' @export
 #' @rdname get_boldid
 as.boldid.character <- function(x, check=TRUE) {
-  if (length(x) == 1)
-    make_boldid(x, check)
-  else
+  if (length(x) == 1) 
+    make_boldid(x, check) 
+  else 
     collapse(x, make_boldid, "boldid", check=check)
 }
 
 #' @export
 #' @rdname get_boldid
 as.boldid.list <- function(x, check=TRUE) {
-  if (length(x) == 1)
-    make_boldid(x, check)
-  else
+  if (length(x) == 1) 
+    make_boldid(x, check) 
+  else 
     collapse(x, make_boldid, "boldid", check=check)
 }
 
@@ -343,10 +346,6 @@ make_boldid <- function(x, check=TRUE) {
 }
 
 check_boldid <- function(x){
-
-  if(!requireNamespace("bold", quietly = TRUE))
-      stop("package 'bold' is reauireed but not available")
-
   tryid <- bold_tax_id(x)
   !identical("noresults", names(tryid)[2])
 }
@@ -356,7 +355,10 @@ check_boldid <- function(x){
 get_boldid_ <- function(sci, messages = TRUE, fuzzy = FALSE,
   dataTypes='basic', includeTree=FALSE, rows = NA, searchterm = NULL, ...) {
 
-  pchk(searchterm, "sci")
+  if (!is.null(searchterm)) {
+    lifecycle::deprecate_warn(when = "v0.9.97", what = "get_boldid_(searchterm)", with = "get_boldid_(sci)")
+    sci <- searchterm
+  }
   stats::setNames(lapply(sci, get_boldid_help, messages = messages,
     fuzzy = fuzzy, dataTypes=dataTypes, includeTree=includeTree,
     rows = rows, ...), sci)
@@ -364,7 +366,7 @@ get_boldid_ <- function(sci, messages = TRUE, fuzzy = FALSE,
 
 get_boldid_help <- function(sci, messages, fuzzy, dataTypes,
   includeTree, rows, ...){
-
+  
   mssg(messages, "\nRetrieving data for taxon '", sci, "'\n")
   df <- bold_search(name = sci, fuzzy = fuzzy, dataTypes = dataTypes,
     includeTree = includeTree)

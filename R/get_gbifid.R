@@ -140,8 +140,12 @@ get_gbifid <- function(sci, ask = TRUE, messages = TRUE, rows = NA,
   assert(rank, "character")
   assert(method, "character")
   assert_rows(rows)
-  pchk(sciname, "sci")
-
+  
+  if (!is.null(sciname)) {
+    lifecycle::deprecate_warn(when = "v0.9.97", what = "get_gbifid(sciname)", with = "get_gbifid(sci)")
+    sci <- sciname
+  }
+  
   if (inherits(sci, "character")) {
     tstate <- taxon_state$new(class = "gbifid", names = sci)
     items <- sci
@@ -152,6 +156,9 @@ get_gbifid <- function(sci, ask = TRUE, messages = TRUE, rows = NA,
     items <- c(sci, tstate$taxa_completed())
   }
 
+  # Escape problematic characters
+  sci <- gsub(sci, pattern = "[^\\]?'", replacement = "\\\\'")
+  
   prog <- progressor$new(items = items, suppress = !messages)
   done <- tstate$get()
   for (i in seq_along(done)) prog$completed(names(done)[i], done[[i]]$att)
@@ -227,7 +234,7 @@ get_gbifid <- function(sci, ask = TRUE, messages = TRUE, rows = NA,
             message("\nMore than one GBIF ID found for taxon '", sci[i], "'!\n
             Enter rownumber of taxon (other inputs will return 'NA'):\n")
             rownames(df) <- 1:nrow(df)
-            print(df)
+            message(paste0(utils::capture.output(df), collapse = "\n"))
             take <- scan(n = 1, quiet = TRUE, what = 'raw')
 
             if (length(take) == 0) {
@@ -323,7 +330,10 @@ check_gbifid <- function(x){
 get_gbifid_ <- function(sci, messages = TRUE, rows = NA, method = "backbone",
   sciname = NULL) {
 
-  pchk(sciname, "sci")
+  if (!is.null(sciname)) {
+    lifecycle::deprecate_warn(when = "v0.9.97", what = "get_gbifid_(sciname)", with = "get_gbifid_(sci)")
+    sci <- sciname
+  }
   stats::setNames(lapply(sci, get_gbifd_help, messages = messages,
     rows = rows, method = method), sci)
 }

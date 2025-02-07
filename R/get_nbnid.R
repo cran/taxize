@@ -93,8 +93,11 @@ get_nbnid <- function(sci_com, ask = TRUE, messages = TRUE, rec_only = FALSE,
   assert(rank, "character")
   assert(messages, "logical")
   assert_rows(rows)
-  pchk(name, "sci_com")
-
+  if (!is.null(name)) {
+    lifecycle::deprecate_warn(when = "v0.9.97", what = "get_nbnid(name)", with = "get_nbnid(sci_com)")
+    sci_com <- name
+  }
+  
   if (inherits(sci_com, "character")) {
     tstate <- taxon_state$new(class = "nbnid", names = sci_com)
     items <- sci_com
@@ -159,7 +162,7 @@ get_nbnid <- function(sci_com, ask = TRUE, messages = TRUE, rec_only = FALSE,
         message("\n\n")
         message("\nMore than one NBN ID found for taxon '", sci_com[i], "'!\n
             Enter rownumber of taxon (other inputs will return 'NA'):\n")
-        print(df)
+        message(paste0(utils::capture.output(df), collapse = "\n"))
         take <- scan(n = 1, quiet = TRUE, what = 'raw')
 
         if (length(take) == 0) {
@@ -283,7 +286,10 @@ check_nbnid <- function(x){
 #' @rdname get_nbnid
 get_nbnid_ <- function(sci_com, messages = TRUE, rec_only = FALSE, rank = NULL,
                        rows = NA, name = NULL, ...) {
-  pchk(name, "sci_com")
+  if (!is.null(name)) {
+    lifecycle::deprecate_warn(when = "v0.9.97", what = "get_nbnid_(name)", with = "get_nbnid_(sci_com)")
+    sci_com <- name
+  }
   stats::setNames(lapply(sci_com, get_nbnid_help, messages = messages,
                   rec_only = rec_only, rank = rank, rows = rows, ...), sci_com)
 }

@@ -65,26 +65,26 @@
 bold_search <- function(sci = NULL, id = NULL, fuzzy = FALSE,
   dataTypes = 'basic', includeTree=FALSE, response=FALSE, name = NULL, ...) {
 
-  if(!requireNamespace("bold", quietly = TRUE))
-      stop("package 'bold' is reauireed but not available")
-
-  pchk(name, "sci")
-  if (!is.null(name)) sci <- name
+  if (!is.null(name)) {
+    lifecycle::deprecate_warn(when = "v0.9.97", what = "bold_search(name)", with = "bold_search(sci)")
+    sci <- name
+  }
+  
   stopifnot(!is.null(sci) | !is.null(id))
   type <- if (is.null(sci)) "id" else "sci"
   tmp <- switch(type,
          sci = bold_tax_name(name = sci, fuzzy = fuzzy, response = response, ...),
-         id = bold_tax_id(id = id, dataTypes = dataTypes, includeTree = includeTree,
-                          response = response, ...)
+         id = bold_tax_id2(id = id, dataTypes = dataTypes, includeTree = includeTree,
+                           response = response, ...)
   )
   return(tmp)
 }
 
 #' Barcode of Life taxonomic children
-#'
-#' BEWARE: this function scrapes data from the BOLD website, so may
+#' 
+#' BEWARE: this function scrapes data from the BOLD website, so may 
 #' be unstable. That is, one day it may work, and the next it may fail.
-#' Open an issue if you encounter an error:
+#' Open an issue if you encounter an error: 
 #' https://github.com/ropensci/taxize/issues
 #'
 #' @export

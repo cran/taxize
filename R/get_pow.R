@@ -104,8 +104,11 @@ get_pow <- function(sci_com, accepted = FALSE, ask = TRUE, messages = TRUE,
   assert(family_filter, "character")
   assert(rank_filter, "character")
   assert_rows(rows)
-  pchk(x, "sci_com")
-
+  if (!is.null(x)) {
+    lifecycle::deprecate_warn(when = "v0.9.97", what = "get_pow(x)", with = "get_pow(sci_com)")
+    sci_com <- x
+  }
+  
   if (inherits(sci_com, "character")) {
     tstate <- taxon_state$new(class = "pow", names = sci_com)
     items <- sci_com
@@ -189,7 +192,7 @@ get_pow <- function(sci_com, accepted = FALSE, ask = TRUE, messages = TRUE,
           if (length(pow) > 1 || NROW(pow_df) > 1) {
             # prompt
             message("\n\n")
-            print(pow_df)
+            message(paste0(utils::capture.output(pow_df), collapse = "\n"))
             message("\nMore than one pow found for taxon '", sci_com[i], "'!\n
           Enter rownumber of taxon (other inputs will return 'NA'):\n") # prompt
             take <- scan(n = 1, quiet = TRUE, what = 'raw')
@@ -275,7 +278,7 @@ as.data.frame.pow <- function(x, ...){
 }
 
 make_pow <- function(x, check=TRUE) {
-  make_generic(x, 'http://powo.science.kew.org/taxon/%s', "pow", check)
+  make_generic(x, 'https://powo.science.kew.org/taxon/%s', "pow", check)
 }
 
 check_pow <- function(x){
@@ -286,7 +289,11 @@ check_pow <- function(x){
 #' @export
 #' @rdname get_pow
 get_pow_ <- function(sci_com, messages = TRUE, rows = NA, x = NULL, ...) {
-  pchk(x, "sci_com")
+  if (!is.null(x)) {
+    lifecycle::deprecate_warn(when = "v0.9.97", what = "get_pow_(x)", with = "get_pow_(sci_com)")
+    sci_com <- x
+  }
+  
   stats::setNames(lapply(sci_com, get_pow_help, messages = messages,
     rows = rows, ...), sci_com)
 }

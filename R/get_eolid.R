@@ -120,7 +120,11 @@ get_eolid <- function(sci_com, ask = TRUE, messages = TRUE,
   assert(rank, "character")
   assert(data_source, "character")
   assert_rows(rows)
-  pchk(sciname, "sci_com")
+  if (!is.null(sciname)) {
+    lifecycle::deprecate_warn(when = "v0.9.97", what = "get_eolid(sciname)", with = "get_eolid(sci_com)")
+    sci_com <- sciname
+  }
+  
 
   if (inherits(sci_com, "character")) {
     tstate <- taxon_state$new(class = "eolid", names = sci_com)
@@ -240,7 +244,7 @@ get_eolid <- function(sci_com, ask = TRUE, messages = TRUE,
         message("\n\n")
         message("\nMore than one eolid found for taxon '", sci_com[i], "'!\n
             Enter rownumber of taxon (other inputs will return 'NA'):\n")
-        print(df)
+        message(paste0(utils::capture.output(df), collapse = "\n"))
         take <- scan(n = 1, quiet = TRUE, what = "raw")
 
         if (length(take) == 0) {
@@ -391,7 +395,11 @@ get_eol_pageid <- function(x) {
 #' @rdname get_eolid
 get_eolid_ <- function(sci_com, messages = TRUE, rows = NA, sciname = NULL,
   ...) {
-  pchk(sciname, "sci_com")
+  if (!is.null(sciname)) {
+    lifecycle::deprecate_warn(when = "v0.9.97", what = "get_eolid_(sciname)", with = "get_eolid_(sci_com)")
+    sci_com <- sciname
+  }
+  
   stats::setNames(lapply(sci_com, get_eolid_help, messages = messages,
                   rows = rows, ...), sci_com)
 }

@@ -114,7 +114,10 @@ synonyms <- function(...) {
 #' @rdname synonyms
 synonyms.default <- function(sci_id, db = NULL, rows = NA, x = NULL, ...) {
   nstop(db)
-  pchk(x, "sci")
+  if (!is.null(x)) {
+    lifecycle::deprecate_warn(when = "v0.9.97", what = "synonyms(x)", with = "synonyms(sci_id)")
+    sci_id <- x
+  }
   if (!is.null(x)) sci_id <- x
   switch(
     db,
@@ -279,8 +282,8 @@ synonyms.iucn <- function(id, ...) {
     if (is.na(id[[i]])) {
       out[[i]] <- NA_character_
     } else {
-      res <- rredlist::rl_synonyms(attr(id, "name")[i], ...)$result
-      out[[i]] <- if (length(res) == 0) tibble::tibble() else res
+      res <- get_iucn_data(attr(id, "name")[i])
+      out[[i]] <- if (length(res) == 0 || is.na(res)) tibble::tibble() else res[[1]]$taxon$synonyms
     }
   }
   stats::setNames(out, id)

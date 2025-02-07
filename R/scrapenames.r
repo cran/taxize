@@ -1,118 +1,167 @@
-#' @title Resolve names using Global Names Recognition and Discovery.
+#' @title Find taxon names using Global Names Recognition and Discovery
 #'
 #' @description Uses the Global Names Recognition and Discovery service, see
-#' http://gnrd.globalnames.org/
+#'   http://gnrd.globalnames.org/
 #'
-#' Note: this function sometimes gives data back and sometimes not. The API
-#' that this function is extremely buggy.
+#'   NOTE: This function sometimes gives data back and sometimes not. The API
+#'   that this function is using is extremely buggy.
 #'
 #' @export
-#' @param url An encoded URL for a web page, PDF, Microsoft Office document, or
-#' image file, see examples
-#' @param file When using multipart/form-data as the content-type, a file may
-#' be sent. This should be a path to your file on your machine.
-#' @param text Type: string. Text content; best used with a POST request, see
-#' examples
-#' @param engine (optional) (integer) Default: 0. Either 1 for TaxonFinder,
-#' 2 for NetiNeti, or 0 for both. If absent, both engines are used.
-#' @param unique (optional) (logical) If `TRUE` (default), response has
-#' unique names without offsets.
-#' @param verbatim (optional) Type: boolean, If `TRUE` (default to
-#' `FALSE`), response excludes verbatim strings.
-#' @param detect_language (optional) Type: boolean, When `TRUE` (default),
-#' NetiNeti is not used if the language of incoming text is determined not to
-#' be English. When `FALSE`, NetiNeti will be used if requested.
-#' @param all_data_sources (optional) Type: boolean. Resolve found names
-#' against all available Data Sources.
-#' @param data_source_ids (optional) Type: string. Pipe separated list of
-#' data source ids to resolve found names against. See list of Data Sources
-#' http://resolver.globalnames.org/data_sources
-#' @param return_content (logical) return OCR'ed text. returns text
-#' string in `x$meta$content` slot. Default: `FALSE`
+#'
+#' @param url (character) If text parameter is empty, and `url` is given,
+#'   GNfinder will process the URL and will find names in the content of its
+#'   body.
+#' @param text (character) Contains the text which will be checked for
+#'   scientific names. If this parameter is not empty, the `url` parameter is
+#'   ignored.
+#' @param format (character) Sets the output format. It can be set to: `"csv"`
+#'   (the default), `"tsv"`, or `"json"`.
+#' @param bytes_offset (logical) This changes how the position of a detected
+#'   name in text is calculated. Normally a name's start and end positions are
+#'   given as the number of UTF-8 characters from the beginning of the text. If
+#'   this is `TRUE`, the start and end offsets are recalculated in the number of
+#'   bytes.
+#' @param return_content (logical) If this is `TRUE`, the text used for the name
+#'   detection is returned back. This is especially useful if the input was not
+#'   a plain UTF-8 text and had to be prepared for name-finding. Then the
+#'   returned content can be used together with start and end fields of detected
+#'   name-strings to locate the strings in the text.
+#' @param unique_names (logical) If this is `TRUE`, the output returns a list of
+#'   unique names, instead of a list of all name occurrences. Unique list of
+#'   names does not provide position information of a name in the text.
+#' @param ambiguous_names (logical) If this is `TRUE`, strings which are
+#'   simultaneously scientific names and "normal" words are not filtered out
+#'   from the results. For example, generic names like America, Cancer,
+#'   Cafeteria will be returned in the results.
+#' @param no_bayes (logical) If this is `TRUE`, only heuristic algorithms are
+#'   used for name detection.
+#' @param odds_details (logical) If `TRUE`, the result will contain odds of all
+#'   features used for calculation of NaiveBayes odds. Odds describe probability
+#'   of a name to be 'real'. The higher the odds, the higher the probability
+#'   that a detected name is not a false positive. Odds are calculated by
+#'   multiplication of the odds of separate features. Odds details explain how
+#'   the final odds value is calculated.
+#' @param language (character) The language of the text. Language value is used
+#'   for calculation of Bayesian odds. If this parameter is not given, `"eng"`
+#'   is used by default. Currently only English and German languages are
+#'   supported. Valid values are: `"eng"`, `"deu"`, and `"detect"`.
+#' @param words_around (integer) Allows to see the context surrounding a
+#'   name-string. This sets the number of words located immediately before or
+#'   after a detected name. These words are then returned in the output. Default
+#'   is 0, maximum value is 5.
+#' @param verification (character) When this `TRUE`, there is an additional
+#'   verification step for detected names. This step requires internet
+#'   connection and uses https://verifier.globalnames.org/api/v1 for
+#'   verification queries.
+#' @param sources Pipe separated list of data source ids to resolve found names
+#'   against. See list of Data Sources
+#'   http://resolver.globalnames.org/data_sources
+#' @param all_matches When this option is true all found results are returned,
+#'   not only the bestResults. The bestResult field in this case is null, and
+#'   results field should contain found results of the matches.
 #' @param ... Further args passed to [crul::verb-GET]
-#' @author Scott Chamberlain 
-#' @return A list of length two, first is metadata, second is the data as a
-#' data.frame.
-#' @details One of url, file, or text must be specified - and only one of them.
+#' @param detect_language Defunct. See the `language` option.
+#' @param data_source_ids Defunct. See the `sources` option.
+#' @param file Defunct. If you feel this is important functionality submit an
+#'   issue at "https://github.com/ropensci/taxize"
+#' @param unique Defunct. See the `unique_names` option.
+#' @param engine Defunct. The API used no longer supports this option.
+#'
+#' @author Scott Chamberlain, Zachary Foster
+#'
+#' @return A [tibble::tibble()] or list representing parsed JSON output
+#'   depending on the value of the `format` option.
 #' @examples \dontrun{
 #' # Get data from a website using its URL
 #' scrapenames('https://en.wikipedia.org/wiki/Spider')
 #' scrapenames('https://en.wikipedia.org/wiki/Animal')
 #' scrapenames('https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0095068')
 #' scrapenames('https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0080498')
-#' scrapenames('http://ucjeps.berkeley.edu/cgi-bin/get_JM_treatment.pl?CARYOPHYLLACEAE')
 #'
-#' # Scrape names from a pdf at a URL
-#' url <- 'https://journals.plos.org/plosone/article/file?id=
-#' 10.1371/journal.pone.0058268&type=printable'
-#' scrapenames(url = sub('\n', '', url))
-#'
-#' # With arguments
-#' scrapenames(url = 'https://www.mapress.com/zootaxa/2012/f/z03372p265f.pdf',
-#'   unique=TRUE)
-#' scrapenames(url = 'https://en.wikipedia.org/wiki/Spider',
-#'   data_source_ids=c(1, 169))
-#'
-#' # Get data from a file
-#' speciesfile <- system.file("examples", "species.txt", package = "taxize")
-#' scrapenames(file = speciesfile)
-#'
-#' nms <- paste0(names_list("species"), collapse="\n")
-#' file <- tempfile(fileext = ".txt")
-#' writeLines(nms, file)
-#' scrapenames(file = file)
+#' scrapenames(url = 'https://en.wikipedia.org/wiki/Spider', source=c(1, 169))
 #'
 #' # Get data from text string
 #' scrapenames(text='A spider named Pardosa moesta Banks, 1892')
 #'
 #' # return OCR content
-#' scrapenames(url='https://www.mapress.com/zootaxa/2012/f/z03372p265f.pdf',
-#'   return_content = TRUE)
+#' scrapenames(text='A spider named Pardosa moesta Banks, 1892',
+#'             return_content = TRUE, format = 'json')
 #' }
-scrapenames <- function(url = NULL, file = NULL, text = NULL, engine = NULL,
-  unique = NULL, verbatim = NULL, detect_language = NULL,
-  all_data_sources = NULL, data_source_ids = NULL,
-  return_content = FALSE, ...) {
-
-  method <- tc(list(url = url, file = file, text = text))
-  if (length(method) > 1) {
-    stop("Only one of url, file, or text can be used", call. = FALSE)
+scrapenames <- function(
+    url = NULL,
+    text = NULL,
+    format = 'csv',
+    bytes_offset = FALSE,
+    return_content = FALSE,
+    unique_names = TRUE,
+    ambiguous_names = FALSE,
+    no_bayes = FALSE,
+    odds_details = FALSE,
+    language = 'detect',
+    words_around = 0,
+    verification = TRUE,
+    sources = NULL,
+    all_matches = FALSE,
+     ...,
+    file = NULL,
+    unique = NULL,
+    engine = NULL,
+    detect_language = NULL,
+    data_source_ids = NULL
+) {
+  
+  # Error if defunct parameters are used.
+  if (!is.null(unique)) {
+    stop(call. = FALSE, 'The `unique` option is defunct. See the `unique_names` option. ')
   }
-
-  base <- "http://gnrd.globalnames.org/name_finder.json"
-  if (!is.null(data_source_ids))
-    data_source_ids <- paste0(data_source_ids, collapse = "|")
-  args <- tc(list(url = url, text = text, engine = engine, unique = unique,
-                  verbatim = verbatim, detect_language = detect_language,
-                  all_data_sources = all_data_sources,
-                  data_source_ids = data_source_ids,
-                  return_content = as_l(return_content)))
+  if (!is.null(engine)) {
+    stop(call. = FALSE, 'The `engine` option is defunct. The API no longer supports this option. ')
+  }
+  if (!is.null(detect_language)) {
+    stop(call. = FALSE, 'The `detect_language` option is defunct. See the `language` option. ')
+  }
+  if (!is.null(data_source_ids)) {
+    stop(call. = FALSE, 'The `data_source_ids` option is defunct. See the `source` option. ')
+  }
+  
+  # Validate parameters
+  if (! format %in% c('csv', 'tsv', 'json')) {
+    stop(call. = FALSE, 'The `format` option must be "csv", "tsv", or "json". "', format, '" was the value given')
+  }
+  
+  # Make query
+  base <- "http://gnrd.globalnames.org/api/v1/find"
+  args <- tc(list(
+    text = text,
+    url = url,
+    format = format,
+    bytesOffset = bytes_offset,
+    returnContent = return_content,
+    uniqueNames = unique_names,
+    ambiguousNames = ambiguous_names,
+    noBayes = no_bayes,
+    oddsDetails = odds_details,
+    language = language,
+    wordsAround = words_around,
+    verification = verification,
+    sources = paste0(sources, collapse = '|'),
+    allMatches = all_matches
+  ))
   cli <- crul::HttpClient$new(base, headers = tx_ual, opts = list(...))
-  if (names(method) == 'url') {
-    tt <- cli$get(query = args)
-    tt$raise_for_status()
-    out <- jsonlite::fromJSON(tt$parse("UTF-8"))
-    token_url <- out$token_url
-  } else {
-    if (names(method) == "text") {
-      tt <- cli$post(body = list(text = text), encode = "form",
-                 followlocation = 0)
-    } else {
-      tt <- cli$post(query = argsnull(args), encode = "multipart",
-                 body = list(file = crul::upload(file)), 
-                 followlocation = 0)
-    }
-    if (tt$status_code != 303) tt$raise_for_status()
-    token_url <- tt$response_headers$location
-    }
-
-  st <- 303
-  while (st == 303) {
-    dat <- crul::HttpClient$new(token_url, headers = tx_ual)$get()
-    dat$raise_for_status()
-    datout <- jsonlite::fromJSON(dat$parse("UTF-8"))
-    st <- datout$status
+  response <- cli$post(body = args, encode = "form")
+  
+  # Check for errors
+  if (response$status_code == "500") {
+    warning(call. = FALSE, 'The GNR server has encountered an internal error trying to process this request.')
+    return(NULL)
   }
-  meta <- datout[!names(datout) %in% c("names")]
-  list(meta = meta, data = nmslwr(datout$names))
+  
+  # Parse and return results
+  raw_output <- response$parse("UTF-8")
+  switch (format,
+    csv = tibble::as_tibble(utils::read.csv(text = raw_output)),
+    tsv = tibble::as_tibble(utils::read.csv(text = raw_output, sep = '\t')),
+    json = jsonlite::fromJSON(raw_output),
+    other = stop("Invalid 'format' option.")
+  )
 }

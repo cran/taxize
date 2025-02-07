@@ -8,33 +8,28 @@ http_interactions:
     headers:
       Accept-Encoding: gzip, deflate
       Accept: application/json, text/xml, application/xml, */*
-      User-Agent: r-curl/4.3 crul/0.9.0 rOpenSci(taxize/0.9.92.94)
-      X-USER-AGENT: r-curl/4.3 crul/0.9.0 rOpenSci(taxize/0.9.92.94)
+      User-Agent: r-curl/5.2.3 crul/1.5.0 rOpenSci(taxize/0.9.102)
+      X-USER-AGENT: r-curl/5.2.3 crul/1.5.0 rOpenSci(taxize/0.9.102)
   response:
     status:
       status_code: '200'
       message: OK
       explanation: Request fulfilled, document follows
     headers:
-      connection: keep-alive
+      status: 'HTTP/2 200 '
+      date: Fri, 08 Nov 2024 22:29:08 GMT
       content-type: application/xml;charset=UTF-8
-      date: Fri, 06 Mar 2020 19:31:10 GMT
-      status: 'HTTP/1.1 200 '
-      strict-transport-security:
-      - max-age=63072000; includeSubdomains; preload
-      - max-age=63072000; includeSubdomains; preload
-      transfer-encoding: chunked
-      x-application: itis_webservices
-      x-node-name: not shown
-      x-upstream-member: not shown
+      x-frame-options: SAMEORIGIN
+      strict-transport-security: max-age=63072000; includeSubdomains; preload
+      x-robots-tag: noindex, nofollow, nosnippet, noarchive
     body:
-      encoding: UTF-8
+      encoding: ''
       file: no
       string: <ns:getDescriptionResponse xmlns:ns="http://itis_service.itis.usgs.gov"><ns:return
         xmlns:ax21="http://data.itis_service.itis.usgs.gov/xsd" xmlns:ax23="http://metadata.itis_service.itis.usgs.gov/xsd"
         xmlns:ax26="http://itis_service.itis.usgs.gov/xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:type="ax26:SvcDescription"><ax26:description>This is the ITIS Web Service,
-        providing access to the data behind www.itis.gov. The database contains 833,588
-        scientific names (600,075 of them valid/accepted) and 131,214 common names.</ax26:description></ns:return></ns:getDescriptionResponse>
-  recorded_at: 2020-03-06 19:31:10 GMT
-  recorded_with: vcr/0.5.0, webmockr/0.6.0
+        providing access to the data behind www.itis.gov. The database contains 947,465
+        scientific names (660,192 of them valid/accepted) and 146,985 common names.</ax26:description></ns:return></ns:getDescriptionResponse>
+  recorded_at: 2024-11-08 22:29:08 GMT
+  recorded_with: vcr/1.6.0, webmockr/1.0.0

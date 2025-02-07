@@ -93,11 +93,6 @@
 #' nms <- c("Angraecum sesquipedale", "Dracula vampira", "Masdevallia coccinea")
 #' lowest_common(x = nms, db = "ncbi")
 #' lowest_common(x = nms, db = "gbif")
-#' # lowest_common(x = nms, db = "itis")
-#'
-#' ## NAs due to taxon not found, stops with error message
-#' # lowest_common(orchid_itis, db = "itis")
-#' # lowest_common(get_tsn(cool_orchid))
 #' }
 lowest_common <- function(...){
   UseMethod("lowest_common")
@@ -110,7 +105,11 @@ lowest_common.default <- function(sci_id, db = NULL, rows = NA, class_list = NUL
                                   low_rank = NULL, x = NULL, ...) {
   if (is.null(db)) if (!is.null(class_list)) db <- attr(class_list, "db")
   nstop(db)
-  pchk(x, "sci_id")
+  if (!is.null(x)) {
+    lifecycle::deprecate_warn(when = "v0.9.97", what = "lowest_common(x)", with = "lowest_common(sci_id)")
+    sci_id <- x
+  }
+  
   if (!is.null(x)) sci_id <- x
   switch(
     db,

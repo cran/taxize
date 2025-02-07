@@ -6,7 +6,7 @@ http_interactions:
       encoding: ''
       string: ''
     headers:
-      User-Agent: libcurl/7.72.0 r-curl/4.3 crul/1.0.0
+      User-Agent: libcurl/7.81.0 r-curl/6.1.0 crul/1.5.0
       Accept-Encoding: gzip, deflate
       Accept: application/json, text/xml, application/xml, */*
   response:
@@ -16,25 +16,27 @@ http_interactions:
       explanation: Request fulfilled, document follows
     headers:
       status: HTTP/1.1 200 OK
-      date: Fri, 09 Oct 2020 16:28:22 GMT
+      date: Thu, 16 Jan 2025 22:38:46 GMT
       server: Finatra
       strict-transport-security: max-age=31536000; includeSubDomains; preload
       content-security-policy: upgrade-insecure-requests
-      x-ratelimit-remaining: '9'
-      ncbi-phid: D0BD0D52B9512B95000045A5A265E190.1.1.m_3
+      referrer-policy: origin-when-cross-origin
+      ncbi-sid: B4A1D555C08A61CB_91A0SID
+      ncbi-phid: 322CDAF63A8875A5000055EA306039D8.1.1.m_3
+      content-type: text/xml; charset=UTF-8
       cache-control: private
-      ncbi-sid: 49CEB6C45447B03E_9B69SID
       content-encoding: gzip
       x-ratelimit-limit: '10'
+      x-ratelimit-remaining: '6'
       access-control-allow-origin: '*'
-      content-type: text/xml; charset=UTF-8
-      set-cookie: ncbi_sid=49CEB6C45447B03E_9B69SID; domain=.nih.gov; path=/; expires=Sat,
-        09 Oct 2021 16:28:22 GMT
+      access-control-expose-headers: X-RateLimit-Limit,X-RateLimit-Remaining
+      set-cookie: ncbi_sid=B4A1D555C08A61CB_91A0SID; domain=.nih.gov; path=/; expires=Fri,
+        16 Jan 2026 22:38:46 GMT
       x-ua-compatible: IE=Edge
       x-xss-protection: 1; mode=block
       transfer-encoding: chunked
     body:
-      encoding: UTF-8
+      encoding: ''
       file: no
       string: |-
         <?xml version="1.0" ?>
@@ -53,7 +55,7 @@ http_interactions:
                 <MGCId>0</MGCId>
                 <MGCName>Unspecified</MGCName>
             </MitoGeneticCode>
-            <Lineage>cellular organisms; Bacteria; Terrabacteria group; Actinobacteria; Actinobacteria; Corynebacteriales; Mycobacteriaceae; Mycobacterium; Mycobacterium tuberculosis complex; Mycobacterium tuberculosis</Lineage>
+            <Lineage>cellular organisms; Bacteria; Bacillati; Actinomycetota; Actinomycetes; Mycobacteriales; Mycobacteriaceae; Mycobacterium; Mycobacterium tuberculosis complex; Mycobacterium tuberculosis</Lineage>
             <LineageEx>
                 <Taxon>
                     <TaxId>131567</TaxId>
@@ -67,22 +69,22 @@ http_interactions:
                 </Taxon>
                 <Taxon>
                     <TaxId>1783272</TaxId>
-                    <ScientificName>Terrabacteria group</ScientificName>
-                    <Rank>clade</Rank>
+                    <ScientificName>Bacillati</ScientificName>
+                    <Rank>kingdom</Rank>
                 </Taxon>
                 <Taxon>
                     <TaxId>201174</TaxId>
-                    <ScientificName>Actinobacteria</ScientificName>
+                    <ScientificName>Actinomycetota</ScientificName>
                     <Rank>phylum</Rank>
                 </Taxon>
                 <Taxon>
                     <TaxId>1760</TaxId>
-                    <ScientificName>Actinobacteria</ScientificName>
+                    <ScientificName>Actinomycetes</ScientificName>
                     <Rank>class</Rank>
                 </Taxon>
                 <Taxon>
                     <TaxId>85007</TaxId>
-                    <ScientificName>Corynebacteriales</ScientificName>
+                    <ScientificName>Mycobacteriales</ScientificName>
                     <Rank>order</Rank>
                 </Taxon>
                 <Taxon>
@@ -112,8 +114,8 @@ http_interactions:
         </Taxon>
 
         </TaxaSet>
-  recorded_at: 2020-10-09 16:28:23 GMT
-  recorded_with: vcr/0.5.4, webmockr/0.7.0
+  recorded_at: 2025-01-16 22:38:47 GMT
+  recorded_with: vcr/1.6.0.91, webmockr/1.0.0
 - request:
     method: get
     uri: https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=taxonomy&term=Mycobacterium%20tuberculosis%20127%5BNext%20Level%5D%20AND%20Mycobacterium%20tuberculosis%5Bsubtree%5D&RetMax=1000&RetStart=0&api_key=<<entrez_api_token>>
@@ -123,8 +125,8 @@ http_interactions:
     headers:
       Accept-Encoding: gzip, deflate
       Accept: application/json, text/xml, application/xml, */*
-      User-Agent: r-curl/4.3 crul/1.0.0 rOpenSci(taxize/0.9.98.95)
-      X-USER-AGENT: r-curl/4.3 crul/1.0.0 rOpenSci(taxize/0.9.98.95)
+      User-Agent: r-curl/6.1.0 crul/1.5.0 rOpenSci(taxize/0.9.102)
+      X-USER-AGENT: r-curl/6.1.0 crul/1.5.0 rOpenSci(taxize/0.9.102)
   response:
     status:
       status_code: '200'
@@ -132,29 +134,31 @@ http_interactions:
       explanation: Request fulfilled, document follows
     headers:
       status: HTTP/1.1 200 OK
-      date: Fri, 09 Oct 2020 16:28:23 GMT
+      date: Thu, 16 Jan 2025 22:38:46 GMT
       server: Finatra
       strict-transport-security: max-age=31536000; includeSubDomains; preload
       content-security-policy: upgrade-insecure-requests
-      x-ratelimit-remaining: '8'
-      ncbi-phid: D0BD0D52B9512B95000050A5A29334BB.1.1.m_1
+      referrer-policy: origin-when-cross-origin
+      ncbi-sid: 0DFC9962661ECCE4_365ESID
+      ncbi-phid: 322CDAF63A8875A500004CEA31051B16.1.1.m_1
+      content-type: text/xml; charset=UTF-8
       cache-control: private
-      ncbi-sid: 5978794924F3BAFA_429FSID
       content-encoding: gzip
       x-ratelimit-limit: '10'
+      x-ratelimit-remaining: '6'
       access-control-allow-origin: '*'
-      content-type: text/xml; charset=UTF-8
-      set-cookie: ncbi_sid=5978794924F3BAFA_429FSID; domain=.nih.gov; path=/; expires=Sat,
-        09 Oct 2021 16:28:23 GMT
+      access-control-expose-headers: X-RateLimit-Limit,X-RateLimit-Remaining
+      set-cookie: ncbi_sid=0DFC9962661ECCE4_365ESID; domain=.nih.gov; path=/; expires=Fri,
+        16 Jan 2026 22:38:46 GMT
       x-ua-compatible: IE=Edge
       x-xss-protection: 1; mode=block
       transfer-encoding: chunked
     body:
-      encoding: UTF-8
+      encoding: ''
       file: no
       string: |
         <?xml version="1.0" encoding="UTF-8" ?>
         <!DOCTYPE eSearchResult PUBLIC "-//NLM//DTD esearch 20060628//EN" "https://eutils.ncbi.nlm.nih.gov/eutils/dtd/20060628/esearch.dtd">
         <eSearchResult><Count>0</Count><RetMax>0</RetMax><RetStart>0</RetStart><IdList/><TranslationSet/><QueryTranslation>Mycobacterium tuberculosis 127[Next Level] AND Mycobacterium tuberculosis[subtree]</QueryTranslation><ErrorList><PhraseNotFound>Mycobacterium tuberculosis 127[Next Level]</PhraseNotFound></ErrorList><WarningList><OutputMessage>No items found.</OutputMessage></WarningList></eSearchResult>
-  recorded_at: 2020-10-09 16:28:23 GMT
-  recorded_with: vcr/0.5.4, webmockr/0.7.0
+  recorded_at: 2025-01-16 22:38:47 GMT
+  recorded_with: vcr/1.6.0.91, webmockr/1.0.0
