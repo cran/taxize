@@ -1,3 +1,8 @@
+taxize 0.10.1
+=============
+
+* Adjusted batch size of `gna_verifier` to 50 [issue #953](https://github.com/ropensci/taxize/issues/953#issuecomment-3844371540)
+
 taxize 0.10.0
 =============
 
@@ -16,7 +21,6 @@ taxize 0.9.101
   - Bump `taxize` version.
   - Add `rworkflows` status badge to *README*.
 
-=============
 taxize 0.9.100
 =============
 

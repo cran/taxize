@@ -10,11 +10,10 @@ Description: Interacts with a suite of web application programming interfaces
     'Global Biodiversity Information Facility' (<https://techdocs.gbif.org/en/openapi/>),
     and many more. Links to the API documentation for other supported services are
     available in the documentation for their respective functions in this package.
-Version: 0.10.0
+Version: 0.10.1
 License: MIT + file LICENSE
 URL: https://docs.ropensci.org/taxize/ (website),
-        https://github.com/ropensci/taxize (devel), https://taxize.dev
-        (user manual)
+        https://github.com/ropensci/taxize (devel)
 BugReports: https://github.com/ropensci/taxize/issues
 Authors@R: 
     c(person(given = "Scott",
@@ -80,13 +79,13 @@ Imports: graphics, methods, stats, utils, crul (>= 0.7.0), xml2 (>=
         natserv (>= 1.0.0), wikitaxa (>= 0.3.0), R6, crayon, cli,
         phangorn, lifecycle, curl, stringi
 Suggests: testthat, vegan, vcr
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3
 X-schema.org-applicationCategory: Taxonomy
 X-schema.org-keywords: taxonomy, biology, nomenclature, JSON, API, web,
         api-client, identifiers, species, names
 X-schema.org-isPartOf: https://ropensci.org
 NeedsCompilation: no
-Packaged: 2025-02-06 19:53:50 UTC; fosterz
+Packaged: 2026-02-13 20:17:14 UTC; fosterz
 Author: Scott Chamberlain [aut],
   Eduard Szoecs [aut],
   Zachary Foster [aut, cre],
@@ -106,4 +105,4 @@ Author: Scott Chamberlain [aut],
   rOpenSci [fnd]
 Maintainer: Zachary Foster <zacharyfoster1989@gmail.com>
 Repository: CRAN
-Date/Publication: 2025-02-07 09:50:02 UTC
+Date/Publication: 2026-02-14 14:40:02 UTC

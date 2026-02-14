@@ -1,7 +1,7 @@
-1f9f86e15dcfc2c6e17d75d5859e152e *DESCRIPTION
+772f892122929f5905497e59b8a1400b *DESCRIPTION
 35bd8606c71dfbfad3ad27387e177ad4 *LICENSE
 5682b799597feafacf34b68b21bb93b4 *NAMESPACE
-46f9adf6bd71e538e91423d03c3dfe83 *NEWS.md
+ac5b8ec1b46af769382cbfe13ea78cf0 *NEWS.md
 049f2ace89f111b8c72c8ae2f811b25d *R/aaa.R
 132770bef14e4bdc8b3227d9288a0f05 *R/apg.R
 65b9cf6213ff9e75cb74e87865c2332f *R/apg_lookup.R
@@ -54,7 +54,7 @@ c6fc365b53e36ed988844e4cf5455222 *R/globals.R
 8a8eed9f983113043008f406c8793f68 *R/gna_data_sources.R
 a3a29cab451de4f6367d7a73362bb2fc *R/gna_parse.R
 01c7090f5e3fb0b260d0f185f109d240 *R/gna_search.R
-c4e4f5d4ca43af637f0f3e47b8aae242 *R/gna_verifier.R
+38e6f854bb10c29851b54dec266290d4 *R/gna_verifier.R
 3537b535f66e5c7bfb3491eeb823b408 *R/gni_details.R
 50ac5e9085d9146fe22d63b37195ea68 *R/gnr_datasources.R
 c2470d06246a6da17915a8fe75e14e1c *R/gnr_resolve.R
@@ -104,12 +104,12 @@ bc327a2b41ec0498815d36d16312254b *R/ping.R
 a3ff49ef2ffb23c1b1535fb07e818b2c *R/sci2comm.R
 fc9a6b0a45e8ca76815f36b71b980ff1 *R/scrapenames.r
 91e27a2627fe7885406817a436a3553a *R/status_codes.R
-ab40a62ecb0671ef83e522ff1995bccf *R/synonyms.R
+ba971a1484a4b0341269daf0b05fb139 *R/synonyms.R
 512290cdaeddc216da2f70cc61ceda01 *R/tax_agg.R
 49cbb2a016979787d350754983441958 *R/tax_name.R
 c17511fb37e2a7f9ea2dda34d960bd2c *R/tax_rank.R
 3a5699742bc3d76d7196285d72c08725 *R/taxize-authentication.R
-cf76abc9813aa4485c7f85f9ea576cfa *R/taxize-package.R
+5aec9e93fddb792a997252242b7fcba6 *R/taxize-package.R
 e8668eb338cd35d115114858b1c70e0d *R/taxize-params.R
 9f03839f69ed290b23983d9eeb83863d *R/taxize_capwords.r
 310ac4af5c9361210ba47613db51b3b0 *R/taxize_cite.R
@@ -277,9 +277,9 @@ ed5f5c7d72eb2cbb17b2050fb8e806ad *man/pow_search.Rd
 02861d294101f173741664f66b208369 *man/resolve.Rd
 2673bb048aa98b53faf810ae01344ce2 *man/sci2comm.Rd
 263ff1fe4dc11a253fc7980b8f1d297b *man/scrapenames.Rd
-2338d4f149d9bae664af643418e8891e *man/species_plantarum_binomials.Rd
+be4654b57c938ca4a43fcf88a68b69da *man/species_plantarum_binomials.Rd
 2653daef8b92709cd0456a6cf4181efb *man/status_codes.Rd
-3e4ad8176a854a28a9ccf82d2be444b9 *man/synonyms.Rd
+ea3ebde6a875443de7437d1fd5e9a4c5 *man/synonyms.Rd
 5552491b0fa263d4bea27948e919582b *man/tax_agg.Rd
 8bef300ad72072197b690fa33b5db012 *man/tax_name.Rd
 657d74194eb3dde2c569a1705527a91b *man/tax_rank.Rd
@@ -519,7 +519,7 @@ a9b3487b7ab23fcabfdd3a2a4b469d7e *tests/fixtures/worms_downstream.yml
 2728ce269660c28390462562a55fa8e9 *tests/fixtures/worms_downstream_previously_unaccounted_for_ranks.yml
 73051bc7d7d3f167234b1b5f359c8ad7 *tests/fixtures/worms_downstream_start_param.yml
 265c6f13798f3db6770e9265dd5c0665 *tests/test-all.R
-e634e0a2ba7253e1e3be74032a01a4e3 *tests/testthat/Rplots.pdf
+16c993f90d9f15bd6cf94b8901d462cb *tests/testthat/Rplots.pdf
 3e73ac262a49378ae798bf85fbe6ccf4 *tests/testthat/helper-taxize.R
 88c361a06ab441183fe01013f09ef519 *tests/testthat/test-apgscraping.R
 1a78ed1c210d9a8270b12e32b502018c *tests/testthat/test-bold_children.R
